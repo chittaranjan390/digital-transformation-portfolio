@@ -3,7 +3,7 @@
 
 > An interactive portfolio demonstrating end-to-end Salesforce Solution Architecture and digital platform design for a B2B industrial tyre distribution enterprise — built as a work sample for product & consulting roles.
 
-🔗 **Live Portfolio → [chittaranjansahu.github.io/sf-portfolio](https://chittaranjansahu.github.io/sf-portfolio)**
+🔗 **Live Portfolio → [chittaranjansahu.github.io/sf-portfolio](https://chittaranjan390.github.io/digital-transformation-portfolio/)**
 
 ---
 
