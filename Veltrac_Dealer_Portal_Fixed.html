@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veltrac India — Dealer Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   VELTRAC INDIA — DEALER PORTAL
+   Design: Same system, green-accented partner theme
+   ══════════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A0F1E;--ink-mid:#1C2638;--ink-soft:#2E3D55;
+  --slate:#4A5568;--steel:#E2E8F0;--steel-lt:#F7F9FC;
+  --amber:#F59E0B;--amber-dk:#D97706;--amber-lt:#FFFBEB;
+  --blue:#0EA5E9;--blue-dk:#0284C7;--blue-lt:#F0F9FF;
+  --green:#10B981;--green-dk:#059669;--green-lt:#ECFDF5;
+  --red:#EF4444;--red-lt:#FEF2F2;
+  --white:#FFFFFF;--border:#E2E8F0;--border-dk:#CBD5E1;
+  --text-1:#0A0F1E;--text-2:#374151;--text-3:#6B7280;--text-4:#9CA3AF;
+  --radius:6px;--radius-lg:12px;--radius-xl:16px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow:0 4px 16px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.12);
+  --font:'DM Sans','Segoe UI',system-ui,sans-serif;
+  --font-disp:'DM Serif Display',Georgia,serif;
+  --sidebar-w:256px;--topbar-h:60px;
+  /* Dealer theme accent */
+  --dealer-bg:#064E3B;--dealer-accent:#10B981;--dealer-accent-lt:#ECFDF5;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--steel-lt);color:var(--text-1);font-size:14px;line-height:1.6;overflow-x:hidden}
+
+/* ── UTILITIES ───────────────────────────────────────────────────── */
+.hidden{display:none!important}
+.flex{display:flex}.col{flex-direction:column}
+.ai-c{align-items:center}.jc-sb{justify-content:space-between}.jc-c{justify-content:center}
+.gap-4{gap:4px}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.gap-20{gap:20px}
+.flex-1{flex:1}
+.mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
+.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fw-5{font-weight:500}.fw-6{font-weight:600}.fw-7{font-weight:700}.fw-8{font-weight:800}
+.text-sm{font-size:12px}.text-xs{font-size:11px}.text-lg{font-size:16px}
+.text-muted{color:var(--text-3)}.text-green{color:var(--green-dk)}.text-amber{color:var(--amber-dk)}
+.text-blue{color:var(--blue-dk)}.text-red{color:var(--red)}.text-center{text-align:center}
+.w-full{width:100%}
+
+/* ── BADGES ─────────────────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.badge-amber{background:#FEF3C7;color:#92400E}
+.badge-blue{background:#DBEAFE;color:#1E40AF}
+.badge-green{background:#D1FAE5;color:#065F46}
+.badge-red{background:#FEE2E2;color:#991B1B}
+.badge-ink{background:var(--ink);color:white}
+.badge-gray{background:#F3F4F6;color:#4B5563}
+.badge-purple{background:#EDE9FE;color:#5B21B6}
+
+/* ── CARDS ─────────────────────────────────────────────────────── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card-title{font-weight:700;font-size:14px;color:var(--text-1)}
+.card-subtitle{font-size:12px;color:var(--text-3);margin-top:2px}
+.card-body{padding:20px}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.sf-input{padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:12.5px;color:var(--ink,#181818);background:white;outline:none;width:100%}
+.sf-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.12)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--radius);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;user-select:none;white-space:nowrap}
+.btn-primary{background:var(--ink);color:white;border-color:var(--ink)}.btn-primary:hover{background:var(--ink-mid)}
+.btn-green{background:var(--green);color:white;border-color:var(--green)}.btn-green:hover{background:var(--green-dk)}
+.btn-amber{background:var(--amber);color:white;border-color:var(--amber)}.btn-amber:hover{background:var(--amber-dk)}
+.btn-outline{background:white;color:var(--text-1);border-color:var(--border-dk)}.btn-outline:hover{background:var(--steel-lt)}
+.btn-danger{background:var(--red);color:white;border-color:var(--red)}
+.btn-sm{padding:6px 12px;font-size:12px}.btn-xs{padding:4px 9px;font-size:11px}
+
+/* ── FORMS ─────────────────────────────────────────────────────── */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.form-control{width:100%;padding:9px 12px;border:1.5px solid var(--border-dk);border-radius:var(--radius);font-family:var(--font);font-size:13px;color:var(--text-1);background:white;outline:none;transition:border-color .15s,box-shadow .15s}
+.form-control:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-hint{font-size:11.5px;color:var(--text-3);margin-top:4px}
+
+/* ── TABLES ─────────────────────────────────────────────────────── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--steel-lt);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFBFD}
+
+/* ── ALERTS ─────────────────────────────────────────────────────── */
+.alert{padding:12px 16px;border-radius:var(--radius);font-size:13px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start}
+.alert-info{background:var(--blue-lt);border:1px solid #BAE6FD;color:#0C4A6E}
+.alert-success{background:var(--green-lt);border:1px solid #6EE7B7;color:#064E3B}
+.alert-warning{background:var(--amber-lt);border:1px solid #FDE68A;color:#78350F}
+.alert-error{background:var(--red-lt);border:1px solid #FECACA;color:#7F1D1D}
+
+/* ── PROGRESS ─────────────────────────────────────────────────────── */
+.prog-bar{height:6px;background:var(--steel);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:var(--green)}
+.prog-fill.amber{background:var(--amber)}.prog-fill.red{background:var(--red)}.prog-fill.blue{background:var(--blue)}
+
+/* ── STATUS FLOW ─────────────────────────────────────────────────── */
+.status-flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;padding:12px 0}
+.status-node{padding:6px 14px;border-radius:20px;font-size:11.5px;font-weight:600;background:var(--steel);color:var(--text-3);border:2px solid transparent;white-space:nowrap}
+.status-node.done{background:var(--green-lt);color:var(--green);border-color:#6EE7B7}
+.status-node.active{background:var(--dealer-bg);color:white;border-color:var(--dealer-bg)}
+.status-arrow{color:var(--border-dk);font-size:16px;margin:0 3px}
+
+/* ── DIVIDER / MONO ─────────────────────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.mono{font-family:'Consolas',monospace;font-size:12px}
+
+/* ══════════════════════════════════════════════════════════════════
+   DEALER SIDEBAR
+   ══════════════════════════════════════════════════════════════════ */
+#dealer-sidebar{
+  width:var(--sidebar-w);background:var(--dealer-bg);
+  min-height:100vh;position:fixed;top:0;left:0;bottom:0;
+  display:flex;flex-direction:column;z-index:100;overflow-y:auto;
+}
+.sb-brand{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo{display:flex;align-items:center;gap:10px}
+.sb-logo-mark{width:36px;height:36px;background:var(--dealer-accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:white}
+.sb-logo-name{font-family:var(--font-disp);font-size:16px;color:white}
+.sb-logo-sub{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px;text-transform:uppercase}
+.sb-dealer-info{padding:14px 16px;margin:10px 10px 0;background:rgba(255,255,255,.06);border-radius:var(--radius-lg)}
+.sb-dealer-name{font-weight:700;font-size:13px;color:white}
+.sb-dealer-meta{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+.sb-dealer-badges{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.sb-nav{flex:1;padding:10px 0}
+.sb-section-label{padding:12px 20px 4px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;color:rgba(255,255,255,.55);cursor:pointer;font-size:13px;font-weight:500;border-left:3px solid transparent;transition:all .15s;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(16,185,129,.15);color:#6EE7B7;border-left-color:var(--dealer-accent)}
+.nav-icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+.nav-badge-red{background:var(--red)!important}
+.nav-badge{margin-left:auto;background:var(--dealer-accent);color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.switcher-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;margin:8px 10px 2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);cursor:pointer;color:rgba(255,255,255,.5);font-size:12px;font-weight:600;transition:all .15s}
+.switcher-btn:hover{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.4);color:#6EE7B7}
+.sb-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,.07)}
+.logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.4);font-size:12.5px;cursor:pointer;padding:6px 4px;border-radius:var(--radius);transition:all .15s}
+.logout-btn:hover{color:var(--red)}
+
+/* ══════════════════════════════════════════════════════════════════
+   MAIN LAYOUT
+   ══════════════════════════════════════════════════════════════════ */
+#dealer-main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+#topbar{height:var(--topbar-h);background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:50;gap:16px}
+.topbar-title{font-weight:700;font-size:15px;flex:1}
+.topbar-sub{font-size:12px;font-weight:400;color:var(--text-3);margin-left:6px}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+#dealer-content{flex:1;padding:24px;overflow-y:auto}
+.dealer-section{display:none}
+.dealer-section.active{display:block}
+
+/* ── KPI ROW ─────────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.kpi-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:6px}
+.kpi-value{font-family:var(--font-disp);font-size:28px;color:var(--text-1);line-height:1;margin-bottom:4px;letter-spacing:-1px}
+.kpi-trend{font-size:11.5px;font-weight:600;color:var(--green)}
+.kpi-icon{float:right;font-size:24px;margin-top:-4px;opacity:.5}
+.kpi-card.highlight{border-color:var(--green);background:linear-gradient(135deg,#ECFDF5,white)}
+
+/* ── CONTENT GRID ─────────────────────────────────────────────────── */
+.content-grid{display:grid;grid-template-columns:1fr 280px;gap:20px}
+.bv-panel{background:linear-gradient(135deg,#ECFDF5,#F7F9FC);border:1px solid #6EE7B7;border-radius:var(--radius-lg);padding:18px;position:sticky;top:80px}
+.bv-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--green-dk);margin-bottom:12px}
+.bv-item{display:flex;gap:8px;margin-bottom:10px;font-size:12.5px;color:var(--text-2);line-height:1.5}
+.bv-dot{width:18px;height:18px;background:var(--dealer-accent-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--green-dk);flex-shrink:0;margin-top:1px;font-weight:700}
+
+/* ── MARGIN CALCULATOR ─────────────────────────────────────────── */
+.margin-card{background:white;border:1.5px solid var(--green);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm)}
+.margin-value{font-family:var(--font-disp);font-size:36px;color:var(--green-dk);line-height:1}
+.margin-bar-wrap{height:20px;background:var(--steel);border-radius:10px;overflow:hidden;position:relative;margin-top:8px}
+.margin-bar-fill{height:100%;border-radius:10px;background:var(--green);transition:width .4s ease}
+.margin-bar-label{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:white;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.transfer-price-display{background:var(--steel-lt);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+
+/* ── PERFORMANCE CHART ─────────────────────────────────────────── */
+canvas{display:block}
+
+/* ── ORDER TRACKER ─────────────────────────────────────────────── */
+.order-track-row{padding:12px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
+.order-track-row:last-child{border-bottom:none}
+.track-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+
+/* ── PROFILE PAGE ─────────────────────────────────────────────── */
+.dealer-profile-header{background:linear-gradient(135deg,var(--dealer-bg),#065F46);border-radius:var(--radius-lg);padding:28px;margin-bottom:16px;display:flex;gap:20px;align-items:center}
+.dealer-avatar{width:70px;height:70px;background:var(--dealer-accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-disp);font-size:26px;color:white;flex-shrink:0}
+.dealer-profile-name{font-family:var(--font-disp);font-size:22px;color:white;margin-bottom:6px}
+.dealer-profile-meta{font-size:12.5px;color:rgba(255,255,255,.6)}
+
+/* ── COMMISSION CARD ─────────────────────────────────────────────── */
+.commission-highlight{background:linear-gradient(135deg,#064E3B,#065F46);border-radius:var(--radius-lg);padding:20px;color:white}
+.commission-rate{font-family:var(--font-disp);font-size:48px;color:#6EE7B7;line-height:1}
+.commission-label{font-size:12px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+
+/* ── TOAST ─────────────────────────────────────────────────────── */
+#toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--dealer-bg);color:white;padding:12px 18px;border-radius:var(--radius);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);max-width:360px;animation:toastIn .2s ease;border-left:3px solid var(--dealer-accent)}
+.toast.success{border-left-color:#6EE7B7;background:#065F46}
+.toast.error{border-left-color:var(--red);background:#7F1D1D}
+.toast.warning{border-left-color:var(--amber);background:#78350F}
+@keyframes toastIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── SWITCHER MODAL ─────────────────────────────────────────────── */
+#switcher-modal{display:none;position:fixed;inset:0;background:rgba(10,15,30,.8);z-index:2000;align-items:center;justify-content:center}
+#switcher-modal.open{display:flex}
+.sw-modal{background:white;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);width:660px;max-width:96vw;overflow:hidden}
+.sw-header{background:var(--dealer-bg);padding:24px 28px}
+.sw-title{font-family:var(--font-disp);font-size:20px;color:white;margin-bottom:4px}
+.sw-sub{font-size:12.5px;color:rgba(255,255,255,.4)}
+.sw-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border)}
+.sw-card{padding:22px 24px;cursor:pointer;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background .15s;display:flex;flex-direction:column;gap:10px}
+.sw-card:nth-child(2),.sw-card:nth-child(4){border-right:none}
+.sw-card:nth-child(3),.sw-card:nth-child(4){border-bottom:none}
+.sw-card:hover{background:var(--steel-lt)}
+.sw-card.current{background:var(--dealer-accent-lt)}
+.sw-card-icon{font-size:30px}
+.sw-card-title{font-weight:700;font-size:14px;color:var(--text-1)}
+.sw-card-desc{font-size:12px;color:var(--text-3);line-height:1.5}
+
+/* ── LOGIN SCREEN ─────────────────────────────────────────────── */
+#dealer-login{display:flex;min-height:100vh;align-items:center;justify-content:center;background:var(--dealer-bg);position:fixed;inset:0;z-index:500}
+.dealer-login-card{background:white;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);width:440px;max-width:96vw;overflow:hidden}
+.dealer-login-header{background:var(--dealer-bg);padding:28px 32px;border-bottom:3px solid var(--dealer-accent)}
+.dealer-login-title{font-family:var(--font-disp);font-size:22px;color:white;margin-bottom:4px}
+.dealer-login-sub{font-size:12.5px;color:rgba(255,255,255,.4)}
+.dealer-login-body{padding:28px 32px}
+
+/* ── KPI SECTION LABEL ─────────────────────────────────────────── */
+.kpi-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);margin-bottom:8px;padding-left:2px}
+
+/* ── STOCK ORDER FORM ─────────────────────────────────────────── */
+.so-header{display:grid;grid-template-columns:1fr 100px 130px 130px 36px;gap:8px;padding:8px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);border-bottom:1px solid var(--border);margin-bottom:8px}
+.so-line{display:grid;grid-template-columns:1fr 100px 130px 130px 36px;gap:8px;margin-bottom:8px;align-items:center}
+.so-remove-btn{background:none;border:1px solid var(--border-dk);border-radius:var(--radius);width:32px;height:34px;cursor:pointer;color:var(--text-3);font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.so-remove-btn:hover{background:var(--red-lt);border-color:var(--red);color:var(--red)}
+.so-total-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.so-total-cell{padding:12px 16px;background:var(--steel-lt);border-right:1px solid var(--border)}
+.so-total-cell:last-child{border-right:none}
+.so-total-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:4px}
+.so-total-val{font-family:var(--font-disp);font-size:18px;color:var(--text-1)}
+.so-total-val.danger{color:var(--red);font-size:14px;font-family:var(--font);font-weight:700}
+
+/* ── STOCK HISTORY FILTER ROW ─────────────────────────────────── */
+.sh-filter-row{display:flex;gap:6px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--border)}
+
+/* ── EXPANDED PO DETAIL ────────────────────────────────────────── */
+.expanded-detail{padding:20px;background:var(--steel-lt);border-top:2px solid var(--dealer-accent)}
+.expanded-line{display:grid;grid-template-columns:2fr 80px 140px 140px;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.expanded-line:last-of-type{border-bottom:none}
+
+/* ── CREDIT & PAYMENTS ─────────────────────────────────────────── */
+.credit-util-card{background:linear-gradient(135deg,var(--dealer-bg),#065F46);border-radius:var(--radius-lg);padding:22px;color:white;margin-bottom:16px}
+.credit-big-val{font-family:var(--font-disp);font-size:40px;color:#6EE7B7;line-height:1}
+.credit-bar-wrap{height:14px;background:rgba(255,255,255,.15);border-radius:7px;overflow:hidden;margin:12px 0}
+.credit-bar-fill{height:100%;border-radius:7px;transition:width .5s ease}
+.credit-bar-fill.safe{background:var(--green)}
+.credit-bar-fill.warn{background:var(--amber)}
+.credit-bar-fill.danger{background:var(--red)}
+
+/* ── PAYMENT HISTORY TIMELINE ──────────────────────────────────── */
+.pay-timeline-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.pay-timeline-item:last-child{border-bottom:none}
+.pay-tl-icon{width:34px;height:34px;background:var(--green-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.pay-tl-body{flex:1;min-width:0}
+.pay-tl-amount{font-family:var(--font-disp);font-size:17px;color:var(--text-1)}
+.pay-tl-meta{font-size:11.5px;color:var(--text-3);margin-top:2px}
+
+/* ── RFQ ASSIGNMENT INFO BUTTON ────────────────────────────────── */
+.assign-info-btn{background:none;border:none;cursor:pointer;color:var(--green-dk);font-size:13px;padding:0 3px;opacity:.7;transition:opacity .15s;vertical-align:middle}
+.assign-info-btn:hover{opacity:1}
+
+/* ── PDF BUTTONS ───────────────────────────────────────────────── */
+.pdf-btn-group{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-pdf{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;border-radius:var(--radius);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .15s;text-align:center;line-height:1.4}
+.btn-pdf-dealer{background:var(--dealer-bg);color:white;border-color:var(--dealer-bg)}
+.btn-pdf-dealer:hover{background:#065F46}
+.btn-pdf-customer{background:white;color:var(--dealer-bg);border-color:var(--dealer-accent)}
+.btn-pdf-customer:hover{background:var(--dealer-accent-lt)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     DEALER LOGIN SCREEN
+     ══════════════════════════════════════════════════════════════════ -->
+<div id="dealer-login">
+  <div class="dealer-login-card">
+    <div class="dealer-login-header">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:40px;height:40px;background:var(--dealer-accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-disp);font-weight:700;font-size:16px;color:white">VT</div>
+        <div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase">Veltrac India Tyres</div>
+          <div class="dealer-login-title" style="margin-bottom:0">Dealer Partner Portal</div>
+        </div>
+      </div>
+      <div class="dealer-login-sub">Experience Cloud — Authorized Dealers Only</div>
+    </div>
+    <div class="dealer-login-body">
+      <div class="alert alert-success" style="margin-bottom:20px">
+        <span>🔑</span>
+        <div><strong>Demo Credentials:</strong><br>
+        Email: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f99d9c98959c8bb98d908b9c8a96958c8d9096978ad79097">[email&#160;protected]</a></strong><br>
+        Password: any password</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Dealer Email</label>
+        <input class="form-control" id="dl-email" type="email" value="dealer@tiresolutions.in" placeholder="dealer@company.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-control" id="dl-pass" type="password" value="dealer123" placeholder="••••••••">
+      </div>
+      <div id="dl-error" class="hidden" style="color:var(--red);font-size:12.5px;margin-bottom:12px"></div>
+      <button class="btn btn-green w-full" style="justify-content:center;padding:11px;font-size:14px" onclick="dealerLogin()">Log In to Dealer Portal →</button>
+      <p style="text-align:center;margin-top:16px;font-size:12px;color:var(--text-3)">
+        Not a dealer yet? <a href="#" style="color:var(--green-dk);font-weight:600" onclick="toast('Contact your Veltrac India territory manager to request dealer access.','info');return false">Request Access</a>
+      </p>
+      <div class="divider"></div>
+      <p style="text-align:center;font-size:12px;color:var(--text-3)">
+        <a href="Veltrac_B2B_Portal.html" style="color:var(--blue-dk)">← Back to B2B Customer Portal</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     DEALER PORTAL APP
+     ══════════════════════════════════════════════════════════════════ -->
+<div id="dealer-app" style="display:none;min-height:100vh">
+
+  <!-- SIDEBAR -->
+  <div id="dealer-sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">
+        <div class="sb-logo-mark">VT</div>
+        <div>
+          <div class="sb-logo-name">Veltrac India</div>
+          <div class="sb-logo-sub">Dealer Portal</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-dealer-info">
+      <div class="sb-dealer-name" id="sb-dealer-name">Tyre Solutions India</div>
+      <div class="sb-dealer-meta" id="sb-dealer-meta">West Region · Mumbai Territory</div>
+      <div class="sb-dealer-badges">
+        <span class="badge badge-green" id="sb-dealer-tier">Gold Dealer</span>
+        <span class="badge badge-gray" id="sb-dealer-code">Code: DLR-W-042</span>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section-label">My Stock Business</div>
+      <div class="nav-item active" onclick="dealerNav('dashboard')"><span class="nav-icon">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="dealerNav('stock-order')"><span class="nav-icon">🛒</span>Place Stock Order</div>
+      <div class="nav-item" onclick="dealerNav('stock-history')"><span class="nav-icon">📦</span>Stock Order History</div>
+      <div class="nav-item" onclick="dealerNav('credit')"><span class="nav-icon">💳</span>Credit &amp; Payments<span class="nav-badge nav-badge-red" id="nav-overdue-count" style="display:none">!</span></div>
+      <div class="sb-section-label">Fulfillment Partner</div>
+      <div class="nav-item" onclick="dealerNav('rfq-list')"><span class="nav-icon">📋</span>Assigned RFQs<span class="nav-badge" id="nav-rfq-count">0</span></div>
+      <div class="nav-item" onclick="dealerNav('quote-submit')"><span class="nav-icon">💰</span>Submit Quote<span class="nav-badge" id="nav-pending-count">0</span></div>
+      <div class="nav-item" onclick="dealerNav('orders')"><span class="nav-icon">🚚</span>Fulfillment Orders<span class="nav-badge" id="nav-order-count">0</span></div>
+      <div class="sb-section-label">Account</div>
+      <div class="nav-item" onclick="dealerNav('profile')"><span class="nav-icon">👤</span>Dealer Profile</div>
+    </nav>
+    <div class="switcher-btn" onclick="openSwitcher()">
+      <span style="font-size:14px">⚡</span>
+      <span>Switch Portal View</span>
+      <span style="margin-left:auto;font-size:9px;opacity:.5">▲</span>
+    </div>
+    <div class="sb-footer">
+      <div class="logout-btn" onclick="dealerLogout()">← Sign Out</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="dealer-main">
+    <!-- TOPBAR -->
+    <div id="topbar">
+      <div class="topbar-title">
+        <span id="page-title">Dashboard</span>
+        <span class="topbar-sub" id="page-sub"></span>
+      </div>
+      <div class="topbar-actions">
+        <span class="badge badge-green" id="tb-dealer-name">Tyre Solutions India</span>
+        <span class="badge badge-gray" style="background:var(--dealer-accent-lt);color:var(--green-dk)">Dealer Portal</span>
+        <span style="font-size:11px;color:var(--text-4)">SAP</span>
+        <span class="badge badge-green" style="font-size:10px">● Connected</span>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div id="dealer-content">
+
+      <!-- ══════════════════════════════════════════════════════════
+           DASHBOARD
+           ══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section active" id="ds-dashboard">
+        <!-- Mode 1: My Stock Business KPIs -->
+        <div class="kpi-section-label">My Stock Business</div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">🛒</div>
+            <div class="kpi-label">MTD Stock Purchases</div>
+            <div class="kpi-value" id="kd-mtd-purchases">₹0</div>
+            <div class="kpi-trend" id="kd-purchase-trend">This month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">💳</div>
+            <div class="kpi-label">Outstanding Credit</div>
+            <div class="kpi-value" id="kd-credit-used">₹3.2L</div>
+            <div class="kpi-trend">of ₹10L limit</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">📅</div>
+            <div class="kpi-label">Next Payment Due</div>
+            <div class="kpi-value" id="kd-next-due" style="font-size:20px">Jan 5</div>
+            <div class="kpi-trend" id="kd-due-amount">₹1,24,000</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">📈</div>
+            <div class="kpi-label">YTD Revenue</div>
+            <div class="kpi-value" id="kd-ytd-revenue">₹0</div>
+            <div class="kpi-trend" id="kd-ytd-trend">Your own sales</div>
+          </div>
+        </div>
+
+        <!-- Mode 2: Fulfillment Partner KPIs -->
+        <div class="kpi-section-label" style="margin-top:14px">Fulfillment Partner</div>
+        <div class="kpi-grid" style="margin-bottom:16px">
+          <div class="kpi-card highlight">
+            <div class="kpi-icon">📋</div>
+            <div class="kpi-label">Assigned RFQs</div>
+            <div class="kpi-value" id="kd-assigned">0</div>
+            <div class="kpi-trend" id="kd-rfq-trend">Awaiting response</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">⏳</div>
+            <div class="kpi-label">Pending Quotes</div>
+            <div class="kpi-value" id="kd-pending">0</div>
+            <div class="kpi-trend">Submit by deadline</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">📦</div>
+            <div class="kpi-label">Converted Orders</div>
+            <div class="kpi-value" id="kd-converted">0</div>
+            <div class="kpi-trend">This month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-label">Commission MTD</div>
+            <div class="kpi-value" id="kd-revenue">₹0</div>
+            <div class="kpi-trend" id="kd-rev-trend">↑ vs last month</div>
+          </div>
+        </div>
+
+        <div class="grid-2 mb-16">
+          <!-- Performance Summary -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Performance Summary</div>
+              <span class="badge badge-green">FY 2024-25</span>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div>
+                  <div class="flex jc-sb ai-c mb-12" style="margin-bottom:4px">
+                    <span class="text-sm fw-6">Quote Win Rate</span>
+                    <span class="fw-7 text-green" id="dash-win-rate">0%</span>
+                  </div>
+                  <div class="prog-bar"><div class="prog-fill" id="dash-win-bar" style="width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="flex jc-sb ai-c mb-12" style="margin-bottom:4px">
+                    <span class="text-sm fw-6">Avg. Response Time</span>
+                    <span class="fw-7 text-amber">4.2 hrs</span>
+                  </div>
+                  <div class="prog-bar"><div class="prog-fill amber" style="width:68%"></div></div>
+                </div>
+                <div>
+                  <div class="flex jc-sb ai-c mb-12" style="margin-bottom:4px">
+                    <span class="text-sm fw-6">Customer Satisfaction</span>
+                    <span class="fw-7 text-green">4.6 / 5</span>
+                  </div>
+                  <div class="prog-bar"><div class="prog-fill" style="width:92%"></div></div>
+                </div>
+                <div>
+                  <div class="flex jc-sb ai-c mb-12" style="margin-bottom:4px">
+                    <span class="text-sm fw-6">On-Time Delivery</span>
+                    <span class="fw-7 text-green">94%</span>
+                  </div>
+                  <div class="prog-bar"><div class="prog-fill" style="width:94%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Commission Summary -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Commission Earned MTD</div>
+              <span class="badge badge-amber">Pending Payout</span>
+            </div>
+            <div class="card-body">
+              <div style="text-align:center;padding:8px 0 16px">
+                <div style="font-family:var(--font-disp);font-size:40px;color:var(--green-dk)" id="dash-commission">₹0</div>
+                <div class="text-sm text-muted mt-4">from <span id="dash-comm-orders">0</span> dealer-routed orders</div>
+              </div>
+              <div class="divider"></div>
+              <table style="font-size:12.5px">
+                <tr><td style="padding:5px 0;color:var(--text-3)">Avg. Margin per Order</td><td class="fw-7 text-green" id="dash-avg-margin">—</td></tr>
+                <tr><td style="padding:5px 0;color:var(--text-3)">Next Payout Date</td><td class="fw-6">1st of next month</td></tr>
+                <tr><td style="padding:5px 0;color:var(--text-3)">YTD Commission</td><td class="fw-7" id="dash-ytd">₹0</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent RFQs table -->
+        <div class="card mb-16">
+          <div class="card-header">
+            <div class="card-title">Recent Assigned RFQs</div>
+            <button class="btn btn-sm btn-outline" onclick="dealerNav('rfq-list')">View All →</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>RFQ ID</th><th>Customer</th><th>Products</th><th>Qty</th><th>Est. Value</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="dash-rfq-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Revenue chart -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Monthly Revenue Trend (₹ Lakhs)</div></div>
+          <div class="card-body">
+            <canvas id="chart-dealer-revenue" width="700" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           RFQ LIST
+           ══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section" id="ds-rfq-list">
+        <div class="content-grid">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Assigned RFQs</div>
+                  <div class="card-subtitle">RFQs routed to your territory by Veltrac Sales Ops</div>
+                </div>
+                <span class="badge badge-amber" id="rfq-open-badge">0 Open</span>
+              </div>
+              <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-xs btn-outline rfq-filter active" onclick="filterRFQ('all',this)">All</button>
+                <button class="btn btn-xs btn-outline rfq-filter" onclick="filterRFQ('Open',this)">Open</button>
+                <button class="btn btn-xs btn-outline rfq-filter" onclick="filterRFQ('Quote Submitted',this)">Submitted</button>
+                <button class="btn btn-xs btn-outline rfq-filter" onclick="filterRFQ('Accepted',this)">Accepted</button>
+                <button class="btn btn-xs btn-outline rfq-filter" onclick="filterRFQ('Rejected',this)">Rejected</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>RFQ ID</th><th>Customer</th><th>SKU / Product</th><th>Qty</th><th>Transfer Price</th><th>Est. Value</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+                  <tbody id="rfq-list-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="bv-panel">
+              <div class="bv-title">📋 RFQ Rules</div>
+              <div class="bv-item"><div class="bv-dot">ℹ</div><div>RFQs are auto-assigned by territory match when order value is below ₹5L. Above this threshold, Veltrac fulfils direct.</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Respond within 24 hours to maintain Gold Dealer status</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Your selling price must not exceed Transfer Price + 15% max markup</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>All accepted quotes auto-create orders in your dashboard</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           QUOTE SUBMISSION
+           ══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section" id="ds-quote-submit">
+        <div class="content-grid">
+          <div id="quote-submit-area">
+            <div class="alert alert-info mb-16">
+              <span>ℹ️</span>
+              <div>Select an open RFQ from the list below to prepare and submit your quote. Transfer price is set by Veltrac India and cannot be changed.</div>
+            </div>
+            <!-- RFQ selector -->
+            <div class="card mb-16">
+              <div class="card-header"><div class="card-title">Select RFQ to Quote</div></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>RFQ ID</th><th>Customer</th><th>Product</th><th>Qty</th><th>Transfer Price</th><th>Action</th></tr></thead>
+                  <tbody id="quote-selector-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <!-- Quote form (hidden until RFQ selected) -->
+            <div id="quote-form-panel" class="hidden">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Prepare Quote — <span id="qf-rfq-id"></span></div>
+                    <div class="card-subtitle" id="qf-customer-name"></div>
+                  </div>
+                  <button class="btn btn-xs btn-outline" onclick="clearQuoteForm()">← Change RFQ</button>
+                </div>
+                <div class="card-body">
+                  <div class="grid-2 mb-16">
+                    <div>
+                      <div class="form-label">Product</div>
+                      <div class="fw-7 text-lg" id="qf-product"></div>
+                      <div class="text-sm text-muted mt-4" id="qf-sku"></div>
+                    </div>
+                    <div>
+                      <div class="form-label">Quantity Required</div>
+                      <div class="fw-7 text-lg" id="qf-qty"></div>
+                    </div>
+                  </div>
+
+                  <div class="transfer-price-display mb-16">
+                    <div>
+                      <div class="form-label" style="margin-bottom:2px">Transfer Price (Veltrac India → You)</div>
+                      <div style="font-family:var(--font-disp);font-size:22px;color:var(--ink)" id="qf-transfer-price">₹0</div>
+                    </div>
+                    <span class="badge badge-gray">🔒 Fixed by RK</span>
+                  </div>
+
+                  <div class="form-row mb-16">
+                    <div class="form-group">
+                      <label class="form-label">Your Selling Price (per unit) *</label>
+                      <input class="form-control" id="qf-selling-price" type="number" placeholder="Enter selling price" oninput="recalcMargin()">
+                      <div class="form-hint" id="qf-price-hint"></div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Delivery Commitment</label>
+                      <select class="form-control" id="qf-delivery">
+                        <option value="3-5 Business Days">3–5 Business Days</option>
+                        <option value="5-7 Business Days">5–7 Business Days</option>
+                        <option value="7-10 Business Days">7–10 Business Days</option>
+                        <option value="10-14 Business Days">10–14 Business Days</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Notes to Customer (optional)</label>
+                    <textarea class="form-control" id="qf-notes" rows="2" placeholder="e.g. Includes free delivery within 50km, stock available at local depot..."></textarea>
+                  </div>
+
+                  <!-- Margin Calculator -->
+                  <div class="margin-card mb-16">
+                    <div class="flex jc-sb ai-c mb-12">
+                      <div class="form-label" style="margin:0;color:var(--green-dk)">Live Margin Calculator</div>
+                      <span class="badge badge-green">Real-time</span>
+                    </div>
+                    <div class="grid-3" style="gap:16px;margin-bottom:12px">
+                      <div>
+                        <div class="text-xs text-muted mb-4">Margin %</div>
+                        <div class="margin-value" id="calc-margin-pct">—</div>
+                      </div>
+                      <div>
+                        <div class="text-xs text-muted mb-4">Gross Profit / Unit</div>
+                        <div style="font-family:var(--font-disp);font-size:24px;color:var(--ink)" id="calc-profit-unit">—</div>
+                      </div>
+                      <div>
+                        <div class="text-xs text-muted mb-4">Total Gross Profit</div>
+                        <div style="font-family:var(--font-disp);font-size:24px;color:var(--ink)" id="calc-total-profit">—</div>
+                      </div>
+                    </div>
+                    <div class="margin-bar-wrap">
+                      <div class="margin-bar-fill" id="calc-margin-bar" style="width:0%"></div>
+                      <span class="margin-bar-label" id="calc-margin-bar-label"></span>
+                    </div>
+                    <div id="calc-warning" class="hidden" style="margin-top:8px;font-size:12px;color:var(--red);font-weight:600">⚠️ Margin below minimum threshold. Adjust selling price.</div>
+                    <div id="calc-info" class="hidden" style="margin-top:8px;font-size:12px;color:var(--green-dk);font-weight:600">✅ Good margin — within competitive range.</div>
+                  </div>
+
+                  <div id="qf-submit-error" class="hidden" style="color:var(--red);font-size:12.5px;margin-bottom:12px"></div>
+                  <div class="flex gap-12">
+                    <button class="btn btn-green" onclick="submitQuote()">✅ Submit Quote to Veltrac India</button>
+                    <button class="btn btn-outline" onclick="clearQuoteForm()">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="bv-panel">
+              <div class="bv-title">💰 Margin Guidelines</div>
+              <div class="bv-item"><div class="bv-dot">5%</div><div>Minimum acceptable margin — quotes below this are automatically flagged</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Sweet spot: 8–12% margin earns Gold Dealer priority routing</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Max markup cap: 15% over transfer price (Salesforce validation rule)</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Competitive pricing improves your win rate and monthly commission ranking</div></div>
+            </div>
+            <!-- PDF download section shown after quote submission -->
+            <div id="quote-pdf-section" class="hidden card mt-16" style="border:2px solid var(--dealer-accent)">
+              <div class="card-header" style="background:var(--dealer-accent-lt)">
+                <div class="card-title">📄 Quote <span id="quote-pdf-rfqid"></span> Submitted</div>
+              </div>
+              <div class="card-body">
+                <div style="font-size:12.5px;color:var(--text-2);margin-bottom:10px">Download your quote as PDF:</div>
+                <div class="pdf-btn-group">
+                  <button class="btn-pdf btn-pdf-dealer" id="quote-pdf-dlr-btn">📄 Dealer Copy<br><span style="font-weight:400;font-size:10px">Includes transfer price</span></button>
+                  <button class="btn-pdf btn-pdf-customer" id="quote-pdf-cust-btn">📄 Customer Copy<br><span style="font-weight:400;font-size:10px">Selling price only</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="card mt-16">
+              <div class="card-header"><div class="card-title">Submitted Quotes</div></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>RFQ ID</th><th>Margin</th><th>Status</th></tr></thead>
+                  <tbody id="submitted-quotes-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           ORDER TRACKING
+           ══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section" id="ds-orders">
+        <div class="content-grid">
+          <div>
+            <div class="card mb-16">
+              <div class="card-header">
+                <div class="card-title">Dealer-Routed Orders</div>
+                <span class="badge badge-green" id="orders-count-badge">0 Active</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Value</th><th>Your Margin</th><th>Dispatch</th><th>Status</th><th>Action</th></tr></thead>
+                  <tbody id="dealer-orders-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="order-detail-card" class="hidden card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Order Detail — <span id="od-num"></span></div>
+                  <div class="card-subtitle" id="od-customer"></div>
+                </div>
+                <span class="badge" id="od-status-badge"></span>
+              </div>
+              <div class="card-body">
+                <div class="status-flow" id="od-status-flow"></div>
+                <hr class="divider">
+                <div class="grid-2">
+                  <table style="font-size:13px">
+                    <tr><td style="padding:5px 0;color:var(--text-3);width:140px">Product</td><td class="fw-6" id="od-product"></td></tr>
+                    <tr><td style="padding:5px 0;color:var(--text-3)">Order Value</td><td class="fw-7 text-blue" id="od-value"></td></tr>
+                    <tr><td style="padding:5px 0;color:var(--text-3)">Your Margin</td><td class="fw-7 text-green" id="od-margin"></td></tr>
+                  </table>
+                  <table style="font-size:13px">
+                    <tr><td style="padding:5px 0;color:var(--text-3);width:130px">SAP Order No.</td><td class="fw-6 mono" id="od-sap"></td></tr>
+                    <tr><td style="padding:5px 0;color:var(--text-3)">Est. Delivery</td><td class="fw-6" id="od-delivery"></td></tr>
+                    <tr><td style="padding:5px 0;color:var(--text-3)">Commission</td><td class="fw-7 text-green" id="od-commission"></td></tr>
+                  </table>
+                </div>
+                <div class="flex gap-10 mt-16">
+                  <button class="btn btn-green" id="od-advance-btn" onclick="advanceDealerOrder()">⏩ Advance Fulfillment</button>
+                  <button class="btn btn-outline" onclick="closeOrderDetail()">← Back</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="bv-panel">
+              <div class="bv-title">🚚 Order Flow</div>
+              <div class="bv-item"><div class="bv-dot">1</div><div>Quote accepted → Order created in your portal</div></div>
+              <div class="bv-item"><div class="bv-dot">2</div><div>Veltrac India confirms stock availability at nearest depot</div></div>
+              <div class="bv-item"><div class="bv-dot">3</div><div>You confirm dispatch commitment to customer</div></div>
+              <div class="bv-item"><div class="bv-dot">4</div><div>SAP generates delivery note + invoice to your account</div></div>
+              <div class="bv-item"><div class="bv-dot">5</div><div>Commission credited on POD confirmation</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           DEALER PROFILE
+           ══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section" id="ds-profile">
+        <div class="content-grid">
+          <div>
+            <!-- Header -->
+            <div class="dealer-profile-header">
+              <div class="dealer-avatar" id="dp-avatar">T</div>
+              <div>
+                <div class="dealer-profile-name" id="dp-name">Tyre Solutions India Pvt. Ltd.</div>
+                <div class="dealer-profile-meta" id="dp-meta">Dealer Code: DLR-W-042 · West Region · Mumbai Territory</div>
+                <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                  <span class="badge badge-green" id="dp-tier">Gold Dealer</span>
+                  <span class="badge badge-blue">ISO Certified Partner</span>
+                  <span class="badge badge-ink">Since 2019</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile fields -->
+            <div class="card mb-16">
+              <div class="card-header"><div class="card-title">Dealer Information</div><span class="badge badge-green">Verified</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr">
+                <div style="padding:14px 20px;border-bottom:1px solid var(--border)"><div class="form-label">Company Name</div><div class="fw-6" id="dp-company">—</div></div>
+                <div style="padding:14px 20px;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><div class="form-label">GST Number</div><div class="fw-6 mono" id="dp-gst">—</div></div>
+                <div style="padding:14px 20px;border-bottom:1px solid var(--border)"><div class="form-label">Contact Person</div><div class="fw-6" id="dp-contact">—</div></div>
+                <div style="padding:14px 20px;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><div class="form-label">Email</div><div class="fw-6" id="dp-email">—</div></div>
+                <div style="padding:14px 20px;border-bottom:1px solid var(--border)"><div class="form-label">Territory</div><div class="fw-6" id="dp-territory">—</div></div>
+                <div style="padding:14px 20px;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><div class="form-label">Assigned Region</div><div class="fw-6" id="dp-region">—</div></div>
+                <div style="padding:14px 20px"><div class="form-label">Product Categories</div><div id="dp-categories">—</div></div>
+                <div style="padding:14px 20px;border-left:1px solid var(--border)"><div class="form-label">RK Account Manager</div><div class="fw-6" id="dp-manager">—</div></div>
+              </div>
+            </div>
+
+            <!-- Commission structure -->
+            <div class="commission-highlight mb-16">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px">
+                <div>
+                  <div class="commission-label">Commission Rate</div>
+                  <div class="commission-rate" id="dp-commission-rate">7%</div>
+                  <div style="font-size:12.5px;color:rgba(255,255,255,.6);margin-top:6px">Applied on dealer-to-customer spread · Paid monthly</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;min-width:200px">
+                  <div><div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Tier Threshold</div><div style="font-weight:700;color:white">₹15L/month for Gold</div></div>
+                  <div><div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">YTD Revenue</div><div style="font-weight:700;color:#6EE7B7" id="dp-ytd">₹0</div></div>
+                  <div><div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">YTD Commission</div><div style="font-weight:700;color:#6EE7B7" id="dp-ytd-comm">₹0</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dealer Scorecard -->
+            <div class="card">
+              <div class="card-header"><div class="card-title">Dealer Scorecard</div><span class="badge badge-green">Q4 FY25</span></div>
+              <div class="card-body">
+                <div class="grid-3" style="gap:16px">
+                  <div style="text-align:center;padding:14px;background:var(--steel-lt);border-radius:var(--radius-lg)">
+                    <div style="font-size:28px;font-weight:800;color:var(--green-dk)">A+</div>
+                    <div class="text-xs text-muted mt-4">Overall Rating</div>
+                  </div>
+                  <div style="text-align:center;padding:14px;background:var(--steel-lt);border-radius:var(--radius-lg)">
+                    <div style="font-size:28px;font-weight:800;color:var(--ink)" id="sc-win-rate">0%</div>
+                    <div class="text-xs text-muted mt-4">Quote Win Rate</div>
+                  </div>
+                  <div style="text-align:center;padding:14px;background:var(--steel-lt);border-radius:var(--radius-lg)">
+                    <div style="font-size:28px;font-weight:800;color:var(--amber-dk)">4.6</div>
+                    <div class="text-xs text-muted mt-4">CSAT Score</div>
+                  </div>
+                </div>
+                <table style="font-size:13px;margin-top:16px">
+                  <tr><th>Metric</th><th>This Quarter</th><th>Target</th><th>Status</th></tr>
+                  <tr><td>Response Time</td><td>4.2 hrs avg</td><td>&lt;6 hrs</td><td><span class="badge badge-green">On Track</span></td></tr>
+                  <tr><td>Quote Win Rate</td><td id="sc-qwr-td">0%</td><td>&gt;60%</td><td><span class="badge badge-amber" id="sc-qwr-status">In Progress</span></td></tr>
+                  <tr><td>Monthly Revenue</td><td id="sc-rev-td">₹0</td><td>₹15L+</td><td><span class="badge badge-amber" id="sc-rev-status">In Progress</span></td></tr>
+                  <tr><td>On-Time Delivery</td><td>94%</td><td>&gt;90%</td><td><span class="badge badge-green">Achieved</span></td></tr>
+                  <tr><td>Zero Disputes</td><td>✓</td><td>✓</td><td><span class="badge badge-green">Achieved</span></td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="bv-panel">
+              <div class="bv-title">🏆 Gold Dealer Benefits</div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Priority RFQ routing — first access to high-value orders in your territory</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>7% base commission — Silver dealers earn 5%</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Credit terms: Net 30 vs Net 15 for Silver</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Dedicated RK Account Manager for escalations</div></div>
+              <div class="bv-item"><div class="bv-dot">✓</div><div>Co-branding rights on marketing collateral</div></div>
+            </div>
+            <div class="card mt-16">
+              <div class="card-header"><div class="card-title">Support</div></div>
+              <div class="card-body" style="font-size:13px;color:var(--text-2);line-height:1.8">
+                <div>📞 <strong>+91 79 4000 5678</strong></div>
+                <div>✉️ <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0460616568617629777174746b767044726168707665672a6d6a">[email&#160;protected]</a></strong></div>
+                <div class="text-muted mt-8" style="font-size:12px">Dealer Helpdesk: Mon–Sat<br>9 AM – 7 PM IST</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CHANGE 4a: PLACE STOCK ORDER
+           ═══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section" id="ds-stock-order">
+        <div class="content-grid">
+          <div>
+            <div class="alert alert-info mb-16" style="display:flex;gap:10px;align-items:flex-start">
+              <span style="font-size:16px">ℹ️</span>
+              <div>Stock orders are fulfilled by Veltrac India within <strong>5–7 business days</strong>. Transfer price applies. Credit terms: <strong>Net 30 (Gold)</strong> / Net 15 (Silver).</div>
+            </div>
+            <div class="card mb-16">
+              <div class="card-header">
+                <div class="card-title">Order Line Items</div>
+                <button class="btn btn-sm btn-outline" onclick="addStockOrderLine()">+ Add Product</button>
+              </div>
+              <div class="card-body" id="stock-order-lines-wrap">
+                <div class="so-header">
+                  <span>Product / SKU</span><span>Qty</span><span>Transfer Price</span><span>Line Total</span><span></span>
+                </div>
+                <div id="stock-order-lines"></div>
+              </div>
+              <div id="so-total-bar" class="so-total-bar" style="margin:0 16px 16px">
+                <div class="so-total-cell">
+                  <div class="so-total-lbl">Subtotal</div>
+                  <div class="so-total-val" id="so-subtotal">₹0</div>
+                </div>
+                <div class="so-total-cell">
+                  <div class="so-total-lbl">GST @ 18%</div>
+                  <div class="so-total-val" id="so-gst">₹0</div>
+                </div>
+                <div class="so-total-cell">
+                  <div class="so-total-lbl">Grand Total</div>
+                  <div class="so-total-val fw-7" id="so-grand">₹0</div>
+                </div>
+                <div class="so-total-cell">
+                  <div class="so-total-lbl">Credit Available</div>
+                  <div class="so-total-val" id="so-credit-avail">₹6.8L</div>
+                </div>
+                <div class="so-total-cell">
+                  <div class="so-total-lbl">Credit After Order</div>
+                  <div class="so-total-val" id="so-credit-after">₹6.8L</div>
+                </div>
+              </div>
+              <div id="so-credit-alert" class="hidden" style="margin:0 16px 14px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:8px;padding:12px 16px;color:#BE123C;font-size:13px;font-weight:600">
+                ⚠️ This order exceeds your available credit limit. Please clear outstanding invoices or contact your Veltrac RM.
+              </div>
+            </div>
+            <div class="flex gap-8">
+              <button class="btn btn-primary" id="so-submit-btn" onclick="submitStockOrder()">Place Order →</button>
+              <button class="btn btn-outline" onclick="resetStockOrder()">Clear Form</button>
+            </div>
+          </div>
+          <div>
+            <div class="bv-panel mb-16">
+              <div class="bv-title">💳 Your Credit Terms</div>
+              <div style="font-size:13px;line-height:1.9;color:var(--text-2)">
+                <div class="flex jc-sb"><span>Tier</span><span class="badge badge-green fw-7">Gold Dealer</span></div>
+                <div class="flex jc-sb"><span>Credit Limit</span><span class="fw-7">₹10,00,000</span></div>
+                <div class="flex jc-sb"><span>Used</span><span class="fw-6" style="color:var(--amber)">₹3,20,000</span></div>
+                <div class="flex jc-sb"><span>Available</span><span class="fw-7" style="color:var(--green-dk)">₹6,80,000</span></div>
+                <div class="flex jc-sb"><span>Terms</span><span class="fw-6">Net 30 days</span></div>
+                <div class="flex jc-sb"><span>Next Due</span><span class="fw-6">Jan 5, 2025</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">🚚 Delivery Information</div></div>
+              <div class="card-body" style="font-size:13px;line-height:1.9;color:var(--text-2)">
+                <div>📍 Dispatched from: <strong>Mumbai DC / Gujarat DC</strong></div>
+                <div>📅 Lead time: <strong>5–7 business days</strong></div>
+                <div>🚚 Carrier: Veltrac Logistics Partner</div>
+                <div>📄 SAP Delivery Note emailed on dispatch</div>
+                <div style="margin-top:10px;font-size:12px;color:var(--text-3)">For urgent orders above ₹2L, contact your Veltrac RM for expedited dispatch.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CHANGE 4b: STOCK ORDER HISTORY
+           ═══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section" id="ds-stock-history">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📦 Stock Order History</div>
+            <div class="sh-filter-row" style="margin:0">
+              <button class="btn btn-xs btn-green rfq-filter active" onclick="filterStockHistory('all',this)">All</button>
+              <button class="btn btn-xs btn-outline rfq-filter" onclick="filterStockHistory('Pending Approval',this)">Pending Approval</button>
+              <button class="btn btn-xs btn-outline rfq-filter" onclick="filterStockHistory('Confirmed',this)">Confirmed</button>
+              <button class="btn btn-xs btn-outline rfq-filter" onclick="filterStockHistory('Dispatched',this)">Dispatched</button>
+              <button class="btn btn-xs btn-outline rfq-filter" onclick="filterStockHistory('Delivered',this)">Delivered</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>PO Number</th><th>Date</th><th>Products</th><th>Subtotal</th><th>GST</th>
+                <th>Grand Total</th><th>Payment</th><th>Dispatch</th><th>Action</th>
+              </tr></thead>
+              <tbody id="stock-history-body"></tbody>
+            </table>
+          </div>
+          <div id="stock-history-detail" class="hidden expanded-detail"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CHANGE 4c: CREDIT & PAYMENTS
+           ═══════════════════════════════════════════════════════════ -->
+      <div class="dealer-section" id="ds-credit">
+        <div class="content-grid">
+          <div>
+            <!-- Credit Utilisation Card -->
+            <div class="credit-util-card">
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--green-dk)">Credit Utilisation</div>
+              <div class="flex ai-c jc-sb">
+                <div class="credit-big-val" id="cr-used-val">₹3,20,000</div>
+                <div style="text-align:right">
+                  <div style="font-size:12px;color:var(--text-3)">of ₹10,00,000 limit</div>
+                  <div style="font-size:22px;font-weight:700;color:var(--green-dk)" id="cr-pct">32%</div>
+                </div>
+              </div>
+              <div class="credit-bar-wrap">
+                <div class="credit-bar-fill safe" id="cr-bar" style="width:32%"></div>
+              </div>
+              <div class="flex gap-20" style="font-size:12.5px;color:var(--text-2);margin-top:8px">
+                <span>💳 Terms: <strong>Net 30</strong></span>
+                <span>🔁 Next Review: <strong>Mar 2025</strong></span>
+                <span>✅ Available: <strong>₹6,80,000</strong></span>
+              </div>
+            </div>
+            <!-- Outstanding Invoices -->
+            <div class="card">
+              <div class="card-header"><div class="card-title">📄 Outstanding Invoices</div></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Invoice No.</th><th>PO Reference</th><th>Date</th><th>Due Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+                  <tbody id="invoices-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div>
+            <!-- Payment History -->
+            <div class="card mb-14">
+              <div class="card-header"><div class="card-title">🕐 Payment History</div></div>
+              <div class="card-body" id="payment-history-body"></div>
+            </div>
+            <!-- Need more credit? -->
+            <div class="bv-panel">
+              <div class="bv-title">💬 Need More Credit?</div>
+              <p style="font-size:12.5px;color:var(--text-2);line-height:1.7;margin-bottom:14px">If you need a higher credit limit to support growing order volumes, your Veltrac RM can raise a review request. Average processing time is 3–5 business days.</p>
+              <button class="btn btn-primary w-full" style="justify-content:center" onclick="toast('✅ Credit enhancement request sent to your Veltrac RM.','success')">Request Credit Enhancement →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dealer-content -->
+  </div><!-- /dealer-main -->
+</div><!-- /dealer-app -->
+
+<!-- PORTAL SWITCHER MODAL -->
+<div id="switcher-modal">
+  <div class="sw-modal">
+    <div class="sw-header">
+      <div class="sw-title">Switch Portal View</div>
+      <div class="sw-sub">Veltrac Enterprise Platform — 4 Role-Based Experiences</div>
+    </div>
+    <div class="sw-grid">
+      <div class="sw-card" onclick="window.open('Veltrac_B2B_Portal.html','_blank')">
+        <div class="sw-card-icon">🛒</div>
+        <div><div class="sw-card-title">B2B Customer Portal</div><div class="sw-card-desc">Browse catalogue, add to cart, request quotes, track orders.</div></div>
+        <span class="badge badge-gray" style="align-self:flex-start">File 1</span>
+      </div>
+      <div class="sw-card current" onclick="closeSwitcher()">
+        <div class="sw-card-icon">🤝</div>
+        <div><div class="sw-card-title">Dealer Portal</div><div class="sw-card-desc">Respond to RFQs, submit quotes with margin, track dealer-routed orders.</div></div>
+        <span class="badge badge-green" style="align-self:flex-start">Currently Active</span>
+      </div>
+      <div class="sw-card" onclick="window.open('Veltrac_SF_Console_Final.html','_blank')">
+        <div class="sw-card-icon">☁️</div>
+        <div><div class="sw-card-title">Salesforce Sales Console</div><div class="sw-card-desc">Leads, Accounts, Opportunities, Quotes, Orders — Lightning UI simulation.</div></div>
+        <span class="badge badge-amber" style="align-self:flex-start">File 3</span>
+      </div>
+      <div class="sw-card" onclick="window.open('Veltrac_Admin_Console.html','_blank')">
+        <div class="sw-card-icon">⚙️</div>
+        <div><div class="sw-card-title">Admin Console</div><div class="sw-card-desc">Territory config, threshold rules, dealer mapping, integration monitoring.</div></div>
+        <span class="badge badge-red" style="align-self:flex-start">File 4</span>
+      </div>
+    </div>
+    <div style="padding:14px 24px;background:var(--steel-lt);border-top:1px solid var(--border);text-align:right">
+      <button class="btn btn-outline btn-sm" onclick="closeSwitcher()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════════
+// CHANGE 6b: ASSIGNMENT REASON TOGGLE
+// ══════════════════════════════════════════════════════════════════
+function toggleAssignReason(rfqId) {
+  const row = document.getElementById('assign-reason-' + rfqId);
+  if (row) row.classList.toggle('hidden');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CHANGE 4a: PLACE STOCK ORDER
+// ══════════════════════════════════════════════════════════════════
+function renderStockOrder() {
+  if (!dealerState.stockOrderLines.length) {
+    dealerState.stockOrderLines = [{sku:'DUN-18X7-8', qty:1}];
+  }
+  renderStockLines();
+}
+
+function renderStockLines() {
+  const wrap = document.getElementById('stock-order-lines');
+  if (!wrap) return;
+  wrap.innerHTML = dealerState.stockOrderLines.map((line, i) => {
+    const prod = STOCK_PRODUCTS.find(p => p.sku === line.sku) || STOCK_PRODUCTS[0];
+    const lineTotal = prod.price * (line.qty || 0);
+    return `
+    <div class="so-line" id="so-line-${i}">
+      <select class="sf-input w-full" onchange="updateStockLine(${i},'sku',this.value)">
+        ${STOCK_PRODUCTS.map(p => `<option value="${p.sku}" ${line.sku===p.sku?'selected':''}>${p.name} (${p.sku})</option>`).join('')}
+      </select>
+      <input type="number" class="sf-input" min="1" value="${line.qty}" style="text-align:right"
+        onchange="updateStockLine(${i},'qty',this.value)">
+      <div class="sf-input" style="background:#F3F2F2;color:var(--text-2);cursor:default">₹${prod.price.toLocaleString('en-IN')}</div>
+      <div class="sf-input fw-7" style="background:#F0FFF4;color:var(--green-dk);cursor:default">₹${lineTotal.toLocaleString('en-IN')}</div>
+      <button class="so-remove-btn" onclick="removeStockLine(${i})">✕</button>
+    </div>`;
+  }).join('');
+  updateStockTotals();
+}
+
+function updateStockLine(idx, field, val) {
+  if (field === 'qty') dealerState.stockOrderLines[idx].qty = parseInt(val) || 1;
+  if (field === 'sku') dealerState.stockOrderLines[idx].sku = val;
+  renderStockLines();
+}
+
+function addStockOrderLine() {
+  dealerState.stockOrderLines.push({sku:'DUN-18X7-8', qty:1});
+  renderStockLines();
+}
+
+function removeStockLine(idx) {
+  dealerState.stockOrderLines.splice(idx, 1);
+  if (!dealerState.stockOrderLines.length) dealerState.stockOrderLines.push({sku:'DUN-18X7-8', qty:1});
+  renderStockLines();
+}
+
+function updateStockTotals() {
+  const CREDIT_LIMIT  = 1000000;
+  const CREDIT_USED   = 320000;
+  const CREDIT_AVAIL  = CREDIT_LIMIT - CREDIT_USED;
+
+  const subtotal = dealerState.stockOrderLines.reduce((s, line) => {
+    const prod = STOCK_PRODUCTS.find(p => p.sku === line.sku) || STOCK_PRODUCTS[0];
+    return s + prod.price * (line.qty || 0);
+  }, 0);
+  const gst = Math.round(subtotal * 0.18);
+  const grand = subtotal + gst;
+  const afterOrder = CREDIT_AVAIL - grand;
+
+  const fmt = v => v >= 100000 ? '₹' + (v/100000).toFixed(2) + 'L' : '₹' + v.toLocaleString('en-IN');
+  document.getElementById('so-subtotal').textContent = fmt(subtotal);
+  document.getElementById('so-gst').textContent      = fmt(gst);
+  document.getElementById('so-grand').textContent    = fmt(grand);
+  document.getElementById('so-credit-avail').textContent = fmt(CREDIT_AVAIL);
+
+  const afterEl = document.getElementById('so-credit-after');
+  const alertEl = document.getElementById('so-credit-alert');
+  const btnEl   = document.getElementById('so-submit-btn');
+  if (afterOrder < 0) {
+    afterEl.textContent = '⚠️ Exceeds limit';
+    afterEl.className   = 'so-total-val danger';
+    alertEl.classList.remove('hidden');
+    btnEl.disabled = true; btnEl.style.opacity = '.5';
+  } else {
+    afterEl.textContent = fmt(afterOrder);
+    afterEl.className   = 'so-total-val';
+    alertEl.classList.add('hidden');
+    btnEl.disabled = false; btnEl.style.opacity = '';
+  }
+}
+
+function submitStockOrder() {
+  const lines = dealerState.stockOrderLines;
+  if (!lines.length) return;
+  const subtotal = lines.reduce((s,l) => {
+    const p = STOCK_PRODUCTS.find(x=>x.sku===l.sku)||STOCK_PRODUCTS[0];
+    return s + p.price * l.qty;
+  }, 0);
+  const gst = Math.round(subtotal * 0.18);
+  const grand = subtotal + gst;
+  const poNum = 'PO-2024-00' + (++dealerState.poCounter);
+  const newOrder = {
+    id: poNum,
+    date: new Date().toISOString().split('T')[0],
+    lines: lines.map(l => {
+      const p = STOCK_PRODUCTS.find(x=>x.sku===l.sku)||STOCK_PRODUCTS[0];
+      return {product:p.name, sku:p.sku, qty:l.qty, transferPrice:p.price};
+    }),
+    subtotal, gst, grandTotal: grand,
+    paymentStatus:'Due',
+    dispatchStatus:'Pending Approval',
+    dueDate: new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0]
+  };
+  dealerState.stockOrders.unshift(newOrder);
+  dealerState.stockOrderLines = [{sku:'DUN-18X7-8', qty:1}];
+  renderStockLines();
+  toast('✅ ' + poNum + ' submitted. Veltrac will confirm within 4 business hours.', 'success');
+}
+
+function resetStockOrder() {
+  dealerState.stockOrderLines = [{sku:'DUN-18X7-8', qty:1}];
+  renderStockLines();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CHANGE 4b: STOCK ORDER HISTORY
+// ══════════════════════════════════════════════════════════════════
+function renderStockHistory() {
+  const filter = dealerState.stockFilter || 'all';
+  const items  = filter === 'all' ? dealerState.stockOrders
+                                  : dealerState.stockOrders.filter(o => o.dispatchStatus === filter);
+  const tbody = document.getElementById('stock-history-body');
+  if (!tbody) return;
+
+  const dispBadge = {
+    'Pending Approval':'badge-blue','Confirmed':'badge-ink',
+    'Dispatched':'badge-amber','Delivered':'badge-green'
+  };
+  const payBadge = {'Paid':'badge-green','Due':'badge-amber','Overdue':'badge-red'};
+
+  if (!items.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-3)">No orders in this filter.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = items.map(o => `
+    <tr class="${o.paymentStatus==='Overdue'?'overdue-row':''}" style="${o.paymentStatus==='Overdue'?'background:#FFF5F5':''}">
+      <td class="mono fw-7">${o.id}</td>
+      <td class="text-sm text-muted">${o.date}</td>
+      <td class="text-sm">${o.lines.length} SKU${o.lines.length>1?'s':''}</td>
+      <td>₹${o.subtotal.toLocaleString('en-IN')}</td>
+      <td class="text-muted text-sm">₹${o.gst.toLocaleString('en-IN')}</td>
+      <td class="fw-7">₹${o.grandTotal.toLocaleString('en-IN')}</td>
+      <td><span class="badge ${payBadge[o.paymentStatus]||'badge-gray'}">${o.paymentStatus}${o.paymentStatus==='Due'&&o.dueDate?' ('+o.dueDate+')':''}</span></td>
+      <td><span class="badge ${dispBadge[o.dispatchStatus]||'badge-gray'}">${o.dispatchStatus}</span></td>
+      <td>
+        <button class="btn btn-xs btn-outline" onclick="togglePODetail('${o.id}')">View Details</button>
+        ${o.paymentStatus!=='Paid' ? `<button class="btn btn-xs btn-green mt-4" style="margin-top:5px" onclick="toast('Opening payment gateway for ${o.id}...','info')">Pay Now</button>` : ''}
+      </td>
+    </tr>`).join('');
+}
+
+function filterStockHistory(filter, btn) {
+  dealerState.stockFilter = filter;
+  document.querySelectorAll('.rfq-filter').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderStockHistory();
+  document.getElementById('stock-history-detail').classList.add('hidden');
+}
+
+function togglePODetail(poId) {
+  const detailEl = document.getElementById('stock-history-detail');
+  if (dealerState.expandedPO === poId) {
+    detailEl.classList.add('hidden');
+    dealerState.expandedPO = null;
+    return;
+  }
+  const order = dealerState.stockOrders.find(o => o.id === poId);
+  if (!order) return;
+  dealerState.expandedPO = poId;
+  detailEl.classList.remove('hidden');
+  detailEl.innerHTML = `
+    <div class="flex jc-sb ai-c mb-12">
+      <div><strong>${poId}</strong> · Placed ${order.date} · SAP Doc: <span class="mono">${order.sapDoc||'—'}</span> · Dispatch Date: ${order.dispatchDate||'—'}</div>
+      <button class="btn btn-xs btn-outline" onclick="generateStockOrderPDF('${poId}')">📄 Download PO PDF</button>
+    </div>
+    <div class="expanded-line" style="font-weight:700;font-size:11px;text-transform:uppercase;color:var(--text-3);border-bottom:2px solid var(--border)">
+      <span>Product</span><span>Qty</span><span>Transfer Price</span><span>Line Total</span>
+    </div>
+    ${order.lines.map(l=>`
+    <div class="expanded-line">
+      <span class="fw-6">${l.product} <span class="mono text-muted">${l.sku}</span></span>
+      <span>${l.qty}</span>
+      <span>₹${l.transferPrice.toLocaleString('en-IN')}</span>
+      <span class="fw-7">₹${(l.transferPrice*l.qty).toLocaleString('en-IN')}</span>
+    </div>`).join('')}
+    <div style="text-align:right;margin-top:10px;font-size:12.5px">
+      <div>Subtotal: ₹${order.subtotal.toLocaleString('en-IN')}</div>
+      <div>GST @18%: ₹${order.gst.toLocaleString('en-IN')}</div>
+      <div class="fw-7" style="font-size:14px;color:var(--ink)">Grand Total: ₹${order.grandTotal.toLocaleString('en-IN')}</div>
+      ${order.dueDate?`<div style="color:${order.paymentStatus==='Overdue'?'var(--red)':'var(--amber)'};margin-top:4px">Payment Due: ${order.dueDate}</div>`:''}
+    </div>`;
+}
+
+function generateStockOrderPDF(poId) {
+  toast('📄 PO PDF for ' + poId + ' downloading...', 'info');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CHANGE 4c: CREDIT & PAYMENTS
+// ══════════════════════════════════════════════════════════════════
+function renderCredit() {
+  const CREDIT_LIMIT = 1000000;
+  const CREDIT_USED  = 320000;
+  const pct = Math.round(CREDIT_USED / CREDIT_LIMIT * 100);
+
+  // Update progress bar
+  const bar = document.getElementById('cr-bar');
+  if (bar) {
+    bar.style.width = pct + '%';
+    bar.className = 'credit-bar-fill ' + (pct < 70 ? 'safe' : pct < 90 ? 'warn' : 'danger');
+  }
+
+  // Invoices table
+  const tbody = document.getElementById('invoices-body');
+  if (tbody) {
+    const statusBadge = {Paid:'badge-green',Due:'badge-amber',Overdue:'badge-red'};
+    tbody.innerHTML = INVOICES_SEED.map(inv=>`
+    <tr style="${inv.status==='Overdue'?'background:#FFF5F5':''}">
+      <td class="mono fw-6">${inv.no}</td>
+      <td class="mono text-sm text-muted">${inv.po}</td>
+      <td class="text-sm">${inv.date}</td>
+      <td class="text-sm ${inv.status==='Overdue'?'fw-7':'text-muted'}" style="${inv.status==='Overdue'?'color:var(--red)':''}">
+        ${inv.dueDate}
+      </td>
+      <td class="fw-7">₹${inv.amount.toLocaleString('en-IN')}</td>
+      <td><span class="badge ${statusBadge[inv.status]}">${inv.status}</span></td>
+      <td>
+        ${inv.status!=='Paid' ? `<button class="btn btn-xs btn-green" onclick="toast('Opening payment gateway for ${inv.no}...','info')">Pay Now</button>` : '<span class="text-muted text-xs">Settled</span>'}
+      </td>
+    </tr>`).join('');
+  }
+
+  // Payment history timeline
+  const histEl = document.getElementById('payment-history-body');
+  if (histEl) {
+    histEl.innerHTML = PAYMENT_HISTORY_SEED.map(p=>`
+    <div class="pay-timeline-item">
+      <div class="pay-tl-icon">💳</div>
+      <div class="pay-tl-body">
+        <div class="flex jc-sb">
+          <span class="pay-tl-amount">₹${p.amount.toLocaleString('en-IN')}</span>
+          <span class="badge badge-green" style="font-size:10px">${p.method}</span>
+        </div>
+        <div class="pay-tl-meta">${p.date} · Ref: ${p.ref}</div>
+        <div class="pay-tl-meta">${p.po}</div>
+      </div>
+    </div>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CHANGE 7: PDF QUOTE GENERATION (jsPDF)
+// ══════════════════════════════════════════════════════════════════
+function generateQuotePDF(rfqId, copy) {
+  const rfq = dealerState.rfqs.find(r => r.id === rfqId);
+  if (!rfq) { toast('RFQ not found','error'); return; }
+  if (typeof window.jspdf === 'undefined' && typeof jspdf === 'undefined') {
+    toast('Generating PDF... (jsPDF loading)', 'info');
+    setTimeout(() => generateQuotePDF(rfqId, copy), 800);
+    return;
+  }
+
+  const { jsPDF } = window.jspdf || jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const isDealer = copy === 'dealer';
+  const W = 210; const M = 18; const CW = W - M*2;
+  const green  = [6, 78, 59];  // #064E3B
+  const navy   = [30, 58, 95]; // #1E3A5F
+  const ltGray = [245, 245, 245];
+  const border = [200, 200, 200];
+  const today  = new Date();
+  const fmt = d => d.toLocaleDateString('en-IN',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const ddmmyyyy = d => d.getDate().toString().padStart(2,'0') + d.getMonth().toString().padStart(2,'0').slice(-2) + '' + (d.getMonth()+1).toString().padStart(2,'0') + d.getFullYear();
+  const dateStr  = fmt(today);
+  const validTil = fmt(new Date(today.getTime() + 48*60*60*1000));
+  const quoteRef = 'DQ-' + rfqId + '-' + today.getDate().toString().padStart(2,'0') + (today.getMonth()+1).toString().padStart(2,'0') + today.getFullYear();
+  const fileName = 'VeltracQuote_' + rfqId + '_' + (isDealer?'DealerCopy':'CustomerCopy') + '_' + today.getDate().toString().padStart(2,'0') + (today.getMonth()+1).toString().padStart(2,'0') + today.getFullYear() + '.pdf';
+
+  let y = M;
+
+  // ── Header: Logo block ──
+  doc.setFillColor(...green);
+  doc.roundedRect(M, y, 28, 12, 2, 2, 'F');
+  doc.setFontSize(16); doc.setFont('helvetica','bold'); doc.setTextColor(255,255,255);
+  doc.text('VT', M+5, y+8);
+  doc.setFontSize(11); doc.text('VELTRAC INDIA', M+13, y+5);
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.text('Authorised Dealer Portal', M+13, y+9.5);
+
+  // ── Header: Quote type ──
+  doc.setFontSize(18); doc.setFont('helvetica','bold'); doc.setTextColor(...navy);
+  const typeLabel = isDealer ? 'DEALER QUOTE' : 'CUSTOMER QUOTE';
+  doc.text(typeLabel, W-M, y+6, {align:'right'});
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+  doc.text('Ref: ' + quoteRef, W-M, y+11, {align:'right'});
+
+  y += 16;
+  // Horizontal rule
+  doc.setDrawColor(...green); doc.setLineWidth(0.7);
+  doc.line(M, y, W-M, y); y += 6;
+
+  // ── Dealer Info block (left) ──
+  doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(100,100,100);
+  doc.text('QUOTE SUBMITTED BY:', M, y);
+  y += 4;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(0,0,0);
+  doc.text('Tyre Solutions India', M, y); y += 5;
+  doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
+  doc.text('Dealer Code: DLR-W-042', M, y); y += 4;
+  doc.text('GST: 27AABTS1234A1Z9', M, y); y += 4;
+  doc.text('Territory: Mumbai / Pune / Nashik', M, y); y += 4;
+  doc.text('Contact: Ravi Shah · ravi@tyresolutionsindia.com', M, y); y += 5;
+  doc.setFillColor(...green); doc.setTextColor(255,255,255);
+  doc.roundedRect(M, y, 50, 5.5, 1, 1, 'F');
+  doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('Authorised Veltrac Partner · Gold Dealer', M+2, y+3.8); y += 10;
+
+  // Reset y to after header for RFQ block (right side)
+  const rightX = M + CW/2 + 6;
+  let ry = M + 22;
+  doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(100,100,100);
+  doc.text('PREPARED FOR:', rightX, ry); ry += 4;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(0,0,0);
+  doc.text(rfq.customer, rightX, ry); ry += 5;
+  doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
+  doc.text('RFQ ID: ' + rfq.id, rightX, ry); ry += 4;
+  doc.text('Quote Date: ' + dateStr, rightX, ry); ry += 4;
+  doc.text('Valid Until: ' + validTil + ' (48 hours)', rightX, ry); ry += 4;
+  doc.text('Delivery: ' + (rfq.delivery || '5-7 Business Days'), rightX, ry);
+
+  // ── Line items table ──
+  y += 4;
+  doc.setDrawColor(...border); doc.setLineWidth(0.3);
+  doc.line(M, y, W-M, y); y += 3;
+
+  // Table header
+  doc.setFillColor(...green);
+  doc.rect(M, y, CW, 7, 'F');
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(255,255,255);
+  const cols = isDealer
+    ? [{l:'#',w:8},{l:'Product',w:55},{l:'SKU',w:28},{l:'Qty',w:12},{l:'Transfer',w:22},{l:'Selling',w:22},{l:'Margin%',w:18},{l:'Total',w:CW-165}]
+    : [{l:'#',w:8},{l:'Product',w:70},{l:'SKU',w:32},{l:'Qty',w:15},{l:'Unit Price',w:28},{l:'Total',w:CW-153}];
+  let cx = M + 2;
+  cols.forEach(col => { doc.text(col.l, cx, y+4.8); cx += col.w; });
+  y += 7;
+
+  // Table row
+  const sell = rfq.submittedPrice || rfq.transferPrice;
+  const lineTotal = sell * rfq.qty;
+  doc.setFillColor(249,252,249);
+  doc.rect(M, y, CW, 7, 'F');
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  cx = M + 2;
+  const rowData = isDealer
+    ? ['1', rfq.product.substring(0,28), rfq.sku, String(rfq.qty), '₹'+rfq.transferPrice.toLocaleString('en-IN'), '₹'+sell.toLocaleString('en-IN'), rfq.margin+'%', '₹'+lineTotal.toLocaleString('en-IN')]
+    : ['1', rfq.product.substring(0,36), rfq.sku, String(rfq.qty), '₹'+sell.toLocaleString('en-IN'), '₹'+lineTotal.toLocaleString('en-IN')];
+  cols.forEach((col, i) => { doc.text(rowData[i]||'', cx, y+4.8); cx += col.w; });
+  y += 7;
+
+  doc.setDrawColor(...border); doc.line(M, y, W-M, y); y += 8;
+
+  // ── Totals block ──
+  const subtotal = rfq.submittedPrice ? rfq.submittedPrice * rfq.qty : rfq.transferPrice * rfq.qty;
+  const gstAmt   = Math.round(subtotal * 0.18);
+  const grandTotal = subtotal + gstAmt;
+  const totals = [
+    ['Subtotal:', '₹' + subtotal.toLocaleString('en-IN')],
+    ['GST @ 18%:', '₹' + gstAmt.toLocaleString('en-IN')],
+    ['Grand Total:', '₹' + grandTotal.toLocaleString('en-IN')],
+  ];
+  totals.forEach(([lbl, val], i) => {
+    const isGrand = i === 2;
+    if (isGrand) { doc.setFont('helvetica','bold'); doc.setFontSize(9.5); }
+    else { doc.setFont('helvetica','normal'); doc.setFontSize(8.5); }
+    doc.setTextColor(isGrand?0:60, isGrand?0:60, isGrand?0:60);
+    doc.text(lbl, W-M-40, y);
+    doc.text(val, W-M, y, {align:'right'});
+    y += isGrand ? 6 : 5;
+  });
+  y += 6;
+
+  // ── Terms ──
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+  doc.setFillColor(...ltGray);
+  doc.rect(M, y, CW, 18, 'F');
+  const terms = [
+    'Selling price does not exceed Transfer Price + 15% maximum markup per Veltrac Dealer Agreement.',
+    'This quote is valid for 48 hours from date of issue.',
+    'Payment terms: Net 30 (Gold Dealer) / Net 15 (Silver Dealer).',
+  ];
+  y += 4;
+  terms.forEach(t => { doc.text(t, M+3, y); y += 4; });
+
+  // ── Dealer copy watermark ──
+  if (isDealer) {
+    doc.setTextColor(220,220,220); doc.setFontSize(22); doc.setFont('helvetica','bold');
+    doc.text('DEALER COPY — CONFIDENTIAL', W/2, 140, {align:'center', angle:35});
+  }
+
+  // ── Footer ──
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(150,150,150);
+  doc.line(M, 282, W-M, 282);
+  doc.text('Tyre Solutions India · DLR-W-042', M, 287);
+  doc.text('Submitted via Veltrac Dealer Portal', W/2, 287, {align:'center'});
+  doc.text('Page 1 of 1', W-M, 287, {align:'right'});
+
+  doc.save(fileName);
+  toast('📄 ' + (isDealer?'Dealer':'Customer') + ' copy PDF downloaded: ' + fileName, 'success');
+}
+
+</script><script>
+/* ══════════════════════════════════════════════════════════════════
+   DEALER PORTAL — JAVASCRIPT
+   ══════════════════════════════════════════════════════════════════ */
+
+// ── MOCK DEALER DATA ──────────────────────────────────────────────
+const DEALER = {
+  name: 'Tyre Solutions India Pvt. Ltd.',
+  code: 'DLR-W-042',
+  contact: 'Arjun Mehta',
+  email: 'dealer@tiresolutions.in',
+  gst: '27AATST1234B1Z3',
+  territory: 'Mumbai / Pune / Nashik',
+  region: 'West Region',
+  tier: 'Gold',
+  commissionRate: 7,
+  categories: ['Industrial Tyres', 'Commercial Components'],
+  manager: 'Rahul Sharma',
+  sinceYear: 2019,
+};
+
+// ── MOCK RFQ DATA ─────────────────────────────────────────────────
+const MOCK_RFQS = [
+  { id:'RFQ-W-2024-1001', customer:'Mahindra Logistics', sku:'DUN-18X7-8',    product:'Dunamis Premium Solid',        qty:40,  transferPrice:6200,  dueDate:'2024-12-28', status:'Open',           submittedPrice:null, margin:null, delivery:null, assignmentReason:'Auto-assigned · Mumbai West territory match. Mahindra Logistics, Andheri East. Order value ₹2.48L (below ₹5L threshold). Nearest active dealer: Tyre Solutions India.' },
+  { id:'RFQ-W-2024-1002', customer:'Reliance Retail',   sku:'SOL-6.50-10',   product:'Solitrek Heavy Duty Solid',    qty:20,  transferPrice:8500,  dueDate:'2024-12-29', status:'Open',           submittedPrice:null, margin:null, delivery:null, assignmentReason:'Auto-assigned · BKC territory match. Reliance Retail, Bandra Kurla Complex. Order value ₹1.70L (below ₹5L threshold). Priority routing: Gold dealer.' },
+  { id:'RFQ-W-2024-1003', customer:'Flipkart Logistics',sku:'GOL-4.00-8',     product:'Goliath Economy Solid',        qty:80,  transferPrice:4500,  dueDate:'2024-12-27', status:'Quote Submitted',submittedPrice:4860, margin:7.4,  delivery:'5-7 Business Days', assignmentReason:'Auto-assigned · Bhiwandi territory match. Flipkart Logistics, Bhiwandi Warehouse Hub. Order value ₹3.60L (below ₹5L threshold).' },
+  { id:'RFQ-W-2024-1004', customer:'Wayfair India',     sku:'NUB-21X7X15',   product:'Nubian Press-On-Band Hi-Int.', qty:15,  transferPrice:9500,  dueDate:'2024-12-30', status:'Open',           submittedPrice:null, margin:null, delivery:null, assignmentReason:'Auto-assigned · Thane territory match. Wayfair India, Thane Industrial Park. Order value ₹1.42L (below ₹5L threshold). OTR category: dealer preferred.' },
+  { id:'RFQ-W-2024-1005', customer:'DHL India',         sku:'RS-8.15-15',     product:'Rocksolid Standard Profile',   qty:25,  transferPrice:14500, dueDate:'2024-12-26', status:'Accepted',       submittedPrice:15660,margin:7.4,  delivery:'5-7 Business Days', assignmentReason:'Auto-assigned · Mumbai Port territory match. DHL India, JNPT Logistics Park. Order value ₹3.62L (below ₹5L threshold). Your quote accepted.' },
+  { id:'RFQ-W-2024-1006', customer:'Blue Dart',         sku:'SW-7.00-12',     product:'Solidwings Medium Intensity',  qty:12,  transferPrice:12500, dueDate:'2024-12-25', status:'Rejected',       submittedPrice:13900,margin:10.1, delivery:'7-10 Business Days', assignmentReason:'Auto-assigned · Goregaon territory match. Blue Dart, SEEPZ Courier Hub. Order value ₹1.50L (below ₹5L threshold). Competitor quote was lower.' },
+  { id:'RFQ-W-2024-1007', customer:'Ekart Logistics',   sku:'TUB-TBR-10.00', product:'Truck/Bus Radial Inner Tube',  qty:200, transferPrice:1800,  dueDate:'2024-12-31', status:'Open',           submittedPrice:null, margin:null, delivery:null, assignmentReason:'Auto-assigned · Nashik territory match. Ekart Logistics, Nashik Industrial Area. Order value ₹3.60L (below ₹5L threshold). High volume — submit competitive quote.' },
+];
+
+// ── MOCK ORDERS ───────────────────────────────────────────────────
+const DEALER_ORDERS_SEED = [
+  { id:'RK-DLR-2024-501', rfqId:'RFQ-W-2024-1005', customer:'DHL India',      product:'Rocksolid Standard Profile',  qty:25, value:391500, transferTotal:362500, statusIdx:2, sapNo:'4500087231', delivery:'5-7 Business Days', commPct:7.4 },
+];
+
+// ── APP STATE ─────────────────────────────────────────────────────
+// ── STOCK ORDER SEED DATA ─────────────────────────────────────────
+const STOCK_ORDERS_SEED = [
+  { id:'PO-2024-001', date:'2024-07-15', lines:[{product:'Dunamis Premium Solid',sku:'DUN-18X7-8',qty:50,transferPrice:6200},{product:'Solitrek Heavy Duty Solid',sku:'SOL-6.50-10',qty:20,transferPrice:8500}], subtotal:480000, gst:86400, grandTotal:566400, paymentStatus:'Paid', dispatchStatus:'Delivered', sapDoc:'DN-8801001', dispatchDate:'2024-07-22' },
+  { id:'PO-2024-002', date:'2024-09-03', lines:[{product:'Goliath Economy Solid',sku:'GOL-4.00-8',qty:100,transferPrice:4500}], subtotal:450000, gst:81000, grandTotal:531000, paymentStatus:'Paid', dispatchStatus:'Delivered', sapDoc:'DN-8801145', dispatchDate:'2024-09-12' },
+  { id:'PO-2024-003', date:'2024-10-20', lines:[{product:'Rocksolid Standard Profile',sku:'RS-8.15-15',qty:30,transferPrice:14500},{product:'Solidwings Medium Intensity',sku:'SW-7.00-12',qty:15,transferPrice:12500}], subtotal:622500, gst:112050, grandTotal:734550, paymentStatus:'Due', dispatchStatus:'Delivered', sapDoc:'DN-8801289', dispatchDate:'2024-10-27', dueDate:'2024-11-19' },
+  { id:'PO-2024-004', date:'2024-11-28', lines:[{product:'Dunamis Premium Solid',sku:'DUN-18X7-8',qty:40,transferPrice:6200}], subtotal:248000, gst:44640, grandTotal:292640, paymentStatus:'Overdue', dispatchStatus:'Delivered', sapDoc:'DN-8801401', dispatchDate:'2024-12-05', dueDate:'2024-12-28' },
+  { id:'PO-2024-005', date:'2024-12-10', lines:[{product:'Truck/Bus Radial Inner Tube',sku:'TUB-TBR-10.00',qty:300,transferPrice:1800}], subtotal:540000, gst:97200, grandTotal:637200, paymentStatus:'Due', dispatchStatus:'Dispatched', sapDoc:'DN-8801502', dispatchDate:'2024-12-17', dueDate:'2025-01-09' },
+];
+
+// ── INVOICE SEED DATA ─────────────────────────────────────────────
+const INVOICES_SEED = [
+  { no:'INV-2024-0890', po:'PO-2024-003', date:'2024-10-27', dueDate:'2024-11-19', amount:734550, status:'Due' },
+  { no:'INV-2024-1012', po:'PO-2024-004', date:'2024-12-05', dueDate:'2024-12-28', amount:292640, status:'Overdue' },
+  { no:'INV-2024-1089', po:'PO-2024-005', date:'2024-12-17', dueDate:'2025-01-09', amount:637200, status:'Due' },
+];
+
+// ── PAYMENT HISTORY SEED ──────────────────────────────────────────
+const PAYMENT_HISTORY_SEED = [
+  { date:'2024-11-10', amount:566400, ref:'NEFT-20241110-0042', method:'NEFT', po:'PO-2024-001' },
+  { date:'2024-10-15', amount:531000, ref:'NEFT-20241015-0118', method:'NEFT', po:'PO-2024-002' },
+  { date:'2024-09-22', amount:310000, ref:'RTGS-20240922-0009', method:'RTGS', po:'PO-2024-002 (partial)' },
+  { date:'2024-08-30', amount:450000, ref:'NEFT-20240830-0073', method:'NEFT', po:'PO-2024-001 (partial)' },
+  { date:'2024-07-30', amount:280000, ref:'NEFT-20240730-0055', method:'NEFT', po:'PO-2024-000' },
+  { date:'2024-06-15', amount:195000, ref:'CHEQUE-20240615-011', method:'Cheque', po:'PO-2024-000 (partial)' },
+];
+
+// ── PRODUCTS FOR STOCK ORDER ──────────────────────────────────────
+const STOCK_PRODUCTS = [
+  {sku:'DUN-18X7-8',  name:'Dunamis Premium Solid',         price:6200},
+  {sku:'SOL-6.50-10', name:'Solitrek Heavy Duty Solid',      price:8500},
+  {sku:'GOL-4.00-8',  name:'Goliath Economy Solid',          price:4500},
+  {sku:'NUB-21X7X15', name:'Nubian Press-On-Band Hi-Int.',   price:9500},
+  {sku:'RS-8.15-15',  name:'Rocksolid Standard Profile',     price:14500},
+  {sku:'SW-7.00-12',  name:'Solidwings Medium Intensity',    price:12500},
+  {sku:'TUB-TBR-10.00',name:'Truck/Bus Radial Inner Tube',  price:1800},
+];
+
+let dealerState = {
+  loggedIn: false,
+  rfqs: JSON.parse(JSON.stringify(MOCK_RFQS)),
+  orders: JSON.parse(JSON.stringify(DEALER_ORDERS_SEED)),
+  selectedRFQ: null,
+  rfqFilter: 'all',
+  currentOrderId: null,
+  stockOrders: JSON.parse(JSON.stringify(STOCK_ORDERS_SEED)),
+  stockFilter: 'all',
+  stockOrderLines: [],
+  poCounter: 5,
+  expandedPO: null,
+};
+
+const ORDER_STATUSES = ['RFQ Accepted','Processing','Shipped','Delivered'];
+
+// ══════════════════════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════════════════════
+function dealerLogin() {
+  const email = document.getElementById('dl-email').value.trim();
+  const pass  = document.getElementById('dl-pass').value;
+  const errEl = document.getElementById('dl-error');
+  if (!email || !pass) { errEl.textContent='Please enter email and password.'; errEl.classList.remove('hidden'); return; }
+  // Accept any password for demo
+  dealerState.loggedIn = true;
+  document.getElementById('dealer-login').style.display = 'none';
+  document.getElementById('dealer-app').style.display   = 'flex';
+  populateSidebar();
+  renderDashboard();
+  toast('Welcome back, ' + DEALER.contact + '! 3 new RFQs assigned.', 'success');
+}
+
+function dealerLogout() {
+  dealerState.loggedIn = false;
+  document.getElementById('dealer-app').style.display   = 'none';
+  document.getElementById('dealer-login').style.display = 'flex';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════
+const PAGE_META = {
+  dashboard:      ['Dashboard', 'Dealer Performance Overview'],
+  'stock-order':  ['Place Stock Order', 'Monthly purchase order to Veltrac India'],
+  'stock-history':['Stock Order History', 'Your purchase order history & payment status'],
+  credit:         ['Credit & Payments', 'Outstanding invoices · Payment history · Credit utilisation'],
+  'rfq-list':     ['Assigned RFQs', 'RFQs Routed to Your Territory'],
+  'quote-submit': ['Submit Quote', 'Prepare & Submit Dealer Quotes'],
+  orders:         ['Fulfillment Orders', 'Dealer-Routed Fulfillment Status'],
+  profile:        ['Dealer Profile', 'Territory · Commission · Scorecard'],
+};
+
+function dealerNav(section) {
+  document.querySelectorAll('.dealer-section').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('ds-' + section);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick')?.includes(`'${section}'`)) n.classList.add('active');
+  });
+  const [title, sub] = PAGE_META[section] || [section, ''];
+  document.getElementById('page-title').textContent = title;
+  document.getElementById('page-sub').textContent   = sub;
+
+  if (section === 'dashboard')     renderDashboard();
+  if (section === 'rfq-list')      renderRFQList();
+  if (section === 'quote-submit')  renderQuoteSelector();
+  if (section === 'stock-order')   renderStockOrder();
+  if (section === 'stock-history') renderStockHistory();
+  if (section === 'credit')        renderCredit();
+  if (section === 'orders')        renderDealerOrders();
+  if (section === 'profile')       renderDealerProfile();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SIDEBAR POPULATE
+// ══════════════════════════════════════════════════════════════════
+function populateSidebar() {
+  document.getElementById('sb-dealer-name').textContent = DEALER.name;
+  document.getElementById('sb-dealer-meta').textContent = DEALER.region + ' · ' + DEALER.territory.split('/')[0].trim() + ' Territory';
+  document.getElementById('sb-dealer-tier').textContent = DEALER.tier + ' Dealer';
+  document.getElementById('tb-dealer-name').textContent = DEALER.name.split(' ').slice(0,2).join(' ');
+  updateNavBadges();
+}
+
+function updateNavBadges() {
+  const openRFQs    = dealerState.rfqs.filter(r => r.status === 'Open').length;
+  const pendingQuotes = dealerState.rfqs.filter(r => r.status === 'Quote Submitted').length;
+  const activeOrders  = dealerState.orders.filter(o => o.statusIdx < 3).length;
+  document.getElementById('nav-rfq-count').textContent     = openRFQs;
+  document.getElementById('nav-pending-count').textContent = pendingQuotes;
+  document.getElementById('nav-order-count').textContent   = activeOrders;
+  document.getElementById('kd-assigned').textContent  = dealerState.rfqs.length;
+  document.getElementById('kd-pending').textContent   = openRFQs + pendingQuotes;
+  document.getElementById('kd-converted').textContent = dealerState.orders.length;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════════════════
+function renderDashboard() {
+  updateNavBadges();
+
+  // Mode 1: Stock Business KPIs
+  const mtdPurchases = dealerState.stockOrders
+    .filter(o => o.date >= '2024-12-01')
+    .reduce((s,o) => s + o.grandTotal, 0);
+  document.getElementById('kd-mtd-purchases').textContent = mtdPurchases > 0 ? '₹' + (mtdPurchases/100000).toFixed(1)+'L' : '₹0';
+  document.getElementById('kd-purchase-trend').textContent = dealerState.stockOrders.filter(o=>o.date>='2024-12-01').length + ' orders this month';
+
+  const overdueInvoices = INVOICES_SEED.filter(i=>i.status==='Overdue');
+  if (overdueInvoices.length) {
+    const nb = document.getElementById('nav-overdue-count');
+    if (nb) { nb.style.display = ''; nb.textContent = overdueInvoices.length; }
+  }
+
+  // YTD Revenue (total of fulfillment orders × selling price)
+  const ytdRev = dealerState.orders.reduce((s,o) => s + (o.value||0), 0);
+  document.getElementById('kd-ytd-revenue').textContent = ytdRev >= 100000 ? '₹'+(ytdRev/100000).toFixed(1)+'L' : '₹'+ytdRev.toLocaleString('en-IN');
+  document.getElementById('kd-ytd-trend').textContent = 'Your fulfillment revenue';
+
+  // Mode 2: Fulfillment Partner KPIs
+  const totalRevenue = dealerState.orders.reduce((s,o) => s + o.value, 0);
+  document.getElementById('kd-revenue').textContent = totalRevenue >= 100000 ? '₹'+(totalRevenue/100000).toFixed(1)+'L' : '₹'+totalRevenue.toLocaleString('en-IN');
+  document.getElementById('kd-rfq-trend').textContent = dealerState.rfqs.filter(r=>r.status==='Open').length + ' awaiting response';
+
+  // Commission
+  const totalComm = dealerState.orders.reduce((s,o) => {
+    const spread = o.value - o.transferTotal;
+    return s + spread;
+  }, 0);
+  document.getElementById('dash-commission').textContent = '₹' + totalComm.toLocaleString('en-IN');
+  document.getElementById('dash-comm-orders').textContent = dealerState.orders.length;
+  document.getElementById('dash-ytd').textContent = '₹' + (totalComm * 8).toLocaleString('en-IN');
+
+  const accepted = dealerState.rfqs.filter(r => r.status === 'Accepted').length;
+  const submitted = dealerState.rfqs.filter(r => ['Accepted','Rejected','Quote Submitted'].includes(r.status)).length;
+  const winRate = submitted > 0 ? Math.round(accepted/submitted*100) : 0;
+  document.getElementById('dash-win-rate').textContent = winRate + '%';
+  document.getElementById('dash-win-bar').style.width = winRate + '%';
+  document.getElementById('dash-avg-margin').textContent = '7.4%';
+
+  const avgMarginOrders = dealerState.orders.filter(o=>o.commPct);
+  const avgM = avgMarginOrders.length > 0 ? (avgMarginOrders.reduce((s,o)=>s+o.commPct,0)/avgMarginOrders.length).toFixed(1) : '—';
+  document.getElementById('dash-avg-margin').textContent = avgM + '%';
+
+  // Recent RFQ table
+  const tbody = document.getElementById('dash-rfq-table');
+  const statusClass = { 'Open':'badge-amber','Quote Submitted':'badge-blue','Accepted':'badge-green','Rejected':'badge-red' };
+  tbody.innerHTML = dealerState.rfqs.slice(0,5).map(r => `
+    <tr>
+      <td class="mono fw-7">${r.id}</td>
+      <td class="fw-6">${r.customer}</td>
+      <td style="max-width:180px">${r.product}</td>
+      <td>${r.qty} units</td>
+      <td>₹${(r.transferPrice * r.qty).toLocaleString('en-IN')}</td>
+      <td style="font-size:12px">${r.dueDate}</td>
+      <td><span class="badge ${statusClass[r.status]||'badge-gray'}">${r.status}</span></td>
+      <td>${r.status==='Open'?`<button class="btn btn-xs btn-green" onclick="openQuoteForm('${r.id}')">Quote →</button>`:'<span class="text-muted text-xs">—</span>'}</td>
+    </tr>`).join('');
+
+  // Draw chart
+  setTimeout(drawDealerRevenue, 100);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// RFQ LIST
+// ══════════════════════════════════════════════════════════════════
+function filterRFQ(status, btn) {
+  dealerState.rfqFilter = status;
+  document.querySelectorAll('.rfq-filter').forEach(b => { b.classList.remove('active','btn-primary'); b.classList.add('btn-outline'); });
+  btn.classList.add('active'); btn.classList.remove('btn-outline'); btn.classList.add('btn-primary');
+  renderRFQList();
+}
+
+function renderRFQList() {
+  const open = dealerState.rfqs.filter(r=>r.status==='Open').length;
+  document.getElementById('rfq-open-badge').textContent = open + ' Open';
+  const items = dealerState.rfqFilter === 'all' ? dealerState.rfqs : dealerState.rfqs.filter(r=>r.status===dealerState.rfqFilter);
+  const statusClass = { 'Open':'badge-amber','Quote Submitted':'badge-blue','Accepted':'badge-green','Rejected':'badge-red' };
+  const tbody = document.getElementById('rfq-list-body');
+  if (!items.length) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-3)">No RFQs in this filter.</td></tr>'; return; }
+  tbody.innerHTML = items.map(r => `
+    <tr>
+      <td class="mono fw-7">
+        ${r.id}
+        <button class="assign-info-btn" onclick="toggleAssignReason('${r.id}')" title="Why assigned to you?">ⓘ</button>
+      </td>
+      <td class="fw-6">${r.customer}</td>
+      <td style="font-size:12.5px">${r.product}</td>
+      <td>${r.qty}</td>
+      <td>₹${r.transferPrice.toLocaleString('en-IN')}</td>
+      <td class="fw-7 text-blue">₹${(r.transferPrice*r.qty).toLocaleString('en-IN')}</td>
+      <td style="font-size:12px">${r.dueDate}</td>
+      <td><span class="badge ${statusClass[r.status]||'badge-gray'}">${r.status}</span></td>
+      <td>
+        ${r.status==='Open'?`<button class="btn btn-xs btn-green" onclick="openQuoteForm('${r.id}');dealerNav('quote-submit')">Submit Quote</button>`:''}
+        ${r.status==='Quote Submitted'?`<div>
+          <div class="text-xs text-muted">₹${r.submittedPrice?.toLocaleString('en-IN')} · ${r.margin}% margin</div>
+          <div style="display:flex;gap:5px;margin-top:5px">
+            <button class="btn-pdf btn-pdf-dealer btn-xs" onclick="generateQuotePDF('${r.id}','dealer')" style="padding:3px 8px;font-size:11px">📄 Dealer Copy</button>
+            <button class="btn-pdf btn-pdf-customer btn-xs" onclick="generateQuotePDF('${r.id}','customer')" style="padding:3px 8px;font-size:11px">📄 Customer Copy</button>
+          </div>
+        </div>`:''}
+        ${r.status==='Accepted'?`<button class="btn btn-xs btn-outline" onclick="dealerNav('orders')">Track Order →</button>`:''}
+        ${r.status==='Rejected'?`<span class="badge badge-red text-xs">Outbid</span>`:''}
+      </td>
+    </tr>
+    <tr id="assign-reason-${r.id}" class="hidden" style="background:#F0FFF4">
+      <td colspan="9" style="padding:10px 16px;font-size:12.5px;color:var(--green-dk);border-top:none">
+        📍 <strong>Assignment Reason:</strong> ${r.assignmentReason || 'Auto-assigned by territory match. Order value below ₹5L threshold.'}
+      </td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// QUOTE SUBMISSION
+// ══════════════════════════════════════════════════════════════════
+function renderQuoteSelector() {
+  const openRFQs = dealerState.rfqs.filter(r => r.status === 'Open');
+  const tbody = document.getElementById('quote-selector-body');
+  if (!openRFQs.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-3)">No open RFQs. All RFQs have been responded to.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = openRFQs.map(r => `
+    <tr>
+      <td class="mono fw-7">${r.id}</td>
+      <td class="fw-6">${r.customer}</td>
+      <td>${r.product}</td>
+      <td>${r.qty} units</td>
+      <td>₹${r.transferPrice.toLocaleString('en-IN')}</td>
+      <td><button class="btn btn-xs btn-green" onclick="openQuoteForm('${r.id}')">Prepare Quote →</button></td>
+    </tr>`).join('');
+
+  // Submitted quotes sidebar
+  const subTbody = document.getElementById('submitted-quotes-body');
+  const submitted = dealerState.rfqs.filter(r=>r.submittedPrice);
+  if (!submitted.length) { subTbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--text-3)">None yet</td></tr>'; return; }
+  const sc = {'Quote Submitted':'badge-blue','Accepted':'badge-green','Rejected':'badge-red'};
+  subTbody.innerHTML = submitted.map(r=>`<tr><td class="mono text-xs">${r.id.split('-').pop()}</td><td class="fw-7 text-green">${r.margin}%</td><td><span class="badge ${sc[r.status]||'badge-gray'}" style="font-size:10px">${r.status}</span></td></tr>`).join('');
+}
+
+function openQuoteForm(rfqId) {
+  const r = dealerState.rfqs.find(x => x.id === rfqId);
+  if (!r) return;
+  dealerState.selectedRFQ = rfqId;
+  document.getElementById('qf-rfq-id').textContent       = r.id;
+  document.getElementById('qf-customer-name').textContent = r.customer + ' · ' + r.qty + ' units required';
+  document.getElementById('qf-product').textContent       = r.product;
+  document.getElementById('qf-sku').textContent           = r.sku;
+  document.getElementById('qf-qty').textContent           = r.qty + ' units';
+  document.getElementById('qf-transfer-price').textContent= '₹' + r.transferPrice.toLocaleString('en-IN') + ' per unit';
+  document.getElementById('qf-price-hint').textContent    = `Min: ₹${(r.transferPrice*1.05).toFixed(0)} (5% margin) · Max: ₹${(r.transferPrice*1.15).toFixed(0)} (15% cap)`;
+  document.getElementById('qf-selling-price').value = '';
+  document.getElementById('calc-margin-pct').textContent  = '—';
+  document.getElementById('calc-profit-unit').textContent = '—';
+  document.getElementById('calc-total-profit').textContent= '—';
+  document.getElementById('calc-margin-bar').style.width  = '0%';
+  document.getElementById('calc-warning').classList.add('hidden');
+  document.getElementById('calc-info').classList.add('hidden');
+  document.getElementById('qf-submit-error').classList.add('hidden');
+  document.getElementById('quote-form-panel').classList.remove('hidden');
+  document.getElementById('quote-form-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function clearQuoteForm() {
+  dealerState.selectedRFQ = null;
+  document.getElementById('quote-form-panel').classList.add('hidden');
+  document.getElementById('qf-selling-price').value = '';
+}
+
+function recalcMargin() {
+  const rfq = dealerState.rfqs.find(r => r.id === dealerState.selectedRFQ);
+  if (!rfq) return;
+  const sell = parseFloat(document.getElementById('qf-selling-price').value) || 0;
+  const transfer = rfq.transferPrice;
+  if (sell <= 0) return;
+  const marginPct  = ((sell - transfer) / sell * 100).toFixed(1);
+  const profitUnit = sell - transfer;
+  const totalProfit= profitUnit * rfq.qty;
+  document.getElementById('calc-margin-pct').textContent   = marginPct + '%';
+  document.getElementById('calc-profit-unit').textContent  = '₹' + profitUnit.toLocaleString('en-IN');
+  document.getElementById('calc-total-profit').textContent = '₹' + totalProfit.toLocaleString('en-IN');
+  const barPct = Math.min(100, Math.max(0, parseFloat(marginPct)));
+  document.getElementById('calc-margin-bar').style.width   = barPct + '%';
+  document.getElementById('calc-margin-bar-label').textContent = marginPct + '%';
+  const bar = document.getElementById('calc-margin-bar');
+  bar.style.background = parseFloat(marginPct) < 5 ? 'var(--red)' : parseFloat(marginPct) > 12 ? 'var(--amber)' : 'var(--green)';
+  document.getElementById('calc-warning').classList.toggle('hidden', parseFloat(marginPct) >= 5);
+  document.getElementById('calc-info').classList.toggle('hidden', parseFloat(marginPct) < 5 || parseFloat(marginPct) > 15);
+}
+
+function submitQuote() {
+  const errEl = document.getElementById('qf-submit-error');
+  const rfq   = dealerState.rfqs.find(r => r.id === dealerState.selectedRFQ);
+  if (!rfq) return;
+  const sell = parseFloat(document.getElementById('qf-selling-price').value) || 0;
+  if (!sell || sell <= rfq.transferPrice) {
+    errEl.textContent = 'Selling price must be above transfer price.'; errEl.classList.remove('hidden'); return;
+  }
+  const marginPct = parseFloat(((sell - rfq.transferPrice) / sell * 100).toFixed(1));
+  if (marginPct < 5)  { errEl.textContent = 'Margin too low (min 5%). Adjust your selling price.'; errEl.classList.remove('hidden'); return; }
+  if (marginPct > 15) { errEl.textContent = 'Margin exceeds 15% cap. Reduce selling price.'; errEl.classList.remove('hidden'); return; }
+
+  rfq.status         = 'Quote Submitted';
+  rfq.submittedPrice = sell;
+  rfq.margin         = marginPct;
+  rfq.delivery       = document.getElementById('qf-delivery').value;
+  clearQuoteForm();
+  // Show PDF download options
+  const pdfDiv = document.getElementById('quote-pdf-section');
+  if (pdfDiv) {
+    pdfDiv.classList.remove('hidden');
+    document.getElementById('quote-pdf-rfqid').textContent = rfq.id;
+    document.getElementById('quote-pdf-dlr-btn').onclick = () => generateQuotePDF(rfq.id,'dealer');
+    document.getElementById('quote-pdf-cust-btn').onclick = () => generateQuotePDF(rfq.id,'customer');
+  }
+  updateNavBadges();
+  renderQuoteSelector();
+  toast(`✅ Quote submitted for ${rfq.id}. Margin: ${marginPct}%. Veltrac Sales Ops notified.`, 'success');
+
+  // Simulate auto-acceptance for demo after 3s
+  setTimeout(() => {
+    if (rfq.status === 'Quote Submitted') {
+      rfq.status = 'Accepted';
+      // Create dealer order
+      const orderId = 'RK-DLR-2024-' + (500 + dealerState.orders.length + 1);
+      dealerState.orders.push({
+        id: orderId, rfqId: rfq.id, customer: rfq.customer,
+        product: rfq.product, qty: rfq.qty,
+        value: sell * rfq.qty, transferTotal: rfq.transferPrice * rfq.qty,
+        statusIdx: 0, sapNo: null, delivery: rfq.delivery, commPct: marginPct,
+      });
+      updateNavBadges();
+      toast(`🎉 Quote ${rfq.id} ACCEPTED! Order ${orderId} created.`, 'success');
+    }
+  }, 3000);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ORDER TRACKING
+// ══════════════════════════════════════════════════════════════════
+function renderDealerOrders() {
+  const tbody = document.getElementById('dealer-orders-body');
+  const badge = document.getElementById('orders-count-badge');
+  badge.textContent = dealerState.orders.length + ' Active';
+  const stColors = ['badge-amber','badge-blue','badge-green','badge-ink'];
+  if (!dealerState.orders.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-3)">No orders yet. Accepted quotes will appear here.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = dealerState.orders.map(o => {
+    const spread = o.value - o.transferTotal;
+    return `<tr>
+      <td class="mono fw-7">${o.id}</td>
+      <td class="fw-6">${o.customer}</td>
+      <td style="font-size:12.5px">${o.product}</td>
+      <td class="fw-7 text-blue">₹${o.value.toLocaleString('en-IN')}</td>
+      <td class="fw-7 text-green">₹${spread.toLocaleString('en-IN')} (${o.commPct}%)</td>
+      <td style="font-size:12px">${o.delivery||'Pending'}</td>
+      <td><span class="badge ${stColors[o.statusIdx]||'badge-gray'}">${ORDER_STATUSES[o.statusIdx]}</span></td>
+      <td><button class="btn btn-xs btn-outline" onclick="openDealerOrderDetail('${o.id}')">Manage →</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function openDealerOrderDetail(orderId) {
+  const o = dealerState.orders.find(x=>x.id===orderId);
+  if (!o) return;
+  dealerState.currentOrderId = orderId;
+  document.getElementById('od-num').textContent      = o.id;
+  document.getElementById('od-customer').textContent = o.customer + ' · RFQ: ' + o.rfqId;
+  document.getElementById('od-product').textContent  = o.product + ' (' + o.qty + ' units)';
+  document.getElementById('od-value').textContent    = '₹' + o.value.toLocaleString('en-IN');
+  const spread = o.value - o.transferTotal;
+  document.getElementById('od-margin').textContent   = '₹' + spread.toLocaleString('en-IN') + ' (' + o.commPct + '%)';
+  document.getElementById('od-sap').textContent      = o.sapNo || 'Pending';
+  document.getElementById('od-delivery').textContent = o.delivery || 'TBD';
+  const commAmt = Math.round(spread * DEALER.commissionRate / 100);
+  document.getElementById('od-commission').textContent = '₹' + commAmt.toLocaleString('en-IN');
+  renderDealerOrderFlow(o);
+  const stColors = ['badge-amber','badge-blue','badge-green','badge-ink'];
+  const sb = document.getElementById('od-status-badge');
+  sb.textContent = ORDER_STATUSES[o.statusIdx]; sb.className = 'badge ' + (stColors[o.statusIdx]||'badge-gray');
+  const btn = document.getElementById('od-advance-btn');
+  btn.disabled = o.statusIdx >= ORDER_STATUSES.length - 1;
+  btn.textContent = o.statusIdx >= ORDER_STATUSES.length - 1 ? '✅ Delivered' : '⏩ Advance to: ' + (ORDER_STATUSES[o.statusIdx+1]||'');
+  document.getElementById('order-detail-card').classList.remove('hidden');
+}
+
+function renderDealerOrderFlow(o) {
+  document.getElementById('od-status-flow').innerHTML = ORDER_STATUSES.map((s,i) => {
+    const cls = i < o.statusIdx ? 'done' : i === o.statusIdx ? 'active' : '';
+    return `<div class="flex ai-c">${i>0?'<span class="status-arrow">→</span>':''}<div class="status-node ${cls}">${i<o.statusIdx?'✓ ':''}${s}</div></div>`;
+  }).join('');
+}
+
+function advanceDealerOrder() {
+  const o = dealerState.orders.find(x=>x.id===dealerState.currentOrderId);
+  if (!o || o.statusIdx >= ORDER_STATUSES.length-1) return;
+  o.statusIdx++;
+  if (o.statusIdx===1) { o.sapNo='45'+Math.floor(100000+Math.random()*900000); toast('📡 Order pushed to SAP. Sales Order: '+o.sapNo,'success'); }
+  else if (o.statusIdx===2) toast('🚚 Dispatched from warehouse. Customer notified.','success');
+  else if (o.statusIdx===3) toast('🎉 Delivered! Commission ₹'+Math.round((o.value-o.transferTotal)*DEALER.commissionRate/100).toLocaleString('en-IN')+' credited.','success');
+  openDealerOrderDetail(dealerState.currentOrderId);
+  renderDealerOrders();
+}
+
+function closeOrderDetail() {
+  document.getElementById('order-detail-card').classList.add('hidden');
+  dealerState.currentOrderId = null;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DEALER PROFILE
+// ══════════════════════════════════════════════════════════════════
+function renderDealerProfile() {
+  const d = DEALER;
+  document.getElementById('dp-avatar').textContent    = d.name.charAt(0);
+  document.getElementById('dp-name').textContent      = d.name;
+  document.getElementById('dp-meta').textContent      = 'Dealer Code: ' + d.code + ' · ' + d.region + ' · ' + d.territory.split('/')[0].trim() + ' Territory';
+  document.getElementById('dp-company').textContent   = d.name;
+  document.getElementById('dp-gst').textContent       = d.gst;
+  document.getElementById('dp-contact').textContent   = d.contact;
+  document.getElementById('dp-email').textContent     = d.email;
+  document.getElementById('dp-territory').textContent = d.territory;
+  document.getElementById('dp-region').textContent    = d.region;
+  document.getElementById('dp-manager').textContent   = d.manager;
+  document.getElementById('dp-categories').innerHTML  = d.categories.map(c=>`<span class="badge badge-gray" style="margin-right:4px">${c}</span>`).join('');
+  document.getElementById('dp-commission-rate').textContent = d.commissionRate + '%';
+
+  const totalRev = dealerState.orders.reduce((s,o)=>s+o.value,0);
+  const totalComm = dealerState.orders.reduce((s,o)=>s+(o.value-o.transferTotal),0);
+  document.getElementById('dp-ytd').textContent      = '₹'+(totalRev*8).toLocaleString('en-IN');
+  document.getElementById('dp-ytd-comm').textContent = '₹'+(totalComm*8).toLocaleString('en-IN');
+
+  const accepted = dealerState.rfqs.filter(r=>r.status==='Accepted').length;
+  const submitted = dealerState.rfqs.filter(r=>['Accepted','Rejected'].includes(r.status)).length;
+  const wr = submitted>0 ? Math.round(accepted/submitted*100) : 0;
+  document.getElementById('sc-win-rate').textContent  = wr + '%';
+  document.getElementById('sc-qwr-td').textContent    = wr + '%';
+  document.getElementById('sc-rev-td').textContent    = '₹'+(totalRev/100000).toFixed(1)+'L';
+  document.getElementById('sc-qwr-status').textContent  = wr>=60 ? 'Achieved' : 'In Progress';
+  document.getElementById('sc-qwr-status').className  = wr>=60 ? 'badge badge-green' : 'badge badge-amber';
+  document.getElementById('sc-rev-status').textContent  = totalRev>=1500000 ? 'Achieved' : 'In Progress';
+  document.getElementById('sc-rev-status').className  = totalRev>=1500000 ? 'badge badge-green' : 'badge badge-amber';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CHART
+// ══════════════════════════════════════════════════════════════════
+function drawDealerRevenue() {
+  const c = document.getElementById('chart-dealer-revenue'); if(!c) return;
+  const ctx = c.getContext('2d'); const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const months = ['Jul','Aug','Sep','Oct','Nov','Dec'];
+  const values = [8.2, 11.4, 9.8, 14.6, 13.1, 18.4];
+  const maxV = 22, bW=50, gap=30, sX=50, sY=H-36, cH=H-60;
+  ctx.fillStyle='#9CA3AF'; ctx.font='11px DM Sans,system-ui'; ctx.textAlign='right';
+  for(let i=0;i<=4;i++){const v=Math.round(maxV/4*i),y=sY-(v/maxV*cH); ctx.fillText(v,44,y+4); ctx.strokeStyle='#F3F4F6'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(46,y); ctx.lineTo(W-10,y); ctx.stroke();}
+  values.forEach((d,i)=>{
+    const x=sX+i*(bW+gap),bH=d/maxV*cH,y=sY-bH;
+    const grad=ctx.createLinearGradient(x,y,x,sY);
+    grad.addColorStop(0,'#064E3B'); grad.addColorStop(1,'#10B981');
+    ctx.fillStyle=grad;
+    if(ctx.roundRect) ctx.roundRect(x,y,bW,bH,[4,4,0,0]); else ctx.rect(x,y,bW,bH);
+    ctx.fill();
+    ctx.fillStyle='#064E3B'; ctx.font='bold 12px DM Sans,system-ui'; ctx.textAlign='center';
+    ctx.fillText('₹'+d+'L',x+bW/2,y-8);
+    ctx.fillStyle='#6B7280'; ctx.font='11px DM Sans,system-ui';
+    ctx.fillText(months[i],x+bW/2,sY+16);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PORTAL SWITCHER
+// ══════════════════════════════════════════════════════════════════
+function openSwitcher()  { document.getElementById('switcher-modal').classList.add('open'); }
+function closeSwitcher() { document.getElementById('switcher-modal').classList.remove('open'); }
+document.getElementById('switcher-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('switcher-modal')) closeSwitcher();
+});
+
+// ══════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════
+function toast(msg, type='success') {
+  const wrap = document.getElementById('toast-wrap');
+  const el   = document.createElement('div');
+  el.className   = 'toast ' + (type !== 'success' ? type : '');
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity    = '0';
+    el.style.transition = 'opacity .3s';
+    setTimeout(() => el.remove(), 300);
+  }, 4500);
+}
+</script>
+</body>
+</html>

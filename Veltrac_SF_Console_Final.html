@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veltrac India — Salesforce Console · Role-Based Access</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   VELTRAC INDIA — SF PERSONA CONSOLE
+   Lightning Design System · 6 Personas · Scoped Access
+   ════════════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sf-navy:#032D60;--sf-blue:#0176D3;--sf-blue-lt:#EEF4FF;--sf-sky:#0EA5E9;
+  --sf-bg:#F3F2F2;--sf-bg2:#FAFAF9;--sf-white:#FFFFFF;
+  --sf-border:#DDDBDA;--sf-border-dk:#C9C7C5;
+  --sf-t1:#181818;--sf-t2:#444444;--sf-t3:#706E6B;--sf-t4:#969492;
+  --green:#2E844A;--green-lt:#EEF7EE;--green-dk:#194E31;
+  --amber:#A16207;--amber-lt:#FFF7EC;--amber-raw:#F59E0B;
+  --red:#EA001E;--red-lt:#FFF1EF;
+  --purple:#5A1BA9;--purple-lt:#F3EEFF;
+  --teal:#0B827C;--teal-lt:#E8F7F7;
+  --radius:4px;--radius-md:8px;--radius-lg:12px;
+  --shadow-sm:0 1px 4px rgba(0,0,0,.09);--shadow:0 4px 16px rgba(0,0,0,.1);
+  --font:'DM Sans','Helvetica Neue',sans-serif;
+  --font-disp:'DM Serif Display',Georgia,serif;
+  --nav-h:52px;--sub-h:42px;
+  /* Persona accent colors */
+  --p1:#0284C7;/* Telecaller - sky */
+  --p2:#0176D3;/* Sales Rep - SF blue */
+  --p3:#7C3AED;/* Sales Mgr - purple */
+  --p4:#059669;/* Sales Ops - green */
+  --p5:#D97706;/* Dealer RM - amber */
+  --p6:#032D60;/* Sys Admin - navy */
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--sf-bg);color:var(--sf-t1);font-size:13px;line-height:1.5;overflow-x:hidden;min-height:100vh}
+
+/* ── UTILS ───────────────────────────────────────────────────────── */
+.hidden{display:none!important}
+.flex{display:flex}.ai-c{align-items:center}.jc-sb{justify-content:space-between}.jc-c{justify-content:center}.col{flex-direction:column}
+.gap-4{gap:4px}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}
+.flex-1{flex:1}.fw-5{font-weight:500}.fw-6{font-weight:600}.fw-7{font-weight:700}
+.text-sm{font-size:12px}.text-xs{font-size:11px}.text-muted{color:var(--sf-t3)}
+.mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}
+.w-full{width:100%}.mono{font-family:'Consolas',monospace;font-size:11.5px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.two-col{display:grid;grid-template-columns:1fr 300px;gap:14px}
+
+/* ── BADGES ─────────────────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;white-space:nowrap}
+.b-green{background:var(--green-lt);color:var(--green);border:1px solid #B3D9B6}
+.b-amber{background:var(--amber-lt);color:var(--amber);border:1px solid #F5D5A0}
+.b-red{background:var(--red-lt);color:var(--red);border:1px solid #FFBBB8}
+.b-blue{background:var(--sf-blue-lt);color:var(--sf-blue);border:1px solid #A8C7F0}
+.b-purple{background:var(--purple-lt);color:var(--purple);border:1px solid #C9B1E8}
+.b-teal{background:var(--teal-lt);color:var(--teal);border:1px solid #9BD0CD}
+.b-gray{background:#F3F2F2;color:#706E6B;border:1px solid #DDDBDA}
+.b-navy{background:var(--sf-navy);color:white;border:1px solid var(--sf-navy)}
+.b-sky{background:#E0F2FE;color:#0369A1;border:1px solid #BAE6FD}
+
+/* ── CARDS ───────────────────────────────────────────────────────── */
+.sf-card{background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);margin-bottom:14px}
+.sf-card-hdr{padding:11px 16px;border-bottom:1px solid var(--sf-border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.sf-card-title{font-weight:700;font-size:13.5px;color:var(--sf-t1);display:flex;align-items:center;gap:7px}
+.sf-card-body{padding:14px 16px}
+
+/* ── KPI GRID ────────────────────────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.kpi{background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 16px;box-shadow:var(--shadow-sm)}
+.kpi-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:3px}
+.kpi-val{font-family:var(--font-disp);font-size:28px;color:var(--sf-t1);line-height:1;margin-bottom:2px}
+.kpi-sub{font-size:11.5px;color:var(--sf-t3)}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+.t-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#F3F2F2;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3);padding:8px 14px;border-bottom:1px solid var(--sf-border);text-align:left;white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid #F3F2F2;color:var(--sf-t2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAF9}
+.sf-link{color:var(--sf-blue);cursor:pointer;font-weight:600;text-decoration:none}
+.sf-link:hover{text-decoration:underline}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:var(--radius);font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--sf-blue);color:white;border-color:var(--sf-blue)}.btn-primary:hover{background:#014FA1}
+.btn-success{background:var(--green);color:white;border-color:var(--green)}
+.btn-danger{background:var(--red);color:white;border-color:var(--red)}
+.btn-neutral{background:white;color:var(--sf-blue);border-color:var(--sf-border-dk)}.btn-neutral:hover{background:#F3F2F2}
+.btn-amber{background:var(--amber-raw);color:white;border-color:var(--amber-raw)}
+.btn-sm{padding:4px 10px;font-size:12px}.btn-xs{padding:3px 8px;font-size:11px}
+
+/* ── FORMS ───────────────────────────────────────────────────────── */
+.sf-input{padding:7px 10px;border:1px solid var(--sf-border-dk);border-radius:var(--radius);font-family:var(--font);font-size:12.5px;color:var(--sf-t1);background:white;outline:none;transition:border-color .15s}
+.sf-input:focus{border-color:var(--sf-blue);box-shadow:0 0 0 3px rgba(1,118,211,.12)}
+.sf-select{padding:6px 10px;border:1px solid var(--sf-border-dk);border-radius:var(--radius);font-family:var(--font);font-size:12.5px;background:white;cursor:pointer;outline:none}
+.sf-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t2);display:block;margin-bottom:4px}
+
+/* ── LIGHTNING PATH ──────────────────────────────────────────────── */
+.lpath{display:flex;background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:14px}
+.lpath-step{flex:1;padding:9px 12px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%);text-align:center;cursor:default}
+.lpath-step:first-child{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.lpath-step:last-child{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,12px 50%)}
+.lpath-step .ls-chk{font-size:13px;display:block;margin-bottom:1px}
+.lpath-step .ls-lbl{font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lpath-step.done{background:#EEF7EE;color:var(--green)}
+.lpath-step[onclick]:hover{filter:brightness(0.92);transition:filter .12s}
+.lpath-step.active{background:var(--sf-blue);color:white}
+.lpath-step.future{background:#F3F2F2;color:var(--sf-t3)}
+
+/* ── TIMELINE ────────────────────────────────────────────────────── */
+.timeline-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #F3F2F2}
+.timeline-item:last-child{border-bottom:none}
+.tl-icon{width:28px;height:28px;border-radius:50%;background:#F3F2F2;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.tl-title{font-size:12.5px;font-weight:600;color:var(--sf-t1)}
+.tl-sub{font-size:11.5px;color:var(--sf-t3);margin-top:1px}
+.tl-time{font-size:11px;color:var(--sf-t4);margin-top:1px}
+
+/* ── SAP PILL ────────────────────────────────────────────────────── */
+.sap-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.sap-synced{background:#EEF7EE;color:#2E844A}.sap-pending{background:#FFF7EC;color:#A16207}.sap-failed{background:#FFF1EF;color:#EA001E}
+.sap-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sap-pending .sap-dot{animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── PROGRESS BAR ────────────────────────────────────────────────── */
+.prog{height:6px;background:#DDDBDA;border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:var(--sf-blue)}
+.prog-fill.green{background:var(--green)}.prog-fill.amber{background:var(--amber-raw)}.prog-fill.red{background:var(--red)}
+
+/* ── SIDEBAR PANEL ───────────────────────────────────────────────── */
+.side-card{background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+.side-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:10px}
+.side-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #F3F2F2;font-size:12.5px}
+.side-row:last-child{border-bottom:none}
+
+/* ── RESTRICTION NOTICE ──────────────────────────────────────────── */
+.access-wall{background:#FFF7EC;border:1px solid #F5D5A0;border-radius:var(--radius-md);padding:16px;text-align:center;color:var(--amber);font-size:13px;font-weight:600}
+
+/* ════════════════════════════════════════════════════════════════════
+   GLOBAL NAV
+   ════════════════════════════════════════════════════════════════════ */
+#gnav{
+  height:var(--nav-h);background:var(--sf-navy);display:flex;align-items:center;
+  padding:0 14px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);gap:0;
+}
+.gnav-launcher{width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:var(--radius);transition:background .15s;margin-right:4px}
+.gnav-launcher:hover{background:rgba(255,255,255,.1)}
+.launcher-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;width:15px}
+.launcher-dot{width:4px;height:4px;background:white;border-radius:1px}
+.gnav-appname{color:white;font-weight:700;font-size:14px;padding:0 12px 0 6px;border-right:1px solid rgba(255,255,255,.2);margin-right:10px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.persona-accent-bar{width:3px;height:18px;border-radius:2px}
+.gnav-tabs{display:flex;height:100%;flex:1;overflow-x:auto;scrollbar-width:none}
+.gnav-tabs::-webkit-scrollbar{display:none}
+.gnav-tab{display:flex;align-items:center;gap:5px;padding:0 14px;color:rgba(255,255,255,.7);font-size:12.5px;font-weight:500;cursor:pointer;height:100%;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.gnav-tab:hover{color:white;background:rgba(255,255,255,.07)}
+.gnav-tab.active{color:white;border-bottom-color:white}
+.gnav-right{display:flex;align-items:center;gap:6px;margin-left:auto}
+.gnav-icon-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.7);font-size:15px;transition:background .15s}
+.gnav-icon-btn:hover{background:rgba(255,255,255,.1);color:white}
+/* Persona switcher button in nav */
+.persona-switch-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius);cursor:pointer;color:rgba(255,255,255,.9);font-size:12px;font-weight:600;transition:all .15s;white-space:nowrap}
+.persona-switch-btn:hover{background:rgba(255,255,255,.18)}
+.persona-avatar{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:white;cursor:pointer;flex-shrink:0}
+
+/* ── CONTENT ─────────────────────────────────────────────────────── */
+#sf-content{padding:14px 22px;min-height:calc(100vh - var(--nav-h))}
+
+/* ── RECORD HEADER ───────────────────────────────────────────────── */
+.rec-hdr{background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.rec-type{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:3px}
+.rec-name{font-family:var(--font-disp);font-size:20px;color:var(--sf-t1);margin-bottom:10px}
+.rec-highlights{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px}
+.rec-hl{min-width:110px}
+.rec-hl-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3);margin-bottom:2px}
+.rec-hl-val{font-size:13px;font-weight:600;color:var(--sf-t1)}
+.rec-actions{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ── FIELDS GRID ─────────────────────────────────────────────────── */
+.fields-2col{display:grid;grid-template-columns:1fr 1fr}
+.sf-field{padding:8px 12px;border-bottom:1px solid #F3F2F2}
+.sf-field:nth-child(even){border-left:1px solid #F3F2F2}
+.sf-field-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--sf-t3);margin-bottom:1px}
+.sf-field-val{font-size:12.5px;color:var(--sf-t1);font-weight:500}
+
+/* ═══ PERSONA SELECTOR MODAL ════════════════════════════════════════ */
+#persona-modal{display:none;position:fixed;inset:0;background:rgba(3,45,96,.85);z-index:3000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#persona-modal.open{display:flex}
+.pm-wrap{background:var(--sf-white);border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.3);width:800px;max-width:96vw;overflow:hidden}
+.pm-header{background:var(--sf-navy);padding:28px 32px}
+.pm-title{font-family:var(--font-disp);font-size:26px;color:white;margin-bottom:4px}
+.pm-sub{font-size:13px;color:rgba(255,255,255,.45);letter-spacing:.3px}
+.pm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.pm-card{padding:20px 22px;cursor:pointer;border-right:1px solid var(--sf-border);border-bottom:1px solid var(--sf-border);transition:all .15s;position:relative;overflow:hidden}
+.pm-card:nth-child(3),.pm-card:nth-child(6){border-right:none}
+.pm-card:nth-child(4),.pm-card:nth-child(5),.pm-card:nth-child(6){border-bottom:none}
+.pm-card:hover{background:#F8FAFC}
+.pm-card.active-persona{background:var(--sf-blue-lt)}
+.pm-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.pm-card:nth-child(1)::before{background:var(--p1)}
+.pm-card:nth-child(2)::before{background:var(--p2)}
+.pm-card:nth-child(3)::before{background:var(--p3)}
+.pm-card:nth-child(4)::before{background:var(--p4)}
+.pm-card:nth-child(5)::before{background:var(--p5)}
+.pm-card:nth-child(6)::before{background:var(--p6)}
+.pm-persona-icon{font-size:26px;margin-bottom:8px}
+.pm-persona-name{font-weight:700;font-size:13.5px;color:var(--sf-t1);margin-bottom:2px}
+.pm-persona-role{font-size:12px;color:var(--sf-t3);margin-bottom:8px}
+.pm-license{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:3px;background:#F1F5F9;color:#64748B;display:inline-block}
+.pm-footer{padding:14px 24px;background:#F8FAFC;border-top:1px solid var(--sf-border);text-align:center;font-size:12px;color:var(--sf-t3)}
+
+/* ── TOAST ───────────────────────────────────────────────────────── */
+#toast-wrap{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:7px}
+.sf-toast{background:var(--sf-navy);color:white;padding:10px 14px;border-radius:var(--radius-md);font-size:12.5px;font-weight:500;box-shadow:var(--shadow);max-width:360px;animation:toastIn .2s ease;display:flex;gap:8px;align-items:flex-start;border-left:3px solid rgba(255,255,255,.3)}
+.sf-toast.success{border-left-color:#6EE7B7;background:#064E3B}
+.sf-toast.error{border-left-color:var(--red);background:#7F1D1D}
+.sf-toast.warning{border-left-color:var(--amber-raw);background:#78350F}
+@keyframes toastIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── CALL QUEUE (Telecaller) ─────────────────────────────────────── */
+.call-card{background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;box-shadow:var(--shadow-sm);transition:box-shadow .15s}
+.call-card:hover{box-shadow:var(--shadow)}
+.call-card.priority{border-left:3px solid var(--red)}
+.call-priority-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.attempt-chips{display:flex;gap:4px;margin-top:6px}
+.attempt-chip{width:20px;height:6px;border-radius:2px;background:#DDDBDA}
+.attempt-chip.called{background:var(--amber-raw)}
+.attempt-chip.connected{background:var(--green)}
+
+/* ── APPROVAL CARD ───────────────────────────────────────────────── */
+.approval-card{background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;border-left:3px solid var(--amber-raw);box-shadow:var(--shadow-sm)}
+.approval-amount{font-family:var(--font-disp);font-size:22px;color:var(--sf-t1)}
+
+/* ── KYC REVIEW ──────────────────────────────────────────────────── */
+.kyc-card{background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-sm)}
+.kyc-doc-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F2F2;font-size:12.5px}
+.kyc-doc-row:last-child{border-bottom:none}
+
+/* ── PERMISSION MATRIX ───────────────────────────────────────────── */
+.perm-matrix th,.perm-matrix td{padding:8px 12px;font-size:12px}
+.perm-cell{text-align:center}
+.perm-y{color:var(--green);font-size:14px;font-weight:700}
+.perm-n{color:#DDDBDA;font-size:14px}
+.perm-r{color:var(--amber);font-size:12px;font-weight:600}
+
+/* ── NAV TAB with close button ───────────────────────────────────── */
+.gnav-tab-close{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;margin-left:4px;color:rgba(255,255,255,.5);font-size:10px;transition:all .12s;flex-shrink:0}
+.gnav-tab-close:hover{background:rgba(255,255,255,.2);color:white}
+.gnav-tab.active .gnav-tab-close{color:rgba(255,255,255,.7)}
+
+/* ── MORE DROPDOWN ───────────────────────────────────────────────── */
+.gnav-more-btn{display:flex;align-items:center;gap:4px;padding:0 12px;color:rgba(255,255,255,.7);font-size:12.5px;font-weight:600;cursor:pointer;height:100%;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.gnav-more-btn:hover{color:white;background:rgba(255,255,255,.07)}
+#more-menu{display:none;position:fixed;top:var(--nav-h);z-index:500;background:var(--sf-white);border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:0 8px 32px rgba(0,0,0,.18);width:240px;overflow:hidden;max-height:400px;overflow-y:auto}
+#more-menu.open{display:block}
+.more-menu-hdr{padding:8px 14px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);background:#F8FAFC;border-bottom:1px solid var(--sf-border)}
+.more-item{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-bottom:1px solid #F3F2F2;transition:background .1s;font-size:13px;color:var(--sf-t1)}
+.more-item:last-child{border-bottom:none}
+.more-item:hover{background:var(--sf-blue-lt);color:var(--sf-blue)}
+.more-item.is-open{font-weight:600;color:var(--sf-blue)}
+.more-item-icon{width:26px;height:26px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.more-item-divider{height:1px;background:var(--sf-border);margin:4px 0}
+#more-backdrop{display:none;position:fixed;inset:0;z-index:499}
+#more-backdrop.open{display:block}
+
+/* ── LIST VIEW HEADER ────────────────────────────────────────────── */
+.lv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.lv-title{font-family:var(--font-disp);font-size:20px;color:var(--sf-t1);display:flex;align-items:center;gap:10px}
+.lv-view-select{display:flex;align-items:center;gap:6px}
+.lv-view-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;background:white;border:1px solid var(--sf-border-dk);border-radius:var(--radius);font-size:12.5px;font-weight:600;cursor:pointer;color:var(--sf-t2)}
+.lv-view-btn:hover{background:#F3F2F2}
+
+/* ── RECORD LAYOUT (split view) ──────────────────────────────────── */
+.rec-layout{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start}
+.rec-main{}
+.rec-sidebar{}
+.rec-tab-panel{background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)}
+.rec-tab-bar{display:flex;border-bottom:2px solid var(--sf-border);padding:0 2px}
+.rec-tab-item{padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;color:var(--sf-t3);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.rec-tab-item:hover{color:var(--sf-t1)}
+.rec-tab-item.active{color:var(--sf-blue);border-bottom-color:var(--sf-blue)}
+.rec-tab-content{padding:16px}
+
+/* ── FIELDS SECTION ──────────────────────────────────────────────── */
+.fields-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:10px 0 6px;border-bottom:1px solid var(--sf-border);margin-bottom:4px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.fields-grid{display:grid;grid-template-columns:1fr 1fr}
+.f-row{padding:8px 10px;border-bottom:1px solid #F3F2F2}
+.f-row:nth-child(even){border-left:1px solid #F3F2F2}
+.f-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--sf-t3);margin-bottom:2px}
+.f-val{font-size:12.5px;color:var(--sf-t1);font-weight:500}
+.f-val.link{color:var(--sf-blue);cursor:pointer}
+.f-val.link:hover{text-decoration:underline}
+
+/* ── RELATED SECTION (ofi-style) ─────────────────────────────────── */
+.rs{border:1px solid var(--sf-border);border-radius:var(--radius);margin-bottom:6px;overflow:hidden;background:white}
+.rs-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;background:#FAFAF9;user-select:none}
+.rs-hdr:hover{background:#F3F2F2}
+.rs-left{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--sf-t1)}
+.rs-obj-icon{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:white}
+.rs-count{color:var(--sf-t3);font-weight:500;font-size:12px}
+.rs-actions{display:flex;align-items:center;gap:6px}
+.rs-chev{color:var(--sf-t4);font-size:11px;transition:transform .2s;margin-left:4px}
+.rs-chev.closed{transform:rotate(-90deg)}
+.rs-body{border-top:1px solid var(--sf-border)}
+.rs-empty{padding:12px 16px;font-size:12.5px;color:var(--sf-t3);font-style:italic}
+.rs-view-all{padding:8px 14px;text-align:center;border-top:1px solid #F3F2F2}
+
+/* ── ACTIVITY SIDEBAR ────────────────────────────────────────────── */
+.activity-sidebar{background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)}
+.activity-tabs{display:flex;border-bottom:1px solid var(--sf-border);padding:0 14px}
+.activity-tab{padding:10px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--sf-t3);border-bottom:2px solid transparent;margin-bottom:-1px}
+.activity-tab.active{color:var(--sf-blue);border-bottom-color:var(--sf-blue)}
+
+/* ── WAFFLE LAUNCHER DROPDOWN ────────────────────────────────────── */
+#waffle-menu{
+  display:none;position:fixed;top:var(--nav-h);left:0;z-index:500;
+  background:var(--sf-white);border:1px solid var(--sf-border);border-radius:0 var(--radius-lg) var(--radius-lg) 0;
+  box-shadow:0 8px 32px rgba(0,0,0,.18);width:260px;overflow:hidden;
+}
+#waffle-menu.open{display:block}
+.wm-header{padding:12px 16px;background:var(--sf-navy);font-size:12px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;text-transform:uppercase}
+.wm-app-name{font-size:14px;font-weight:700;color:white;margin-bottom:2px}
+.wm-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;border-bottom:1px solid #F3F2F2;transition:background .12s}
+.wm-item:last-child{border-bottom:none}
+.wm-item:hover{background:var(--sf-blue-lt)}
+.wm-item.active{background:var(--sf-blue-lt);font-weight:600}
+.wm-item-icon{width:30px;height:30px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.wm-item-label{font-size:13px;color:var(--sf-t1)}
+#waffle-backdrop{display:none;position:fixed;inset:0;z-index:499}
+#waffle-backdrop.open{display:block}
+
+/* ── RELATED TAB SECTIONS ────────────────────────────────────────── */
+.related-section{border:1px solid var(--sf-border);border-radius:var(--radius-md);margin-bottom:8px;overflow:hidden;background:white;box-shadow:var(--shadow-sm)}
+.related-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;user-select:none;background:#FAFAF9;border-bottom:1px solid var(--sf-border)}
+.related-section-hdr:hover{background:#F3F2F2}
+.related-section-title{font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;color:var(--sf-t1)}
+.related-section-icon{width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.related-section-chevron{color:var(--sf-t3);font-size:12px;transition:transform .2s}
+.related-section-chevron.open{transform:rotate(180deg)}
+.related-section-body{padding:0}
+.related-empty{padding:14px 16px;font-size:12.5px;color:var(--sf-t3);font-style:italic}
+.rec-detail-tabs{display:flex;border-bottom:2px solid var(--sf-border);margin-bottom:14px;background:white;border-radius:var(--radius-md) var(--radius-md) 0 0;overflow:hidden}
+.rec-detail-tab{padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;color:var(--sf-t3);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.rec-detail-tab:hover{color:var(--sf-t1)}
+.rec-detail-tab.active{color:var(--sf-blue);border-bottom-color:var(--sf-blue)}
+
+/* ── FORECAST ────────────────────────────────────────────────────── */
+.forecast-bar{height:28px;background:var(--sf-blue-lt);border-radius:3px;overflow:hidden;position:relative;margin-bottom:2px}
+.forecast-fill{height:100%;background:var(--sf-blue);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-size:11.5px;font-weight:700;color:white;transition:width .4s ease}
+.forecast-target{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--sf-t3);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     GLOBAL NAV (rebuilt per persona)
+     ════════════════════════════════════════════════════════════════ -->
+<div id="gnav">
+  <div class="gnav-launcher" onclick="toggleWaffleMenu(event)" title="App Launcher" id="gnav-waffle-btn">
+    <div class="launcher-grid">
+      <div class="launcher-dot"></div><div class="launcher-dot"></div><div class="launcher-dot"></div>
+      <div class="launcher-dot"></div><div class="launcher-dot"></div><div class="launcher-dot"></div>
+      <div class="launcher-dot"></div><div class="launcher-dot"></div><div class="launcher-dot"></div>
+    </div>
+  </div>
+  <div class="gnav-appname">
+    <div class="persona-accent-bar" id="gnav-accent"></div>
+    <span id="gnav-appname-text">Veltrac Sales</span>
+  </div>
+  <div class="gnav-tabs" id="gnav-tabs-wrap"></div>
+  <div class="gnav-right">
+    <div class="gnav-icon-btn" title="Search" onclick="toast('Global Search','info')">🔍</div>
+    <div class="gnav-icon-btn" title="Notifications" id="gnav-notif-btn" onclick="toast('Notifications','info')">🔔</div>
+    <div class="persona-switch-btn" onclick="openSwitcher()" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);margin-right:4px;">
+      <span>⚡ Switch Portal</span>
+    </div>
+    <div class="persona-switch-btn" onclick="openPersonaModal()">
+      <span id="persona-switch-label">Switch Persona ▾</span>
+    </div>
+    <div class="persona-avatar" id="gnav-avatar" onclick="openPersonaModal()">—</div>
+  </div>
+</div>
+
+<!-- WAFFLE MENU DROPDOWN -->
+<div id="waffle-backdrop" onclick="closeWaffleMenu()"></div>
+<div id="waffle-menu">
+  <div class="wm-header">
+    <div class="wm-app-name" id="wm-app-name">Veltrac Sales</div>
+    <div id="wm-persona-role" style="font-size:11px;color:rgba(255,255,255,.5);margin-top:1px">App Launcher</div>
+  </div>
+  <div id="wm-items"></div>
+</div>
+
+<!-- MORE DROPDOWN -->
+<div id="more-backdrop" onclick="closeMoreMenu()"></div>
+<div id="more-menu">
+  <div class="more-menu-hdr">All Items</div>
+  <div id="more-items"></div>
+</div>
+
+<!-- CONTENT -->
+<div id="sf-content"></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     PERSONA SELECTOR MODAL
+     ════════════════════════════════════════════════════════════════ -->
+<div id="persona-modal">
+  <div class="pm-wrap">
+    <div class="pm-header">
+      <div class="pm-title">Select Your Role</div>
+      <div class="pm-sub">Veltrac India — Salesforce Console · Each persona sees only what their role requires</div>
+    </div>
+    <div class="pm-grid" id="persona-grid"></div>
+    <div class="pm-footer">Access is scoped per role. Switching persona rebuilds the entire application — navigation, data, and available actions.</div>
+  </div>
+</div>
+
+<!-- PORTAL SWITCHER MODAL -->
+<style>
+#switcher-modal{display:none;position:fixed;inset:0;background:rgba(3,45,96,.85);z-index:4000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#switcher-modal.open{display:flex}
+.sw-modal-wrap{background:#fff;border-radius:12px;overflow:hidden;width:520px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,.4)}
+.sw-modal-header{background:var(--sf-navy,#032D60);padding:20px 24px;display:flex;align-items:center;justify-content:space-between}
+.sw-modal-title{font-weight:700;font-size:16px;color:white}
+.sw-modal-close{color:rgba(255,255,255,.6);font-size:20px;cursor:pointer;line-height:1}
+.sw-modal-close:hover{color:white}
+.sw-portal-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #E2E8F0}
+.sw-portal-card{padding:22px 24px;cursor:pointer;border-right:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0;transition:background .15s;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit}
+.sw-portal-card:nth-child(2),.sw-portal-card:nth-child(4){border-right:none}
+.sw-portal-card:nth-child(3),.sw-portal-card:nth-child(4){border-bottom:none}
+.sw-portal-card:hover{background:#F1F5F9}
+.sw-portal-card.current{background:#EEF4FF}
+.sw-card-icon{font-size:32px}
+.sw-card-title{font-weight:700;font-size:14px;color:#1E293B}
+.sw-card-desc{font-size:12px;color:#64748B;line-height:1.5}
+.sw-card-badge{align-self:flex-start;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block}
+.sw-badge-green{background:#DCFCE7;color:#15803D}
+.sw-badge-blue{background:#DBEAFE;color:#1D4ED8}
+.sw-badge-amber{background:#FEF3C7;color:#B45309}
+.sw-badge-red{background:#FEE2E2;color:#DC2626}
+</style>
+<div id="switcher-modal">
+  <div class="sw-modal-wrap">
+    <div class="sw-modal-header">
+      <div class="sw-modal-title">Switch Portal View</div>
+      <div class="sw-modal-close" onclick="closeSwitcher()">&#x2715;</div>
+    </div>
+    <div class="sw-portal-grid">
+      <div class="sw-portal-card" onclick="window.open('Veltrac_B2B_Portal.html','_blank')">
+        <div class="sw-card-icon">&#x1F6D2;</div>
+        <div><div class="sw-card-title">B2B Customer Portal</div><div class="sw-card-desc">Browse catalogue, add to cart, request quotes, track orders. Customer-facing experience.</div></div>
+        <span class="sw-card-badge sw-badge-green">File 1</span>
+      </div>
+      <div class="sw-portal-card" onclick="window.open('Veltrac_Dealer_Portal_Fixed.html','_blank')">
+        <div class="sw-card-icon">&#x1F91D;</div>
+        <div><div class="sw-card-title">Dealer Portal</div><div class="sw-card-desc">Respond to RFQs, submit quotes with margin, track dealer-routed orders. Partner experience.</div></div>
+        <span class="sw-card-badge sw-badge-blue">File 2</span>
+      </div>
+      <div class="sw-portal-card current" onclick="closeSwitcher()">
+        <div class="sw-card-icon">&#x2601;&#xFE0F;</div>
+        <div><div class="sw-card-title">Salesforce Sales Console</div><div class="sw-card-desc">Leads, Accounts, Opportunities, Quotes, Orders &#8212; full Lightning UI simulation with SAP sync.</div></div>
+        <span class="sw-card-badge sw-badge-amber">Currently Active</span>
+      </div>
+      <div class="sw-portal-card" onclick="window.open('Veltrac_Admin_Console.html','_blank')">
+        <div class="sw-card-icon">&#x2699;&#xFE0F;</div>
+        <div><div class="sw-card-title">Admin Console</div><div class="sw-card-desc">Territory config, threshold rules, dealer mapping, inventory override, integration monitoring.</div></div>
+        <span class="sw-card-badge sw-badge-red">File 4</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="toast-wrap"></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ════════════════════════════════════════════════════════════════ -->
+<script>
+// ════════════════════════════════════════════════════════════════════
+// PERSONA DEFINITIONS
+// ════════════════════════════════════════════════════════════════════
+const PERSONAS = [
+  {
+    id:'telecaller', name:'Arjun Mehta', role:'Lead Verification Specialist',
+    icon:'📞', license:'Platform License', accent:'var(--p1)', initials:'AM',
+    app:'Veltrac Telecaller',
+    tabs:['call-queue','activity','lead-search'],
+    tabLabels:{'call-queue':'📋 My Call Queue','activity':'📅 Today\'s Activity','lead-search':'🔍 Lead Search'},
+    defaultTab:'call-queue',
+    canSee:['Leads (assigned only)','Call Activity','Lead Source','Verification Status'],
+    cannotSee:['Accounts','Opportunities','Quotes','Pricing','Pipeline','Other reps\' data']
+  },
+  {
+    id:'sales-rep', name:'Rahul Sharma', role:'Territory Sales Rep — West',
+    icon:'💼', license:'Sales Cloud', accent:'var(--p2)', initials:'RS',
+    app:'Veltrac Sales',
+    tabs:['home','my-leads','accounts','contacts','opportunities','quotes'],
+    tabLabels:{'home':'🏠 Home','my-leads':'👤 My Leads','accounts':'🏢 Accounts','contacts':'👥 Contacts','opportunities':'💼 Opportunities','quotes':'📄 Quotes'},
+    defaultTab:'home',
+    canSee:['West territory data only','Own leads and accounts','Opportunities (own territory)','Quotes up to 12% discount'],
+    cannotSee:['Other territories\' pipeline','Dealer commission rates','Threshold configuration','Team performance data','Approval queue']
+  },
+  {
+    id:'sales-mgr', name:'Vikram Desai', role:'Sales Manager — National',
+    icon:'📊', license:'Sales Cloud', accent:'var(--p3)', initials:'VD',
+    app:'Veltrac Sales Manager',
+    tabs:['home','team-pipeline','approval-queue','forecasts','reports'],
+    tabLabels:{'home':'🏠 Home','team-pipeline':'📊 Team Pipeline','approval-queue':'✅ Approval Queue','forecasts':'🎯 Forecasts','reports':'📈 Reports'},
+    defaultTab:'home',
+    canSee:['All territories','All reps\' pipeline','Approval queue (discounts 12–20%)','Forecast by rep','Win/Loss reports'],
+    cannotSee:['System configuration','Integration logs','Dealer commission rates','Admin settings']
+  },
+  {
+    id:'sales-ops', name:'Meera Iyer', role:'Sales Operations & KYC',
+    icon:'⚙️', license:'Sales Cloud', accent:'var(--p4)', initials:'MI',
+    app:'Veltrac Sales Ops',
+    tabs:['home','kyc-queue','leads','accounts','quotes','orders','products'],
+    tabLabels:{'home':'🏠 Home','kyc-queue':'🔍 KYC Queue','leads':'👤 Leads','accounts':'🏢 Accounts','quotes':'📄 Quotes','orders':'📦 Orders','products':'🏷️ Products'},
+    defaultTab:'home',
+    canSee:['All leads (all sources)','KYC verification queue','All accounts and contacts','All quotes and orders','Product catalogue and price books'],
+    cannotSee:['Integration architecture','Named credentials','Apex job config','Dealer commission rates','System admin settings']
+  },
+  {
+    id:'dealer-rm', name:'Sanjay Patil', role:'Dealer Relationship Manager',
+    icon:'🤝', license:'Sales Cloud', accent:'var(--p5)', initials:'SP',
+    app:'Veltrac Partner Mgmt',
+    tabs:['home','dealer-accounts','partner-contacts','dealer-opps','commission'],
+    tabLabels:{'home':'🏠 Home','dealer-accounts':'🤝 Dealer Accounts','partner-contacts':'👥 Partner Contacts','dealer-opps':'💼 Dealer Opps','commission':'💰 Commission'},
+    defaultTab:'home',
+    canSee:['Dealer Account records','Partner Contacts','Dealer-routed Opportunities only','Commission rates (edit)','Dealer scorecard','Territory coverage gaps'],
+    cannotSee:['Direct customer pricing','Internal margins on direct deals','Sales rep activity','Customer portal data','System configuration']
+  },
+  {
+    id:'sys-admin', name:'Suresh Krishnamurthy', role:'System Administrator',
+    icon:'🛡️', license:'System Admin', accent:'var(--p6)', initials:'SK',
+    app:'Veltrac Admin',
+    tabs:['home','users','permissions','integration','logs'],
+    tabLabels:{'home':'🏠 Home','users':'👤 Users','permissions':'🔐 Permission Sets','integration':'🔌 Integration','logs':'📋 System Logs'},
+    defaultTab:'home',
+    canSee:['Everything — full org access','All user records and profiles','Permission set assignments','Integration credentials','Apex jobs and flows','System health','Audit trail'],
+    cannotSee:['Nothing — System Admin has unrestricted access']
+  }
+];
+
+// ════════════════════════════════════════════════════════════════════
+// MOCK DATA (scoped per persona)
+// ════════════════════════════════════════════════════════════════════
+
+const ALL_LEADS = [
+  {id:'L-001',name:'Vikram Desai',     company:'Desai Tyre Traders',       title:'Purchase Manager',   source:'IndiaMart',   territory:'Mumbai',    status:'Open',    phone:'98201 44321', attempts:1, lastCalled:'Today 10:15',  disposition:'Not Reachable', verified:false},
+  {id:'L-002',name:'Pooja Agarwal',   company:'Agarwal Logistics',         title:'Procurement Head',   source:'B2B Portal',  territory:'Delhi NCR', status:'Working', phone:'99110 87654', attempts:2, lastCalled:'Today 11:30',  disposition:'Connected',     verified:true},
+  {id:'L-003',name:'Suresh Krishnan', company:'SKL Enterprises',           title:'Operations Director',source:'BD Upload',   territory:'Chennai',   status:'Open',    phone:'94440 22198', attempts:0, lastCalled:'—',            disposition:'Not Called',    verified:false},
+  {id:'L-004',name:'Neha Mehta',      company:'Mehta Cold Chain',          title:'Fleet Manager',      source:'Campaign',    territory:'Pune',      status:'Open',    phone:'90290 55432', attempts:1, lastCalled:'Yesterday',    disposition:'Not Reachable', verified:false},
+  {id:'L-005',name:'Ramesh Pillai',   company:'Pillai Rubber Works',       title:'MD',                 source:'Referral',    territory:'Kochi',     status:'Qualified',phone:'94470 11988',attempts:2, lastCalled:'Today 09:45',  disposition:'Connected',     verified:true},
+  {id:'L-006',name:'Anjali Rao',      company:'Rao Mining Equipment',      title:'GM Procurement',     source:'IndiaMart',   territory:'Hyderabad', status:'Open',    phone:'95050 33761', attempts:0, lastCalled:'—',            disposition:'Not Called',    verified:false},
+  {id:'L-007',name:'Dinesh Kumar',    company:'Kumar Fleet Solutions',     title:'Fleet Ops Head',     source:'B2B Portal',  territory:'Mumbai',    status:'Open',    phone:'98331 20099', attempts:1, lastCalled:'Today 14:00',  disposition:'Not Reachable', verified:false},
+  {id:'L-008',name:'Priya Menon',     company:'Menon Logistics Pvt Ltd',  title:'Supply Chain Mgr',   source:'BD Upload',   territory:'Bangalore', status:'Working', phone:'80556 44120', attempts:2, lastCalled:'Yesterday',    disposition:'Connected',     verified:true},
+];
+
+const WEST_OPPS = [
+  {id:'OPP-001',name:'Mahindra Logistics — Forklift Refresh Q1',account:'Mahindra Logistics Ltd',  stage:3,amount:1240000,discount:8, margin:22,routing:'direct', sapSync:'synced', closeDate:'2024-12-31',owner:'Rahul Sharma'},
+  {id:'OPP-002',name:'Reliance Retail — Pallet Jack Tyres',     account:'Reliance Retail',          stage:2,amount:340000, discount:5, margin:18,routing:'dealer', sapSync:'synced', closeDate:'2025-01-15',owner:'Rahul Sharma'},
+  {id:'OPP-005',name:'Flipkart — Warehouse Fleet Upgrade',       account:'Flipkart Logistics',       stage:2,amount:890000, discount:10,margin:20,routing:'direct', sapSync:'synced', closeDate:'2025-01-30',owner:'Rahul Sharma'},
+];
+
+const ALL_OPPS = [
+  ...WEST_OPPS,
+  {id:'OPP-003',name:'Vedanta Mining — OTR Contract FY25',       account:'Vedanta Mining',           stage:4,amount:4800000,discount:14,margin:19,routing:'direct', sapSync:'pending',closeDate:'2025-01-20',owner:'Arvind Kumar'},
+  {id:'OPP-004',name:'DHL India — Inner Tube Supply',            account:'DHL India',                stage:1,amount:180000, discount:3, margin:25,routing:'dealer', sapSync:'failed', closeDate:'2025-02-01',owner:'Priya Nair'},
+  {id:'OPP-006',name:'Adani Ports — Container Handler Package',  account:'Adani Ports',              stage:5,amount:6200000,discount:12,margin:21,routing:'direct', sapSync:'synced', closeDate:'2024-12-28',owner:'Arvind Kumar'},
+];
+
+const DEALER_MAP_DATA = [
+  {
+    id:'D-001', name:'Tyre Solutions India', code:'DLR-W-042',
+    territory:'Mumbai / Pune / Nashik', commission:7, tier:'Gold', active:true,
+    contactName:'Ravi Shah', contactPhone:'98201 77001', contactEmail:'ravi.shah@tyresolutions.in',
+    address:'Plot 14, MIDC Andheri East, Mumbai 400093',
+    monthlyRev:2140000, lastMonthRev:1980000, ytdRev:18600000, monthlyTarget:2500000,
+    payoutStatus:'Paid', onboardedDate:'Mar 2021',
+    monthlyTrend:[980000,1200000,1450000,1800000,1980000,2140000],
+    goldTarget:25000000,
+
+    contacts:[
+      {name:'Ravi Shah', title:'Owner / Principal', phone:'98201 77001', email:'ravi.shah@tyresolutions.in', primary:true},
+      {name:'Deepak Naik', title:'Operations Manager', phone:'98201 77002', email:'ops@tyresolutions.in', primary:false},
+      {name:'Sunita Joshi', title:'Finance & Accounts', phone:'98201 77003', email:'accounts@tyresolutions.in', primary:false},
+    ],  },
+  {
+    id:'D-002', name:'Northern Tyre Works', code:'DLR-N-018',
+    territory:'Delhi NCR / Gurgaon', commission:6, tier:'Silver', active:true,
+    contactName:'Anil Gupta', contactPhone:'98110 44321', contactEmail:'anil@northerntyres.com',
+    address:'Sector 18, Gurugram 122015, Haryana',
+    monthlyRev:980000, lastMonthRev:870000, ytdRev:8200000, monthlyTarget:1500000,
+    payoutStatus:'Pending', onboardedDate:'Aug 2022',
+    monthlyTrend:[600000,700000,750000,820000,870000,980000],
+    goldTarget:15000000,
+
+    contacts:[
+      {name:'Anil Gupta', title:'Owner / Principal', phone:'98110 44321', email:'anil@northerntyres.com', primary:true},
+      {name:'Pradeep Sharma', title:'Logistics Coordinator', phone:'98110 44322', email:'logistics@northerntyres.com', primary:false},
+    ],  },
+  {
+    id:'D-003', name:'South India Rubber Co', code:'DLR-S-031',
+    territory:'Hyderabad / Bengaluru', commission:7, tier:'Gold', active:true,
+    contactName:'Krishna Rao', contactPhone:'94400 55678', contactEmail:'krishna@sirco.in',
+    address:'Kukatpally Industrial Area, Hyderabad 500072',
+    monthlyRev:1760000, lastMonthRev:1900000, ytdRev:14800000, monthlyTarget:2000000,
+    payoutStatus:'Paid', onboardedDate:'Jan 2020',
+    monthlyTrend:[1200000,1400000,1500000,1900000,1900000,1760000],
+    goldTarget:25000000,
+
+    contacts:[
+      {name:'Krishna Rao', title:'Managing Director', phone:'94400 55678', email:'krishna@sirco.in', primary:true},
+      {name:'Venkatesan R', title:'Head – Sales & Distribution', phone:'94400 55679', email:'sales@sirco.in', primary:false},
+      {name:'Lakshmi Prasad', title:'Accounts Manager', phone:'94400 55680', email:'accounts@sirco.in', primary:false},
+    ],  },
+  {
+    id:'D-004', name:'Gujarat Tyre Distributors', code:'DLR-W-055',
+    territory:'Ahmedabad / Surat', commission:5, tier:'Silver', active:true,
+    contactName:'Bhavesh Patel', contactPhone:'97277 33445', contactEmail:'bhavesh@gtd.co.in',
+    address:'GIDC Vatva Phase 2, Ahmedabad 382445',
+    monthlyRev:650000, lastMonthRev:590000, ytdRev:5400000, monthlyTarget:1000000,
+    payoutStatus:'Pending', onboardedDate:'Jun 2023',
+    monthlyTrend:[300000,350000,420000,500000,590000,650000],
+    goldTarget:15000000,
+
+    contacts:[
+      {name:'Bhavesh Patel', title:'Proprietor', phone:'97277 33445', email:'bhavesh@gtd.co.in', primary:true},
+      {name:'Rutvik Shah', title:'Warehouse & Dispatch', phone:'97277 33446', email:'dispatch@gtd.co.in', primary:false},
+    ],  },
+  {
+    id:'D-005', name:'Chennai Wheel & Tyre', code:'DLR-S-044',
+    territory:'Chennai / Coimbatore', commission:5, tier:'Silver', active:false,
+    contactName:'Tamil Selvan', contactPhone:'94440 12345', contactEmail:'selvan@cwt.in',
+    address:'Ambattur Industrial Estate, Chennai 600058',
+    monthlyRev:0, lastMonthRev:310000, ytdRev:2100000, monthlyTarget:800000,
+    payoutStatus:'Paid', onboardedDate:'Nov 2021', inactiveReason:'Non-performance — Q3 review',
+    monthlyTrend:[420000,380000,310000,0,0,0],
+    goldTarget:15000000,
+
+    contacts:[
+      {name:'Tamil Selvan', title:'Owner', phone:'94440 12345', email:'selvan@cwt.in', primary:true},
+    ],  },
+  {
+    id:'D-006', name:'Kochi Rubber Mart', code:'DLR-S-067',
+    territory:'Kochi / Trivandrum', commission:6, tier:'Silver', active:true,
+    contactName:'Mathew Joseph', contactPhone:'94470 98765', contactEmail:'mathew@kochirubbr.in',
+    address:'Edappally, Kochi 682024, Kerala',
+    monthlyRev:480000, lastMonthRev:440000, ytdRev:3900000, monthlyTarget:700000,
+    payoutStatus:'Pending', onboardedDate:'Feb 2023',
+    monthlyTrend:[200000,280000,320000,400000,440000,480000],
+    goldTarget:15000000,
+
+    contacts:[
+      {name:'Mathew Joseph', title:'Managing Partner', phone:'94470 98765', email:'mathew@kochirubbr.in', primary:true},
+      {name:'Benny Varghese', title:'Sales Coordinator', phone:'94470 98766', email:'sales@kochirubbr.in', primary:false},
+    ],  },
+];
+
+const KYC_QUEUE = [
+  {id:'KYC-001',company:'Sunrise Logistics Pvt Ltd', gst:'27AABCS1234A1Z5', contact:'Deepak Shah',     mobile:'98200 33441', source:'B2B Portal',  submitted:'2 hrs ago',  docs:{gst:true, trade:true, inc:false, bank:false}, status:'Pending'},
+  {id:'KYC-002',company:'Bharat Mining Equip Co',    gst:'36AADCB5678B2Z6', contact:'Ravi Naidu',      mobile:'90002 11987', source:'IndiaMart',   submitted:'4 hrs ago',  docs:{gst:true, trade:true, inc:true,  bank:true},  status:'Ready'},
+  {id:'KYC-003',company:'Patil Transport Pvt Ltd',   gst:'29AAHCP9012C3Z7', contact:'Sunil Patil',     mobile:'94490 55213', source:'BD Upload',   submitted:'Yesterday',  docs:{gst:true, trade:false,inc:false, bank:false}, status:'Incomplete'},
+  {id:'KYC-004',company:'Kiran Fleet Solutions',     gst:'24AABCK3456D4Z8', contact:'Kiran Mehta',     mobile:'98790 22341', source:'B2B Portal',  submitted:'3 days ago', docs:{gst:true, trade:true, inc:true,  bank:true},  status:'Ready'},
+];
+
+const ORDERS_DATA = [
+  {id:'ORD-001',orderNo:'VT-2024-1001',account:'Mahindra Logistics',product:'Dunamis Premium Solid (200 units)',  amount:1139200,wh:'Mumbai',   delivery:'2024-12-30',sapOrder:'4500087100',sapSync:'synced', statusIdx:3},
+  {id:'ORD-002',orderNo:'VT-2024-1002',account:'Adani Ports',       product:'Nubian Press-On-Band (120 units)',   amount:5456000,wh:'Ahmedabad',delivery:'2025-01-05',sapOrder:'4500087310',sapSync:'synced', statusIdx:2},
+  {id:'ORD-003',orderNo:'VT-2024-1003',account:'Flipkart Logistics',product:'Rocksolid Standard (80 units)',      amount:801000, wh:'Mumbai',   delivery:'2025-01-15',sapOrder:'4500087205',sapSync:'synced', statusIdx:1},
+  {id:'ORD-004',orderNo:'VT-2024-1004',account:'DHL India',         product:'TBR Inner Tube (800 units)',         amount:180000, wh:'Delhi',    delivery:'2025-02-01',sapOrder:null,         sapSync:'failed',statusIdx:0},
+];
+
+const PRODUCTS_DATA = [
+  {sku:'DUN-18X7-8',  name:'Dunamis Premium Solid',   category:'Industrial', price:6200, pricebook:'Standard India FY25'},
+  {sku:'SOL-6.50-10', name:'Solitrek Heavy Duty Solid',category:'Industrial', price:8500, pricebook:'Standard India FY25'},
+  {sku:'NUB-21X7X15', name:'Nubian Press-On-Band',     category:'OTR',        price:14500,pricebook:'OTR Segment FY25'},
+  {sku:'RS-8.15-15',  name:'Rocksolid Standard Profile',category:'Commercial',price:10100,pricebook:'Standard India FY25'},
+  {sku:'SW-7.00-12',  name:'Solidwings Medium',         category:'Commercial', price:4800, pricebook:'Standard India FY25'},
+];
+
+// ── VELTRAC ACCOUNT DATA ────────────────────────────────────────────
+const ACCOUNT_DATA = [
+  {
+    id:'ACC-001', name:'Mahindra Logistics Ltd', sapId:'1000087421',
+    type:'Direct', segment:'Fleet & Logistics', territory:'Mumbai / West',
+    owner:'Rahul Sharma', gst:'27AABCM1234A1Z5', pan:'AABCM1234A',
+    phone:'+91 22 6700 5000', email:'procurement@mahindra.com',
+    billingAddress:'Mahindra Towers, Worli, Mumbai 400018',
+    shippingAddress:'Same as Billing',
+    annualTyreReq:'500–700 units/yr', existingBrand:'MRF / Apollo',
+    kycStatus:'Approved', portalAccess:true, commercialized:true,
+    accountMgr:'Rahul Sharma', creditLimit:'₹50,00,000',
+    paymentTerms:'Net 30', region:'West', inactive:false,
+    contacts:[
+      {name:'Rajesh Mehta',    title:'Head of Procurement',  phone:'98201 44321', email:'r.mehta@mahindra.com',    primary:true},
+      {name:'Sunita Desai',    title:'Finance Controller',   phone:'98201 55678', email:'s.desai@mahindra.com',    primary:false},
+    ],
+    history:[
+      {date:'28/2/2026, 9:00 am',  field:'Account Owner',    user:'user Integration', from:'—',             to:'Rahul Sharma'},
+      {date:'20/1/2026, 4:49 pm',  field:'Account Type',     user:'user Integration', from:'Prospect',      to:'Direct'},
+      {date:'15/1/2026, 11:00 am', field:'KYC Status',       user:'Meera Iyer',       from:'Pending',       to:'Approved'},
+      {date:'11/1/2026, 2:39 pm',  field:'Portal Access',    user:'Meera Iyer',       from:'—',             to:'Enabled'},
+      {date:'5/1/2026, 10:00 am',  field:'Credit Limit',     user:'Meera Iyer',       from:'₹25,00,000',    to:'₹50,00,000'},
+      {date:'1/11/2025, 2:39 pm',  field:'Created',          user:'user Integration', from:'—',             to:'Mahindra Logistics Ltd'},
+    ]
+  },
+  {
+    id:'ACC-002', name:'Reliance Retail', sapId:'1000054312',
+    type:'Direct', segment:'Retail / E-Commerce', territory:'Mumbai / West',
+    owner:'Rahul Sharma', gst:'27AABCR5678B2Z6', pan:'AABCR5678B',
+    phone:'+91 22 4477 0000', email:'tyres@relianceretail.com',
+    billingAddress:'RCP Complex, Navi Mumbai 400701',
+    shippingAddress:'Multiple – 8 distribution centres',
+    annualTyreReq:'200–300 units/yr', existingBrand:'Bridgestone',
+    kycStatus:'Approved', portalAccess:false, commercialized:true,
+    accountMgr:'Rahul Sharma', creditLimit:'₹30,00,000',
+    paymentTerms:'Net 45', region:'West', inactive:false,
+    contacts:[
+      {name:'Aditya Nair',     title:'Procurement Manager',  phone:'98765 12340', email:'a.nair@relianceretail.com', primary:true},
+    ],
+    history:[
+      {date:'20/1/2026, 4:49 pm', field:'Account Type', user:'user Integration', from:'Regional', to:'Direct'},
+      {date:'1/11/2025, 9:00 am', field:'Created',      user:'user Integration', from:'—',        to:'Reliance Retail'},
+    ]
+  },
+  {
+    id:'ACC-003', name:'Flipkart Logistics Pvt Ltd', sapId:'1000091204',
+    type:'Direct', segment:'E-Commerce / Warehouse', territory:'Mumbai / West',
+    owner:'Rahul Sharma', gst:'29AABCF9012C3Z7', pan:'AABCF9012C',
+    phone:'+91 80 6798 0000', email:'ops-tyres@flipkart.com',
+    billingAddress:'Flipkart Internet Pvt Ltd, Osman Shukoor Rd, Bengaluru 560102',
+    shippingAddress:'Mumbai DC — Turbhe MIDC, Navi Mumbai',
+    annualTyreReq:'150–200 units/yr', existingBrand:'Camso',
+    kycStatus:'Approved', portalAccess:true, commercialized:false,
+    accountMgr:'Rahul Sharma', creditLimit:'₹20,00,000',
+    paymentTerms:'Net 30', region:'West', inactive:false,
+    contacts:[
+      {name:'Karan Verma',     title:'Logistics Ops Manager', phone:'98330 77665', email:'k.verma@flipkart.com',  primary:true},
+    ],
+    history:[
+      {date:'15/2/2026, 3:00 pm', field:'Portal Access', user:'Meera Iyer', from:'—', to:'Enabled'},
+      {date:'1/11/2025, 9:00 am', field:'Created',       user:'user Integration', from:'—', to:'Flipkart Logistics Pvt Ltd'},
+    ]
+  },
+];
+
+// ── QUOTE DATA linked to opportunities ──────────────────────────────
+const QUOTE_DATA = [
+  {
+    id:'QT-001', name:'Q-Mahindra-001', oppId:'OPP-001',
+    account:'Mahindra Logistics Ltd', amount:1139200, discount:8,
+    approvalStatus:'Approved', status:'Accepted', validUntil:'2025-01-31',
+    owner:'Rahul Sharma', createdDate:'2024-12-15',
+    lineItems:[
+      {sku:'DUN-18X7-8',  product:'Dunamis Premium Solid',    qty:120, unitPrice:6200,  discount:8,  total:685440},
+      {sku:'SOL-6.50-10', product:'Solitrek Heavy Duty Solid', qty:80,  unitPrice:8500,  discount:8,  total:626560},
+    ]
+  },
+  {
+    id:'QT-002', name:'Q-Reliance-001', oppId:'OPP-002',
+    account:'Reliance Retail', amount:323000, discount:5,
+    approvalStatus:'Not Required', status:'Sent', validUntil:'2025-02-15',
+    owner:'Rahul Sharma', createdDate:'2024-12-20',
+    lineItems:[
+      {sku:'RS-8.15-15',  product:'Rocksolid Standard Profile', qty:32,  unitPrice:10100, discount:5, total:306640},
+    ]
+  },
+  {
+    id:'QT-003', name:'Q-Flipkart-001', oppId:'OPP-005',
+    account:'Flipkart Logistics Pvt Ltd', amount:801000, discount:10,
+    approvalStatus:'Approved', status:'Sent', validUntil:'2025-02-28',
+    owner:'Rahul Sharma', createdDate:'2024-12-22',
+    lineItems:[
+      {sku:'SW-7.00-12',  product:'Solidwings Medium',          qty:80,  unitPrice:4800,  discount:10, total:345600},
+      {sku:'RS-8.15-15',  product:'Rocksolid Standard Profile', qty:45,  unitPrice:10100, discount:10, total:408150},
+    ]
+  },
+];
+
+// OPP product line items
+const OPP_PRODUCTS = {
+  'OPP-001': [{sku:'DUN-18X7-8',product:'Dunamis Premium Solid',qty:120,unitPrice:6200,discount:8,total:685440},{sku:'SOL-6.50-10',product:'Solitrek Heavy Duty Solid',qty:80,unitPrice:8500,discount:8,total:626560}],
+  'OPP-002': [{sku:'RS-8.15-15',product:'Rocksolid Standard Profile',qty:32,unitPrice:10100,discount:5,total:306640}],
+  'OPP-005': [{sku:'SW-7.00-12',product:'Solidwings Medium',qty:80,unitPrice:4800,discount:10,total:345600},{sku:'RS-8.15-15',product:'Rocksolid Standard Profile',qty:45,unitPrice:10100,discount:10,total:408150}],
+  'OPP-003': [{sku:'NUB-21X7X15',product:'Nubian Press-On-Band',qty:180,unitPrice:14500,discount:14,total:2245800},{sku:'SOL-6.50-10',product:'Solitrek Heavy Duty Solid',qty:200,unitPrice:8500,discount:14,total:1462000}],
+};
+
+const USERS_DATA = [
+  {id:'U-001',name:'Rahul Sharma',         profile:'Sales Rep',         license:'Sales Cloud',   territory:'West',   lastLogin:'Today 08:42',  active:true},
+  {id:'U-002',name:'Priya Nair',           profile:'Sales Rep',         license:'Sales Cloud',   territory:'South',  lastLogin:'Today 09:15',  active:true},
+  {id:'U-003',name:'Arvind Kumar',         profile:'Sales Rep',         license:'Sales Cloud',   territory:'South',  lastLogin:'Yesterday',    active:true},
+  {id:'U-004',name:'Vikram Desai',         profile:'Sales Manager',     license:'Sales Cloud',   territory:'National',lastLogin:'Today 07:55', active:true},
+  {id:'U-005',name:'Meera Iyer',           profile:'Sales Ops',         license:'Sales Cloud',   territory:'All',    lastLogin:'Today 08:30',  active:true},
+  {id:'U-006',name:'Sanjay Patil',         profile:'Dealer Rel. Mgr',   license:'Sales Cloud',   territory:'National',lastLogin:'Today 10:12', active:true},
+  {id:'U-007',name:'Arjun Mehta',          profile:'Telecaller',        license:'Platform',      territory:'West',   lastLogin:'Today 09:00',  active:true},
+  {id:'U-008',name:'Kavya Reddy',          profile:'Telecaller',        license:'Platform',      territory:'South',  lastLogin:'Today 09:05',  active:true},
+  {id:'U-009',name:'Rohit Singh',          profile:'Telecaller',        license:'Platform',      territory:'North',  lastLogin:'Today 09:02',  active:true},
+  {id:'U-010',name:'Suresh Krishnamurthy', profile:'System Admin',      license:'System Admin',  territory:'All',    lastLogin:'Today 08:00',  active:true},
+];
+
+const OPP_STAGES = ['RFQ Received','Needs Qualification','Quotation In Progress','Quote Presented','Negotiation','Verbal Confirmation','Closed Won'];
+
+// ════════════════════════════════════════════════════════════════════
+// APP STATE
+// ════════════════════════════════════════════════════════════════════
+let state = {
+  persona: null,
+  activeTab: null,
+  openTabs: [],          // [{id, label, icon}] — tabs visible in nav bar
+  selectedAccount: null,
+  selectedAccountTab: 'details',
+  selectedOpp: null,
+  selectedOppTab: 'details',
+  selectedQuote: null,
+  selectedQuoteTab: 'details',
+  accountListView: 'My Accounts',
+  selectedDealer: null,
+  selectedDealerTab: 'details',
+  opps: JSON.parse(JSON.stringify(ALL_OPPS)),
+  leads: JSON.parse(JSON.stringify(ALL_LEADS)),
+  kyc: JSON.parse(JSON.stringify(KYC_QUEUE)),
+  dealers: JSON.parse(JSON.stringify(DEALER_MAP_DATA)),
+  orders: JSON.parse(JSON.stringify(ORDERS_DATA)),
+};
+
+// ════════════════════════════════════════════════════════════════════
+// PERSONA MODAL
+// ════════════════════════════════════════════════════════════════════
+function openSwitcher()  { document.getElementById('switcher-modal').classList.add('open'); }
+function closeSwitcher() { document.getElementById('switcher-modal').classList.remove('open'); }
+document.addEventListener('DOMContentLoaded',()=>{ const m=document.getElementById('switcher-modal'); if(m) m.addEventListener('click',e=>{if(e.target===m) closeSwitcher();}); });
+function openPersonaModal() {
+  const grid = document.getElementById('persona-grid');
+  grid.innerHTML = PERSONAS.map(p => `
+    <div class="pm-card ${state.persona?.id===p.id?'active-persona':''}" onclick="selectPersona('${p.id}')">
+      <div class="pm-persona-icon">${p.icon}</div>
+      <div class="pm-persona-name">${p.name}</div>
+      <div class="pm-persona-role">${p.role}</div>
+      <span class="pm-license">${p.license}</span>
+      ${state.persona?.id===p.id ? '<div style="margin-top:8px"><span class="badge b-green">● Active</span></div>' : ''}
+    </div>`).join('');
+  document.getElementById('persona-modal').classList.add('open');
+}
+
+function selectPersona(personaId) {
+  const p = PERSONAS.find(x => x.id === personaId);
+  if (!p) return;
+  state.persona = p;
+  state.activeTab = p.defaultTab;
+  // Seed open tabs with just the default
+  const objs = WAFFLE_OBJECTS[p.id] || [];
+  const defaultObj = objs.find(o=>o.tab===p.defaultTab) || objs[0];
+  state.openTabs = defaultObj ? [{id:p.defaultTab, label:defaultObj.label, icon:defaultObj.icon, bg:defaultObj.bg}] : [];
+  state.selectedAccount = null;
+  state.selectedOpp = null;
+  state.selectedQuote = null;
+  state.selectedDealer = null;
+  document.getElementById('persona-modal').classList.remove('open');
+  buildApp();
+  toast(`Viewing as ${p.name} · ${p.role}`, 'info');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// APP BUILDER & NAV
+// ════════════════════════════════════════════════════════════════════
+function buildApp() {
+  const p = state.persona;
+  if (!p) return;
+
+  document.getElementById('gnav-accent').style.background = p.accent;
+  document.getElementById('gnav-appname-text').textContent = p.app;
+  document.getElementById('gnav-avatar').textContent = p.initials;
+  document.getElementById('gnav-avatar').style.background = p.accent;
+  document.getElementById('persona-switch-label').textContent = p.name + ' ▾';
+
+  const nBtn = document.getElementById('gnav-notif-btn');
+  nBtn.innerHTML = p.id === 'sales-mgr' ? '🔔<sup style="color:#F59E0B;font-size:9px;font-weight:700">3</sup>' : '🔔';
+
+  buildNav();
+  renderTab(state.activeTab);
+}
+
+// Personas that use the More dropdown (≥4 objects)
+const MORE_PERSONAS = ['sales-rep','sales-ops','sales-mgr','sys-admin'];
+
+function buildNav() {
+  const p = state.persona;
+  const wrap = document.getElementById('gnav-tabs-wrap');
+  const useMore = MORE_PERSONAS.includes(p.id);
+
+  if (useMore) {
+    // Render open tabs with ✕ + More ▾ at end
+    let html = state.openTabs.map(t => `
+      <div class="gnav-tab ${t.id===state.activeTab?'active':''}" id="gntab-${t.id}" onclick="switchTab('${t.id}')">
+        ${t.label}
+        <span class="gnav-tab-close" onclick="event.stopPropagation();closeNavTab('${t.id}')" title="Close">✕</span>
+      </div>`).join('');
+    html += `<div class="gnav-more-btn" id="gnav-more-btn" onclick="toggleMoreMenu(event)">More ▾</div>`;
+    wrap.innerHTML = html;
+  } else {
+    // Telecaller, Dealer RM — show all tabs, no More, no close buttons
+    wrap.innerHTML = p.tabs.map(t => `
+      <div class="gnav-tab ${t===state.activeTab?'active':''}" id="gntab-${t}" onclick="switchTab('${t}')">
+        ${p.tabLabels[t]}
+      </div>`).join('');
+  }
+}
+
+function openFromMore(tabId) {
+  closeMoreMenu();
+  const objs = WAFFLE_OBJECTS[state.persona.id] || [];
+  const obj = objs.find(o=>o.tab===tabId);
+  if (!obj) return;
+
+  // If already open, just navigate
+  if (state.openTabs.find(t=>t.id===tabId)) {
+    switchTab(tabId);
+    return;
+  }
+
+  // Add to openTabs
+  state.openTabs.push({id:tabId, label:obj.label, icon:obj.icon, bg:obj.bg});
+  state.activeTab = tabId;
+  state.selectedAccount = null;
+  state.selectedOpp = null;
+  state.selectedQuote = null;
+  buildNav();
+  renderTab(tabId);
+}
+
+function closeNavTab(tabId) {
+  const idx = state.openTabs.findIndex(t=>t.id===tabId);
+  if (idx === -1) return;
+  state.openTabs.splice(idx, 1);
+
+  // If closing the active tab, switch to adjacent or first
+  if (state.activeTab === tabId) {
+    const next = state.openTabs[Math.max(0, idx-1)];
+    if (next) {
+      state.activeTab = next.id;
+      state.selectedAccount = null;
+      state.selectedOpp = null;
+      state.selectedQuote = null;
+    } else {
+      state.activeTab = null;
+    }
+  }
+  buildNav();
+  if (state.activeTab) renderTab(state.activeTab);
+  else document.getElementById('sf-content').innerHTML = `<div style="padding:40px;text-align:center;color:var(--sf-t3)">Select an item from <strong>More ▾</strong> to open a tab.</div>`;
+}
+
+function switchTab(tab) {
+  state.activeTab = tab;
+  state.selectedAccount = null;
+  state.selectedOpp = null;
+  state.selectedQuote = null;
+  state.selectedDealer = null;
+  buildNav();
+  renderTab(tab);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// MORE DROPDOWN
+// ════════════════════════════════════════════════════════════════════
+function toggleMoreMenu(e) {
+  e && e.stopPropagation();
+  const menu = document.getElementById('more-menu');
+  const bd   = document.getElementById('more-backdrop');
+  if (menu.classList.contains('open')) { closeMoreMenu(); return; }
+
+  // Position under the More button
+  const btn = document.getElementById('gnav-more-btn');
+  if (btn) {
+    const r = btn.getBoundingClientRect();
+    menu.style.left = r.left + 'px';
+    menu.style.top  = r.bottom + 'px';
+  }
+
+  const p = state.persona;
+  const items = WAFFLE_OBJECTS[p.id] || [];
+  const openIds = state.openTabs.map(t=>t.id);
+
+  document.getElementById('more-items').innerHTML = items.map(item => `
+    <div class="more-item ${openIds.includes(item.tab)?'is-open':''}" onclick="openFromMore('${item.tab}')">
+      <div class="more-item-icon" style="background:${item.bg}">${item.icon}</div>
+      <span>${item.label}</span>
+      ${openIds.includes(item.tab)?'<span style="margin-left:auto;font-size:11px;color:var(--sf-blue)">Open</span>':''}
+    </div>`).join('') +
+    `<div class="more-item-divider"></div>
+     <div class="more-item" onclick="closeMoreMenu();toast('Customize nav items','info')">
+       <div class="more-item-icon" style="background:#94A3B8">✏️</div>
+       <span style="color:var(--sf-t2)">Edit</span>
+     </div>`;
+
+  menu.classList.add('open');
+  bd.classList.add('open');
+}
+
+function closeMoreMenu() {
+  document.getElementById('more-menu').classList.remove('open');
+  document.getElementById('more-backdrop').classList.remove('open');
+}
+const WAFFLE_OBJECTS = {
+  'telecaller': [
+    {icon:'🏠',bg:'#0284C7',label:'Home',         tab:'call-queue'},
+    {icon:'📋',bg:'#0284C7',label:'My Call Queue', tab:'call-queue'},
+    {icon:'📅',bg:'#7C3AED',label:'Today\'s Activity',tab:'activity'},
+    {icon:'🔍',bg:'#059669',label:'Lead Search',   tab:'lead-search'},
+  ],
+  'sales-rep': [
+    {icon:'🏠',bg:'#0176D3',label:'Home',          tab:'home'},
+    {icon:'👤',bg:'#0176D3',label:'Leads',         tab:'my-leads'},
+    {icon:'🏢',bg:'#7C3AED',label:'Accounts',      tab:'accounts'},
+    {icon:'👥',bg:'#059669',label:'Contacts',       tab:'contacts'},
+    {icon:'💼',bg:'#D97706',label:'Opportunities',  tab:'opportunities'},
+    {icon:'📄',bg:'#032D60',label:'Quotes',        tab:'quotes'},
+  ],
+  'sales-mgr': [
+    {icon:'🏠',bg:'#7C3AED',label:'Home',          tab:'home'},
+    {icon:'📊',bg:'#7C3AED',label:'Team Pipeline', tab:'team-pipeline'},
+    {icon:'✅',bg:'#059669',label:'Approval Queue', tab:'approval-queue'},
+    {icon:'🎯',bg:'#D97706',label:'Forecasts',     tab:'forecasts'},
+    {icon:'📈',bg:'#032D60',label:'Reports',       tab:'reports'},
+  ],
+  'sales-ops': [
+    {icon:'🏠',bg:'#059669',label:'Home',          tab:'home'},
+    {icon:'🔍',bg:'#059669',label:'KYC Queue',     tab:'kyc-queue'},
+    {icon:'👤',bg:'#0176D3',label:'Leads',         tab:'leads'},
+    {icon:'🏢',bg:'#7C3AED',label:'Accounts',      tab:'accounts'},
+    {icon:'📄',bg:'#D97706',label:'Quotes',        tab:'quotes'},
+    {icon:'📦',bg:'#032D60',label:'Orders',        tab:'orders'},
+    {icon:'🏷️',bg:'#0284C7',label:'Products',     tab:'products'},
+  ],
+  'dealer-rm': [
+    {icon:'🏠',bg:'#D97706',label:'Home',          tab:'home'},
+    {icon:'🤝',bg:'#D97706',label:'Dealer Accounts',tab:'dealer-accounts'},
+    {icon:'👥',bg:'#7C3AED',label:'Partner Contacts',tab:'partner-contacts'},
+    {icon:'💼',bg:'#0176D3',label:'Dealer Opps',   tab:'dealer-opps'},
+    {icon:'💰',bg:'#059669',label:'Commission',    tab:'commission'},
+  ],
+  'sys-admin': [
+    {icon:'🏠',bg:'#032D60',label:'Home',          tab:'home'},
+    {icon:'👤',bg:'#032D60',label:'Users',         tab:'users'},
+    {icon:'🔐',bg:'#7C3AED',label:'Permissions',   tab:'permissions'},
+    {icon:'🔌',bg:'#059669',label:'Integration',   tab:'integration'},
+    {icon:'📋',bg:'#0176D3',label:'System Logs',   tab:'logs'},
+  ],
+};
+
+function toggleWaffleMenu(e) {
+  e && e.stopPropagation();
+  const menu = document.getElementById('waffle-menu');
+  const bd   = document.getElementById('waffle-backdrop');
+  if (menu.classList.contains('open')) {
+    closeWaffleMenu();
+  } else {
+    // Populate
+    const p = state.persona;
+    const items = p ? (WAFFLE_OBJECTS[p.id] || []) : [];
+    document.getElementById('wm-app-name').textContent = p ? p.app : 'Veltrac Sales';
+    document.getElementById('wm-persona-role').textContent = p ? p.role : 'Select a persona to begin';
+    document.getElementById('wm-items').innerHTML = items.map(item => `
+      <div class="wm-item ${state.activeTab===item.tab?'active':''}" onclick="closeWaffleMenu();switchTab('${item.tab}')">
+        <div class="wm-item-icon" style="background:${item.bg}20">${item.icon}</div>
+        <span class="wm-item-label">${item.label}</span>
+      </div>`).join('') + (p ? '' : `<div style="padding:16px;font-size:12.5px;color:var(--sf-t3);text-align:center">Choose a persona first →</div>`);
+    menu.classList.add('open');
+    bd.classList.add('open');
+  }
+}
+
+function closeWaffleMenu() {
+  document.getElementById('waffle-menu').classList.remove('open');
+  document.getElementById('waffle-backdrop').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// TAB ROUTER
+// ════════════════════════════════════════════════════════════════════
+function renderTab(tab) {
+  const p = state.persona;
+  const content = document.getElementById('sf-content');
+  // Clear and render
+  if (p.id === 'telecaller')  { renderTelecallerTab(tab, content); return; }
+  if (p.id === 'sales-rep')   { renderSalesRepTab(tab, content);   return; }
+  if (p.id === 'sales-mgr')   { renderSalesMgrTab(tab, content);   return; }
+  if (p.id === 'sales-ops')   { renderSalesOpsTab(tab, content);   return; }
+  if (p.id === 'dealer-rm')   { renderDealerRMTab(tab, content);   return; }
+  if (p.id === 'sys-admin')   { renderSysAdminTab(tab, content);   return; }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// P1 — TELECALLER
+// ════════════════════════════════════════════════════════════════════
+function renderTelecallerTab(tab, el) {
+  const myLeads = state.leads; // Platform — sees leads only
+
+  if (tab === 'call-queue') {
+    const open = myLeads.filter(l => l.disposition !== 'Connected' && l.status !== 'Qualified');
+    el.innerHTML = `
+    <div style="margin-bottom:14px">
+      <div class="kpi-row">
+        <div class="kpi" style="border-left:3px solid var(--p1)"><div class="kpi-lbl">Assigned to Me</div><div class="kpi-val">${myLeads.length}</div><div class="kpi-sub">Total in queue</div></div>
+        <div class="kpi"><div class="kpi-lbl">Called Today</div><div class="kpi-val">${myLeads.filter(l=>l.lastCalled?.includes('Today')).length}</div><div class="kpi-sub">Attempts made</div></div>
+        <div class="kpi"><div class="kpi-lbl">Connected</div><div class="kpi-val" style="color:var(--green)">${myLeads.filter(l=>l.disposition==='Connected').length}</div><div class="kpi-sub">Verified contacts</div></div>
+        <div class="kpi" style="border-left:3px solid var(--red)"><div class="kpi-lbl">Pending Retry</div><div class="kpi-val" style="color:var(--red)">${myLeads.filter(l=>l.disposition==='Not Reachable').length}</div><div class="kpi-sub">Scheduled for retry</div></div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sf-card">
+          <div class="sf-card-hdr">
+            <div class="sf-card-title">📋 Active Call Queue <span class="badge b-sky">${open.length} leads</span></div>
+            <select class="sf-select" style="font-size:12px" onchange="renderTab('call-queue')">
+              <option>Priority: All</option><option>Not Called First</option><option>Retries</option>
+            </select>
+          </div>
+          <div style="padding:12px">
+            ${open.map(l => `
+            <div class="call-card ${l.attempts===0?'priority':''}">
+              <div class="call-priority-dot" style="background:${l.attempts===0?'var(--red)':l.disposition==='Connected'?'var(--green)':'var(--amber-raw)'}"></div>
+              <div style="flex:1">
+                <div class="flex jc-sb ai-c mb-4">
+                  <div>
+                    <div class="fw-7" style="font-size:13px">${l.name}</div>
+                    <div class="text-sm text-muted">${l.title} · ${l.company}</div>
+                  </div>
+                  <span class="badge ${l.attempts===0?'b-red':l.disposition==='Not Reachable'?'b-amber':'b-gray'}">${l.disposition==='Not Called'?'Not Called Yet':l.disposition}</span>
+                </div>
+                <div class="flex gap-12 mb-8" style="font-size:12px;color:var(--sf-t3)">
+                  <span>📱 ${l.phone}</span>
+                  <span>🗺️ ${l.territory}</span>
+                  <span>📥 ${l.source}</span>
+                  <span>Last: ${l.lastCalled}</span>
+                </div>
+                <div class="flex ai-c gap-8">
+                  <div>
+                    <div class="text-xs text-muted mb-4">Attempts (${l.attempts}/3)</div>
+                    <div class="attempt-chips">
+                      ${[0,1,2].map(i => `<div class="attempt-chip ${i<l.attempts?(l.disposition==='Connected'?'connected':'called'):''}"></div>`).join('')}
+                    </div>
+                  </div>
+                  <div class="flex gap-6" style="margin-left:auto">
+                    <button class="btn btn-primary btn-sm" onclick="logCall('${l.id}','connected')">✅ Connected</button>
+                    <button class="btn btn-neutral btn-sm" onclick="logCall('${l.id}','not-reachable')">🔁 Not Reachable</button>
+                    <button class="btn btn-neutral btn-sm" onclick="logCall('${l.id}','disqualify')">✕ Disqualify</button>
+                  </div>
+                </div>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-title">📞 Verification Script</div>
+          <div style="font-size:12.5px;color:var(--sf-t2);line-height:1.8">
+            <div style="margin-bottom:8px"><strong>1. Confirm identity</strong><br><span class="text-muted">"May I speak with [Name] from [Company]?"</span></div>
+            <div style="margin-bottom:8px"><strong>2. Confirm business</strong><br><span class="text-muted">"Do you use industrial or commercial tyres for your operations?"</span></div>
+            <div style="margin-bottom:8px"><strong>3. Confirm GST</strong><br><span class="text-muted">"Could you confirm your GST number ending in [last 4 digits]?"</span></div>
+            <div style="margin-bottom:8px"><strong>4. Confirm decision maker</strong><br><span class="text-muted">"Are you the right person for tyre procurement, or should I speak with someone else?"</span></div>
+            <div><strong>5. Set expectation</strong><br><span class="text-muted">"Our sales team will reach out within 24 hours with a proposal."</span></div>
+          </div>
+        </div>
+        <div class="side-card">
+          <div class="side-title">📊 My Stats Today</div>
+          <div class="side-row"><span class="text-muted">Calls Made</span><span class="fw-6">7</span></div>
+          <div class="side-row"><span class="text-muted">Connected</span><span class="fw-6 text-muted" style="color:var(--green)">4</span></div>
+          <div class="side-row"><span class="text-muted">Not Reachable</span><span class="fw-6">2</span></div>
+          <div class="side-row"><span class="text-muted">Disqualified</span><span class="fw-6">1</span></div>
+          <div class="side-row"><span class="text-muted">Qualified → Sales</span><span class="fw-6">3</span></div>
+          <hr style="margin:8px 0;border:none;border-top:1px solid #F1F5F9">
+          <div class="side-row"><span class="text-muted">Connect Rate</span><span class="fw-7" style="color:var(--green)">57%</span></div>
+        </div>
+        <div class="side-card" style="background:#FFF7EC;border-color:#F5D5A0">
+          <div class="side-title" style="color:var(--amber)">⚠️ Access Restriction</div>
+          <p style="font-size:12px;color:var(--sf-t2);line-height:1.7">As a Telecaller you can only see <strong>Leads assigned to you</strong>. You cannot access Accounts, Opportunities, Quotes, Pricing, or any other rep's data.</p>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'activity') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">📅 Today's Call Activity Log</div><button class="btn btn-neutral btn-sm" onclick="toast('Activity exported','success')">⬇ Export</button></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Time</th><th>Lead Name</th><th>Company</th><th>Duration</th><th>Disposition</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">09:45</td><td class="fw-6">Ramesh Pillai</td><td>Pillai Rubber Works</td><td>3m 12s</td><td><span class="badge b-green">Connected ✓</span></td><td class="text-muted">Confirmed GST. Decision maker. Handoff to Arvind Kumar.</td></tr>
+          <tr><td class="mono">10:15</td><td class="fw-6">Vikram Desai</td><td>Desai Tyre Traders</td><td>0m</td><td><span class="badge b-amber">Not Reachable</span></td><td class="text-muted">No answer. Retry scheduled for tomorrow 2 PM.</td></tr>
+          <tr><td class="mono">11:30</td><td class="fw-6">Pooja Agarwal</td><td>Agarwal Logistics</td><td>4m 55s</td><td><span class="badge b-green">Connected ✓</span></td><td class="text-muted">Confirmed. Interested in commercial tyres. Procurement head confirmed.</td></tr>
+          <tr><td class="mono">11:58</td><td class="fw-6">Kiran Wagh</td><td>Wagh Transport</td><td>1m 22s</td><td><span class="badge b-red">Disqualified</span></td><td class="text-muted">Company closed. Wrong contact from IndiaMart.</td></tr>
+          <tr><td class="mono">14:00</td><td class="fw-6">Dinesh Kumar</td><td>Kumar Fleet Solutions</td><td>0m</td><td><span class="badge b-amber">Not Reachable</span></td><td class="text-muted">Voicemail. Attempt 1/3.</td></tr>
+        </tbody>
+      </table></div>
+    </div>`;
+  }
+
+  else if (tab === 'lead-search') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">🔍 Search My Assigned Leads</div></div>
+      <div class="sf-card-body">
+        <div class="flex gap-8 mb-16">
+          <input class="sf-input flex-1" placeholder="Search by name, company, mobile…" oninput="filterLeads(this.value)">
+          <select class="sf-select" onchange="filterLeads('')"><option>All Sources</option><option>IndiaMart</option><option>B2B Portal</option><option>BD Upload</option></select>
+        </div>
+        <div id="lead-search-results">
+          ${state.leads.map(l=>`
+          <div class="sf-card" style="margin-bottom:8px">
+            <div class="sf-card-body" style="padding:12px">
+              <div class="flex jc-sb ai-c">
+                <div>
+                  <div class="fw-7">${l.name} <span class="badge b-gray text-xs">${l.id}</span></div>
+                  <div class="text-sm text-muted">${l.title} · ${l.company} · ${l.territory}</div>
+                  <div class="text-sm mt-4">📱 ${l.phone} · 📥 ${l.source}</div>
+                </div>
+                <div class="flex gap-6 ai-c">
+                  <span class="badge ${l.verified?'b-green':'b-gray'}">${l.verified?'✓ Verified':'Unverified'}</span>
+                  <button class="btn btn-neutral btn-xs" onclick="toast('Lead ${l.id} opened','info')">Open →</button>
+                </div>
+              </div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="access-wall">🔒 Telecaller access is restricted to assigned leads only. Accounts, Opportunities, Quotes, and pricing data are not accessible on this profile.</div>`;
+  }
+}
+
+function logCall(leadId, outcome) {
+  const lead = state.leads.find(l => l.id === leadId);
+  if (!lead) return;
+  if (outcome === 'connected') {
+    lead.disposition = 'Connected'; lead.verified = true; lead.attempts++;
+    lead.lastCalled = 'Today ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    toast(`✅ ${lead.name} marked Connected. Handoff to Sales Rep triggered.`, 'success');
+  } else if (outcome === 'not-reachable') {
+    lead.attempts = Math.min(3, lead.attempts + 1);
+    lead.disposition = lead.attempts >= 3 ? 'Exhausted' : 'Not Reachable';
+    lead.lastCalled = 'Today ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    toast(`🔁 Attempt ${lead.attempts}/3 logged for ${lead.name}.`, 'warning');
+  } else {
+    lead.status = 'Disqualified'; lead.disposition = 'Disqualified';
+    toast(`${lead.name} disqualified. Lead closed.`, 'info');
+  }
+  renderTab('call-queue');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// P2 — SALES REP (WEST TERRITORY ONLY)
+// ════════════════════════════════════════════════════════════════════
+function renderSalesRepTab(tab, el) {
+  const myOpps = state.opps.filter(o => o.owner === 'Rahul Sharma'); // West only
+  const pipelineVal = myOpps.reduce((s,o)=>s+o.amount,0);
+  const stageCls = ['b-gray','b-gray','b-blue','b-blue','b-amber','b-purple','b-green'];
+
+  if (tab === 'home') {
+    el.innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi" style="border-left:3px solid var(--p2)"><div class="kpi-lbl">My Pipeline</div><div class="kpi-val">₹${(pipelineVal/100000).toFixed(1)}L</div><div class="kpi-sub">${myOpps.length} opportunities</div></div>
+      <div class="kpi"><div class="kpi-lbl">Closing This Month</div><div class="kpi-val">2</div><div class="kpi-sub">Before Dec 31</div></div>
+      <div class="kpi"><div class="kpi-lbl">Open Quotes</div><div class="kpi-val">3</div><div class="kpi-sub">Awaiting response</div></div>
+      <div class="kpi"><div class="kpi-lbl">Target Attainment</div><div class="kpi-val" style="color:var(--amber)">67%</div><div class="kpi-sub">₹2.4Cr of ₹3.5Cr</div></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sf-card">
+          <div class="sf-card-hdr"><div class="sf-card-title">💼 My Opportunities — West Territory</div><button class="btn btn-primary btn-sm" onclick="toast('New Opportunity (West territory)','info')">+ New</button></div>
+          <div class="t-wrap"><table>
+            <thead><tr><th>Opportunity</th><th>Account</th><th>Stage</th><th>Amount</th><th>Discount</th><th>Close Date</th><th></th></tr></thead>
+            <tbody>${myOpps.map(o=>`
+            <tr>
+              <td><a class="sf-link" onclick="openOppRecord('${o.id}')">${o.name.substring(0,38)}…</a></td>
+              <td>${o.account}</td>
+              <td><span class="badge ${stageCls[o.stage]||'b-gray'}">${OPP_STAGES[o.stage]}</span></td>
+              <td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td>
+              <td class="${o.discount>12?'fw-7':'text-muted'}" style="${o.discount>12?'color:var(--red)':''}">${o.discount}%${o.discount>12?' ⚠️':''}</td>
+              <td class="text-muted text-sm">${o.closeDate}</td>
+              <td><button class="btn btn-neutral btn-xs" onclick="openOppRecord('${o.id}')">Open →</button></td>
+            </tr>`).join('')}</tbody>
+          </table></div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-title">🎯 Target vs Actual</div>
+          <div style="margin-bottom:8px">
+            <div class="flex jc-sb text-sm mb-4"><span>West Territory Q4</span><span class="fw-6">₹2.4Cr / ₹3.5Cr</span></div>
+            <div class="prog"><div class="prog-fill amber" style="width:67%"></div></div>
+          </div>
+          <div class="side-row"><span class="text-muted">Closed Won MTD</span><span class="fw-6">₹68L</span></div>
+          <div class="side-row"><span class="text-muted">Pipeline Coverage</span><span class="fw-6">2.3×</span></div>
+          <div class="side-row"><span class="text-muted">Win Rate</span><span class="fw-6">44%</span></div>
+        </div>
+        <div class="side-card">
+          <div class="side-title">📋 Recent Activity</div>
+          <div class="timeline-item"><div class="tl-icon">📧</div><div><div class="tl-title">Email to Mahindra Logistics</div><div class="tl-time">2 hrs ago</div></div></div>
+          <div class="timeline-item"><div class="tl-icon">📞</div><div><div class="tl-title">Call — Reliance Retail (Procurement)</div><div class="tl-time">Yesterday</div></div></div>
+          <div class="timeline-item"><div class="tl-icon">📄</div><div><div class="tl-title">Quote Q-Flipkart-001 sent</div><div class="tl-time">2 days ago</div></div></div>
+        </div>
+        <div class="side-card" style="background:#FFF7EC;border-color:#F5D5A0">
+          <div class="side-title" style="color:var(--amber)">⚠️ Discount Warning</div>
+          <p style="font-size:12px;color:var(--sf-t2);line-height:1.7">OPP-001 (Mahindra) has 8% discount — within your 0–12% authority. Anything above 12% requires Sales Manager approval.</p>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'my-leads') {
+    const westLeads = state.leads.filter(l => ['Mumbai','Pune'].includes(l.territory));
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">👤 My Leads — West Territory</div><button class="btn btn-primary btn-sm" onclick="toast('New Lead created','info')">+ New Lead</button></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Name</th><th>Company</th><th>Title</th><th>Source</th><th>Verified</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>${westLeads.map(l=>`
+        <tr>
+          <td><a class="sf-link">${l.name}</a></td>
+          <td class="fw-6">${l.company}</td>
+          <td class="text-muted">${l.title}</td>
+          <td>${l.source}</td>
+          <td><span class="badge ${l.verified?'b-green':'b-gray'}">${l.verified?'✓ Verified':'Pending'}</span></td>
+          <td><span class="badge ${l.status==='Qualified'?'b-green':l.status==='Working'?'b-blue':'b-gray'}">${l.status}</span></td>
+          <td><button class="btn btn-neutral btn-xs" onclick="toast('Convert ${l.name} to Opportunity','info')">Convert →</button></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="access-wall">🔒 You are viewing West territory leads only. Leads from Delhi NCR, Hyderabad, Chennai, and other territories are not visible on your profile.</div>`;
+  }
+
+  else if (tab === 'opportunities') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">💼 My Opportunities — West Territory Only</div><button class="btn btn-primary btn-sm" onclick="toast('New Opportunity','info')">+ New</button></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Name</th><th>Account</th><th>Stage</th><th>Amount</th><th>Discount</th><th>Routing</th><th>Close Date</th><th></th></tr></thead>
+        <tbody>${myOpps.map(o=>`
+        <tr>
+          <td><a class="sf-link" onclick="openOppRecord('${o.id}')" style="cursor:pointer">${o.name.substring(0,40)}</a></td>
+          <td>${o.account}</td>
+          <td><span class="badge ${stageCls[o.stage]||'b-gray'}">${OPP_STAGES[o.stage]}</span></td>
+          <td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td>
+          <td style="${o.discount>12?'color:var(--red);font-weight:700':''}">${o.discount}%${o.discount>12?' ⚠️':''}</td>
+          <td><span class="badge ${o.routing==='direct'?'b-green':'b-amber'}">${o.routing==='direct'?'🏢 Direct':'🤝 Dealer'}</span></td>
+          <td class="text-muted text-sm">${o.closeDate}</td>
+          <td><button class="btn btn-neutral btn-xs" onclick="openOppRecord('${o.id}')">Open →</button></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="access-wall" style="margin-top:0">🔒 Team pipeline (other territories) is not visible on the Sales Rep profile. You see only your West territory Opportunities.</div>`;
+  }
+
+  else if (tab === 'quotes') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">📄 My Quotes</div><button class="btn btn-neutral btn-sm" onclick="toast('New Quote from Opportunity','info')">+ New Quote</button></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Quote Name</th><th>Account</th><th>Amount</th><th>Discount</th><th>Approval</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><a class="sf-link">Q-Mahindra-001</a></td><td>Mahindra Logistics</td><td class="fw-7">₹11,39,200</td><td>8%</td><td><span class="badge b-green">Approved</span></td><td><span class="badge b-green">Accepted</span></td><td><button class="btn btn-neutral btn-xs" onclick="toast('Quote PDF downloaded','success')">PDF</button></td></tr>
+          <tr><td><a class="sf-link">Q-Reliance-001</a></td><td>Reliance Retail</td><td class="fw-7">₹3,23,000</td><td>5%</td><td><span class="badge b-gray">Not Required</span></td><td><span class="badge b-blue">Sent</span></td><td><button class="btn btn-neutral btn-xs">View</button></td></tr>
+          <tr><td><a class="sf-link">Q-Flipkart-001</a></td><td>Flipkart Logistics</td><td class="fw-7">₹8,01,000</td><td>10%</td><td><span class="badge b-green">Approved</span></td><td><span class="badge b-blue">Sent</span></td><td><button class="btn btn-neutral btn-xs">View</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="access-wall" style="margin-top:0">🔒 Quotes above 12% discount require Sales Manager approval before sending. Your self-approval limit is 0–12%.</div>`;
+  }
+
+  else if (tab === 'accounts') {
+    renderAccountsTab(el);
+  }
+
+  else if (tab === 'contacts') {
+    el.innerHTML = `
+    <div class="lv-header">
+      <div class="lv-title">Contacts</div>
+      <button class="btn btn-primary btn-sm" onclick="toast('New Contact','info')">+ New</button>
+    </div>
+    <div class="sf-card">
+      <div class="t-wrap"><table>
+        <thead><tr><th>Name</th><th>Account</th><th>Title</th><th>Phone</th><th>Email</th></tr></thead>
+        <tbody>${ACCOUNT_DATA.flatMap(a=>a.contacts.map(c=>`
+        <tr>
+          <td><a class="sf-link">${c.name}</a> ${c.primary?'<span class="badge b-blue" style="font-size:10px">Primary</span>':''}</td>
+          <td><a class="sf-link" onclick="openAccountRecord('${a.id}')">${a.name}</a></td>
+          <td class="text-muted">${c.title}</td>
+          <td>${c.phone}</td>
+          <td style="color:var(--sf-blue);font-size:12px">${c.email}</td>
+        </tr>`)).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="access-wall">🔒 Showing contacts from your West territory accounts only.</div>`;
+  }
+
+  else {
+    el.innerHTML = `<div class="sf-card"><div class="sf-card-body" style="text-align:center;padding:40px;color:var(--sf-t3)">${(state.persona.tabLabels||{})[tab]||tab} — coming soon</div></div>`;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// ACCOUNTS — LIST VIEWS, RECORD, OPP, QUOTE DRILL-THROUGH
+// ════════════════════════════════════════════════════════════════════
+const LIST_VIEWS = ['Recently Viewed','My Accounts','All Accounts','My Territory Accounts','Key Accounts','Accounts Pending KYC'];
+
+function renderAccountsTab(el) {
+  if (state.selectedQuote) {
+    const q = QUOTE_DATA.find(x=>x.id===state.selectedQuote);
+    if (q) { renderQuoteRecord(el, q, state.selectedQuoteTab||'details'); return; }
+  }
+  if (state.selectedOpp) {
+    const o = state.opps.find(x=>x.id===state.selectedOpp);
+    if (o) { renderOppRecord(el, o, state.selectedOppTab||'details'); return; }
+  }
+  if (state.selectedAccount) {
+    const a = ACCOUNT_DATA.find(x=>x.id===state.selectedAccount);
+    if (a) { renderAccountRecord(el, a, state.selectedAccountTab||'details'); return; }
+  }
+  // List view
+  const view = state.accountListView || 'My Accounts';
+  const accounts = state.persona && state.persona.id === 'sales-rep'
+    ? ACCOUNT_DATA.filter(a=>a.owner==='Rahul Sharma')
+    : ACCOUNT_DATA;
+
+  el.innerHTML = `
+  <div class="lv-header" style="position:relative">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="font-family:var(--font-disp);font-size:20px;color:var(--sf-t1)">🏢 Accounts</div>
+      <div style="position:relative">
+        <div class="lv-view-btn" onclick="toggleListViewDropdown(event)">${view} <span style="color:var(--sf-t4);margin-left:4px">▾</span></div>
+        <div id="lv-dropdown" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow);z-index:100;width:220px;overflow:hidden">
+          ${LIST_VIEWS.map(v=>`<div style="padding:9px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid #F3F2F2;${v===view?'font-weight:700;color:var(--sf-blue)':'color:var(--sf-t1)'}" onmousedown="setListView('${v}')">${v===view?'✓ ':''}${v}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-8">
+      <button class="btn btn-neutral btn-sm" onclick="toast('Filter accounts','info')">⚙ Filters</button>
+      <button class="btn btn-primary btn-sm" onclick="toast('New Account — KYC required first','info')">+ New</button>
+    </div>
+  </div>
+  <div class="sf-card">
+    <div class="t-wrap"><table>
+      <thead><tr><th>Account Name</th><th>Account Owner</th><th>SAP ID</th><th>Type</th><th>Segment</th><th>Territory</th><th>KYC</th><th>Opps</th><th></th></tr></thead>
+      <tbody>${accounts.map(a=>{
+        const acctOpps = state.opps.filter(o=>o.account===a.name);
+        return `<tr>
+          <td><a class="sf-link" onclick="openAccountRecord('${a.id}')">${a.name}</a></td>
+          <td style="color:var(--sf-blue);font-size:12.5px">${a.owner}</td>
+          <td class="mono text-sm">${a.sapId}</td>
+          <td><span class="badge b-gray">${a.type}</span></td>
+          <td class="text-muted">${a.segment}</td>
+          <td class="text-muted text-sm">${a.territory}</td>
+          <td>${a.kycStatus==='Approved'?'<span class="badge b-green">✓ Approved</span>':'<span class="badge b-amber">Pending</span>'}</td>
+          <td class="fw-6">${acctOpps.length}</td>
+          <td><button class="btn btn-neutral btn-xs" onclick="openAccountRecord('${a.id}')">Open →</button></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>
+  ${(state.persona&&state.persona.id==='sales-rep')?'<div class="access-wall">🔒 You are viewing West territory accounts only. Accounts outside your territory are not visible.</div>':''}`;
+}
+
+function toggleListViewDropdown(e) {
+  e.stopPropagation();
+  const d = document.getElementById('lv-dropdown');
+  d.style.display = d.style.display==='none' ? 'block' : 'none';
+  setTimeout(()=>document.addEventListener('click', ()=>{ if(d) d.style.display='none'; }, {once:true}), 10);
+}
+
+function setListView(v) {
+  state.accountListView = v;
+  const d = document.getElementById('lv-dropdown');
+  if (d) d.style.display = 'none';
+  renderAccountsTab(document.getElementById('sf-content'));
+}
+
+function openAccountRecord(id, recTab) {
+  state.selectedAccount = id;
+  state.selectedAccountTab = recTab||'details';
+  state.selectedOpp = null;
+  state.selectedQuote = null;
+  renderAccountsTab(document.getElementById('sf-content'));
+}
+
+function openOppRecord(id, recTab) {
+  state.selectedOpp = id;
+  state.selectedOppTab = recTab||'details';
+  state.selectedQuote = null;
+  // Switch active tab to accounts so nav highlights correctly and breadcrumb back-nav works
+  if (state.activeTab !== 'accounts') {
+    state.activeTab = 'accounts';
+    // Add accounts tab to openTabs if not already there
+    if (!state.openTabs.find(t => t.id === 'accounts')) {
+      // Find the full tab definition from WAFFLE_OBJECTS so icon/bg/label are correct
+      const waffleItems = WAFFLE_OBJECTS[state.persona.id] || [];
+      const tabDef = waffleItems.find(w => w.tab === 'accounts');
+      state.openTabs.push(tabDef
+        ? {id:'accounts', label:tabDef.label, icon:tabDef.icon, bg:tabDef.bg}
+        : {id:'accounts', label:'🏢 Accounts', icon:'🏢', bg:'#7C3AED'}
+      );
+    }
+    buildNav();
+  }
+  renderAccountsTab(document.getElementById('sf-content'));
+}
+
+function openQuoteRecord(id, recTab) {
+  state.selectedQuote = id;
+  state.selectedQuoteTab = recTab||'details';
+  renderAccountsTab(document.getElementById('sf-content'));
+}
+
+function renderBreadcrumb(items) {
+  return `<div style="font-size:12px;color:var(--sf-t3);margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+    ${items.map((item,i)=>i===items.length-1
+      ? `<span style="color:var(--sf-t2);font-weight:600">${item.label}</span>`
+      : `<a class="sf-link" style="font-size:12px;color:var(--sf-t3)" onclick="${item.action}">${item.label}</a> <span>/</span>`
+    ).join('')}
+  </div>`;
+}
+
+// ── ACCOUNT RECORD ───────────────────────────────────────────────────
+function renderAccountRecord(el, acc, activeTab) {
+  const acctOpps = state.opps.filter(o=>o.account===acc.name);
+  const acctOrders = state.orders.filter(o=>o.account.startsWith(acc.name.split(' ').slice(0,2).join(' ')));
+  const bc = renderBreadcrumb([
+    {label:'Accounts', action:"state.selectedAccount=null;state.selectedOpp=null;state.selectedQuote=null;renderAccountsTab(document.getElementById('sf-content'))"},
+    {label:acc.name}
+  ]);
+  el.innerHTML = `
+  ${bc}
+  <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:0;box-shadow:var(--shadow-sm);border-top:3px solid var(--sf-blue)">
+    ${acc.commercialized?`<div style="background:#FFF7EC;border:1px solid #F5D5A0;border-radius:var(--radius);padding:8px 14px;font-size:12px;font-weight:600;color:var(--amber);margin-bottom:12px">ℹ️ Commercialized Account: All fields are read-only except Channel and Account Owner. To edit, first add yourself to the Account Team.</div>`:''}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:10px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:2px">Account · SAP: <span class="mono">${acc.sapId}</span></div>
+        <div style="font-family:var(--font-disp);font-size:22px;color:var(--sf-t1);margin-bottom:8px">${acc.name}</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Account Owner</div><div style="font-size:13px;font-weight:600;color:var(--sf-blue)">${acc.owner}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Account Type</div><div style="font-size:13px;font-weight:600">${acc.type}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Segment</div><div style="font-size:13px;font-weight:600">${acc.segment}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">KYC Status</div><div style="font-size:13px;font-weight:600">${acc.kycStatus==='Approved'?'<span style="color:var(--green)">✓ Approved</span>':acc.kycStatus}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Territory</div><div style="font-size:13px;font-weight:600">${acc.territory}</div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-neutral btn-sm" onclick="toast('New Contact','info')">New Contact</button>
+        <button class="btn btn-primary btn-sm" onclick="toast('New Opportunity','info')">New Opportunity</button>
+        <button class="btn btn-neutral btn-sm" onclick="toast('New Quote','info')">New Quote</button>
+        <button class="btn btn-neutral btn-sm" onclick="toast('New Order','info')">New Order</button>
+      </div>
+    </div>
+  </div>
+  <div class="rec-layout" style="margin-top:14px">
+    <div>
+      <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden">
+        <div class="rec-tab-bar">
+          ${['details','related','accountplan'].map(t=>`<div class="rec-tab-item ${activeTab===t?'active':''}" onclick="openAccountRecord('${acc.id}','${t}')">${t==='details'?'Details':t==='related'?'Related':'Account Plan'}</div>`).join('')}
+        </div>
+        <div class="rec-tab-content">
+          ${activeTab==='details'?renderVeltracDetails(acc):''}
+          ${activeTab==='related'?renderVeltracRelated(acc,acctOpps,acctOrders):''}
+          ${activeTab==='accountplan'?`<div style="text-align:center;padding:40px;color:var(--sf-t3)">No Account Plans found.<br><br><button class="btn btn-primary btn-sm" onclick="toast('New Account Plan','success')">+ New Account Plan</button></div>`:''}
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="activity-sidebar">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--sf-border)">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:6px">Add Tag</div>
+          <input class="sf-input w-full" placeholder="Search or create tag" style="font-size:12px;padding:6px 10px">
+        </div>
+        <div class="activity-tabs">
+          <div class="activity-tab active">Activity</div>
+          <div class="activity-tab" onclick="toast('Chatter','info')">Chatter</div>
+          <div class="activity-tab" onclick="toast('Notes','info')">Notes</div>
+        </div>
+        <div style="padding:14px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sf-t3);margin-bottom:8px">Upcoming & Overdue</div>
+          <div style="padding:16px;text-align:center;color:var(--sf-t3);font-size:12.5px">No activities to show.<br><span style="font-size:12px">Get started by sending an email or scheduling a task.</span></div>
+          <button class="btn btn-primary btn-sm w-full" style="justify-content:center" onclick="toast('All activities','info')">Show All Activities</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderVeltracDetails(acc) {
+  const sec = (title, fields) => `
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 4px;border-bottom:1px solid var(--sf-border);margin-bottom:4px">▾ ${title}</div>
+    <div class="fields-grid" style="margin-bottom:12px">${fields.map(([l,v])=>`<div class="f-row"><div class="f-lbl">${l}</div><div class="f-val">${v}</div></div>`).join('')}</div>`;
+  return sec('Account Information',[
+    ['Account Name',acc.name],['Account Owner',`<span style="color:var(--sf-blue)">${acc.owner}</span>`],
+    ['Account Type',acc.type],['Industry Segment',acc.segment],
+    ['Customer Priority Level','—'],['Phone',acc.phone],
+    ['Email ID',acc.email],['Website','—'],
+    ['Description','—'],['',''],
+  ])+sec('Commercial Information',[
+    ['Annual Tyre Requirement',acc.annualTyreReq],['Existing Brand',acc.existingBrand],
+    ['Credit Limit',acc.creditLimit],['Payment Terms',acc.paymentTerms],
+    ['GST Number',`<span class="mono">${acc.gst}</span>`],['PAN',`<span class="mono">${acc.pan}</span>`],
+    ['Portal Access',acc.portalAccess?'✓ Enabled':'Not Enabled'],['Channel','—'],
+  ])+sec('Address Information',[
+    ['Billing Address',acc.billingAddress],['Shipping Address',acc.shippingAddress],
+    ['Region',acc.region],['Territory',acc.territory],
+  ])+sec('System Information',[
+    ['SAP Account ID',`<span class="mono">${acc.sapId}</span>`],['KYC Status',acc.kycStatus==='Approved'?'<span style="color:var(--green)">✓ Approved</span>':acc.kycStatus],
+    ['Commercialized',acc.commercialized?'✓':'—'],['Inactive',acc.inactive?'Yes':'—'],
+    ['To be Deleted','—'],['Last Modified By','<span style="color:var(--sf-blue)">user Integration</span>'],
+  ]);
+}
+
+function renderVeltracRelated(acc, opps, orders) {
+  const quotes = QUOTE_DATA.filter(q=>q.account===acc.name);
+  function rs(icon,bg,title,count,btns,body,open=false){
+    const id='rs'+Math.random().toString(36).slice(2,8);
+    return `<div class="rs"><div class="rs-hdr" onclick="toggleRS('${id}')"><div class="rs-left"><div class="rs-obj-icon" style="background:${bg}">${icon}</div>${title}<span class="rs-count">(${count})</span></div><div class="rs-actions">${btns}<span class="rs-chev ${open?'':'closed'}" id="${id}c">▾</span></div></div><div id="${id}" class="rs-body" style="${open?'':'display:none'}">${body}</div></div>`;
+  }
+  const contactsHtml = acc.contacts.length===0?`<div class="rs-empty">No contacts.</div>`:`<div class="t-wrap"><table><thead><tr><th>Name</th><th>Title</th><th>Phone</th><th>Email</th></tr></thead><tbody>${acc.contacts.map(c=>`<tr><td><a class="sf-link">${c.name}</a>${c.primary?' <span class="badge b-blue" style="font-size:10px">Primary</span>':''}</td><td class="text-muted">${c.title}</td><td>${c.phone}</td><td style="color:var(--sf-blue);font-size:12px">${c.email}</td></tr>`).join('')}</tbody></table></div>`;
+  const quotesHtml = quotes.length===0?`<div class="rs-empty">No quotes.</div>`:`<div class="t-wrap"><table><thead><tr><th>Quote Name</th><th>Amount</th><th>Discount</th><th>Approval</th><th>Status</th><th></th></tr></thead><tbody>${quotes.map(q=>`<tr><td><a class="sf-link" onclick="openQuoteRecord('${q.id}')">${q.name}</a></td><td class="fw-7">₹${q.amount.toLocaleString('en-IN')}</td><td>${q.discount}%</td><td><span class="badge ${q.approvalStatus==='Approved'?'b-green':'b-gray'}">${q.approvalStatus}</span></td><td><span class="badge ${q.status==='Accepted'?'b-green':'b-blue'}">${q.status}</span></td><td><button class="btn btn-neutral btn-xs" onclick="openQuoteRecord('${q.id}')">Open →</button></td></tr>`).join('')}</tbody></table></div>`;
+  const ordersHtml = orders.length===0?`<div class="rs-empty">No orders.</div>`:`<div class="t-wrap"><table><thead><tr><th>Order No.</th><th>Product</th><th>Amount</th><th>SAP Sync</th><th>Status</th></tr></thead><tbody>${orders.map(o=>`<tr><td class="mono fw-6">${o.orderNo}</td><td class="text-sm">${o.product}</td><td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td><td><span class="sap-pill ${o.sapSync==='synced'?'sap-synced':'sap-failed'}"><span class="sap-dot" style="background:${o.sapSync==='synced'?'var(--green)':'var(--red)'}"></span>${o.sapSync}</span></td><td><span class="badge ${['b-navy','b-blue','b-amber','b-amber','b-green'][o.statusIdx]}">${['Confirmed','Processing','Shipped','In Transit','Delivered'][o.statusIdx]}</span></td></tr>`).join('')}</tbody></table></div>`;
+  const oppsHtml = opps.length===0?`<div class="rs-empty">No opportunities.</div>`:`<div class="t-wrap"><table><thead><tr><th>Opportunity</th><th>Stage</th><th>Amount</th><th>Discount</th><th>Close Date</th><th></th></tr></thead><tbody>${opps.map(o=>`<tr><td><a class="sf-link" onclick="openOppRecord('${o.id}')">${o.name}</a></td><td><span class="badge b-blue">${OPP_STAGES[o.stage]}</span></td><td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td><td style="${o.discount>12?'color:var(--red);font-weight:700':''}">${o.discount}%${o.discount>12?' ⚠️':''}</td><td class="text-muted text-sm">${o.closeDate}</td><td><button class="btn btn-neutral btn-xs" onclick="openOppRecord('${o.id}')">Open →</button></td></tr>`).join('')}</tbody></table></div>`;
+  const historyHtml = `<div class="t-wrap"><table><thead><tr><th>Date</th><th>Field</th><th>User</th><th>Original Value</th><th>New Value</th></tr></thead><tbody>${acc.history.slice(0,6).map(h=>`<tr><td class="mono text-sm">${h.date}</td><td class="fw-6">${h.field}</td><td style="color:var(--sf-blue)">${h.user}</td><td class="text-muted">${h.from}</td><td>${h.to}</td></tr>`).join('')}</tbody></table>${acc.history.length>6?'<div class="rs-view-all"><a class="sf-link" style="font-size:12px" onclick="toast(\'View all history\',\'info\')">View All</a></div>':''}`;
+  return rs('📄','#2E844A','Quotes',quotes.length,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('New Quote','info')">+ New Quote</button>`,quotesHtml)
+    +rs('✅','#0B827C','Approved SKUs',0,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('Add SKU','info')">+ Add SKU</button>`,`<div class="rs-empty">No Approved SKUs.</div>`)
+    +rs('📦','#1B52AE','Orders',orders.length,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('New Order','info')">New Order</button>`,ordersHtml)
+    +rs('👤','#1B52AE','Contacts',acc.contacts.length,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('Add Relationship','info')">Add Relationship</button> <button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('New Contact','info')">New Contact</button>`,contactsHtml)
+    +rs('📊','#2E5FAC','Account History',acc.history.length+'+','',historyHtml,true)
+    +rs('👥','#E07000','Account Team',0,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('Add Team Member','info')">Add Team Member</button> <button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('Remove','info')">Remove Team Member</button>`,`<div class="rs-empty">No team members.</div>`)
+    +rs('💼','#D97706','Commercial Opportunities',opps.length,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('New Opp','info')">+ New Opp</button>`,oppsHtml)
+    +rs('🌱','#059669','Sustainability Opportunities',0,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('New Sustainability Opp','info')">+ New Opp</button>`,`<div class="rs-empty">No Sustainability Opportunities.</div>`);
+}
+
+function toggleRS(id) {
+  const body=document.getElementById(id), chev=document.getElementById(id+'c');
+  if(!body) return;
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'';
+  if(chev) chev.classList.toggle('closed',open);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// OPPORTUNITY RECORD
+// ════════════════════════════════════════════════════════════════════
+function renderOppRecord(el, opp, activeTab) {
+  const acc = ACCOUNT_DATA.find(a=>a.name===opp.account);
+  const oppQuotes = QUOTE_DATA.filter(q=>q.oppId===opp.id);
+  const oppProducts = OPP_PRODUCTS[opp.id]||[];
+  const stageCls=['b-gray','b-gray','b-blue','b-blue','b-amber','b-purple','b-green'];
+  const bc = renderBreadcrumb([
+    {label:'Accounts', action:"state.selectedAccount=null;state.selectedOpp=null;state.selectedQuote=null;renderAccountsTab(document.getElementById('sf-content'))"},
+    {label:opp.account, action:`state.selectedOpp=null;state.selectedQuote=null;openAccountRecord('${acc?acc.id:''}')`},
+    {label:opp.name.substring(0,45)}
+  ]);
+  el.innerHTML = `${bc}
+  <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:0;box-shadow:var(--shadow-sm);border-top:3px solid #7C3AED">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:2px">Opportunity · ${opp.id}</div>
+        <div style="font-family:var(--font-disp);font-size:20px;color:var(--sf-t1);margin-bottom:8px">${opp.name}</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Account</div><div><a class="sf-link" onclick="openAccountRecord('${acc?acc.id:''}')">${opp.account}</a></div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Stage</div><div><span class="badge ${stageCls[opp.stage]||'b-gray'}">${OPP_STAGES[opp.stage]}</span></div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Amount</div><div style="font-size:13px;font-weight:700">₹${opp.amount.toLocaleString('en-IN')}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Close Date</div><div style="font-size:13px;font-weight:600">${opp.closeDate}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Owner</div><div style="font-size:13px;font-weight:600;color:var(--sf-blue)">${opp.owner}</div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="toast('New Quote from ${opp.id}','info')">New Quote</button>
+        <button class="btn btn-neutral btn-sm" onclick="toast('Edit Opportunity','info')">Edit</button>
+      </div>
+    </div>
+    <div class="lpath" style="margin-bottom:0">
+      ${OPP_STAGES.map((s,i)=>{
+        const stepCls=i<opp.stage?'done':i===opp.stage?'active':'future';
+        const canEdit=state.persona.id==='sales-rep'&&opp.owner==='Rahul Sharma';
+        const isClickable=canEdit&&i!==opp.stage;
+        return `<div class="lpath-step ${stepCls}"
+          ${isClickable?`onclick="moveOppStage('${opp.id}',${i})" title="Move to ${s}" style="cursor:pointer"`:''}
+          ><span class="ls-chk">${i<opp.stage?'✓':i===opp.stage&&canEdit?'●':''}</span><span class="ls-lbl">${s}</span></div>`;
+      }).join('')}
+    </div>
+  </div>
+  <div class="rec-layout" style="margin-top:14px">
+    <div>
+      <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden">
+        <div class="rec-tab-bar">
+          ${['details','related'].map(t=>`<div class="rec-tab-item ${activeTab===t?'active':''}" onclick="openOppRecord('${opp.id}','${t}')">${t==='details'?'Details':'Related'}</div>`).join('')}
+        </div>
+        <div class="rec-tab-content">
+          ${activeTab==='details'?renderOppDetails(opp):renderOppRelated(opp,oppProducts,oppQuotes)}
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="side-card">
+        <div class="side-title">📊 Key Metrics</div>
+        <div class="side-row"><span class="text-muted">Discount</span><span class="fw-7" style="${opp.discount>12?'color:var(--red)':''}">${opp.discount}%${opp.discount>12?' ⚠️':''}</span></div>
+        <div class="side-row"><span class="text-muted">Gross Margin</span><span class="fw-7">${opp.margin}%</span></div>
+        <div class="side-row"><span class="text-muted">Routing</span><span><span class="badge ${opp.routing==='direct'?'b-green':'b-amber'}">${opp.routing==='direct'?'🏢 Direct':'🤝 Dealer'}</span></span></div>
+        <div class="side-row"><span class="text-muted">SAP Sync</span><span class="sap-pill ${opp.sapSync==='synced'?'sap-synced':opp.sapSync==='pending'?'sap-pending':'sap-failed'}"><span class="sap-dot" style="background:${opp.sapSync==='synced'?'var(--green)':opp.sapSync==='pending'?'var(--amber-raw)':'var(--red)'}"></span>${opp.sapSync}</span></div>
+        <div class="side-row"><span class="text-muted">Quotes</span><span class="fw-6">${oppQuotes.length}</span></div>
+      </div>
+      <div class="side-card">
+        <div class="side-title">🕐 Recent Activity</div>
+        <div class="timeline-item"><div class="tl-icon">📧</div><div><div class="tl-title">Email sent to procurement</div><div class="tl-time">2 days ago</div></div></div>
+        <div class="timeline-item"><div class="tl-icon">📄</div><div><div class="tl-title">Quote presented</div><div class="tl-time">3 days ago</div></div></div>
+        <div class="timeline-item"><div class="tl-icon">📞</div><div><div class="tl-title">Discovery call</div><div class="tl-time">1 week ago</div></div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function moveOppStage(oppId, newStageIdx) {
+  const opp = state.opps.find(o=>o.id===oppId);
+  if (!opp) return;
+  const oldStage = OPP_STAGES[opp.stage];
+  const newStage = OPP_STAGES[newStageIdx];
+  // Warn if moving backward
+  if (newStageIdx < opp.stage) {
+    toast(`Stage moved back: ${oldStage} → ${newStage}`, 'warning');
+  } else {
+    toast(`✅ Stage updated: ${oldStage} → ${newStage}`, 'success');
+  }
+  opp.stage = newStageIdx;
+  openOppRecord(oppId, state.selectedOppTab || 'details');
+}
+
+function renderOppDetails(opp) {
+  const acc = ACCOUNT_DATA.find(a=>a.name===opp.account);
+  return `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 4px;border-bottom:1px solid var(--sf-border);margin-bottom:4px">▾ Opportunity Information</div>
+    <div class="fields-grid" style="margin-bottom:12px">${[
+      ['Opportunity Name',opp.name],
+      ['Account Name',`<a class="sf-link" onclick="openAccountRecord('${acc?acc.id:''}')">${opp.account}</a>`],
+      ['Stage',`<span class="badge b-blue">${OPP_STAGES[opp.stage]}</span>`],
+      ['Amount',`<strong>₹${opp.amount.toLocaleString('en-IN')}</strong>`],
+      ['Close Date',opp.closeDate],
+      ['Opportunity Owner',`<span style="color:var(--sf-blue)">${opp.owner}</span>`],
+      ['Discount %',`<span style="${opp.discount>12?'color:var(--red);font-weight:700':''}">${opp.discount}%</span>`],
+      ['Gross Margin',`${opp.margin}%`],
+      ['Routing',opp.routing==='direct'?'Direct Customer':'Dealer Channel'],
+      ['Lead Source','Inbound / B2B Portal'],
+      ['Probability',`${[10,20,40,60,70,90,100][opp.stage]}%`],
+      ['SAP Sync',opp.sapSync],
+    ].map(([l,v])=>`<div class="f-row"><div class="f-lbl">${l}</div><div class="f-val">${v}</div></div>`).join('')}</div>`;
+}
+
+function renderOppRelated(opp, products, quotes) {
+  function rs(icon,bg,title,count,btns,body,open=false){
+    const id='rsop'+Math.random().toString(36).slice(2,8);
+    return `<div class="rs"><div class="rs-hdr" onclick="toggleRS('${id}')"><div class="rs-left"><div class="rs-obj-icon" style="background:${bg}">${icon}</div>${title}<span class="rs-count">(${count})</span></div><div class="rs-actions">${btns}<span class="rs-chev ${open?'':'closed'}" id="${id}c">▾</span></div></div><div id="${id}" class="rs-body" style="${open?'':'display:none'}">${body}</div></div>`;
+  }
+  const productsHtml = products.length===0?`<div class="rs-empty">No products. <a class="sf-link" style="font-size:12px" onclick="toast('Add Product','info')">Add Product Line →</a></div>`:`<div class="t-wrap"><table><thead><tr><th>SKU</th><th>Product</th><th>Qty</th><th>Unit Price</th><th>Discount</th><th>Total</th></tr></thead><tbody>${products.map(p=>`<tr><td class="mono">${p.sku}</td><td class="fw-6">${p.product}</td><td>${p.qty}</td><td>₹${p.unitPrice.toLocaleString('en-IN')}</td><td>${p.discount}%</td><td class="fw-7">₹${p.total.toLocaleString('en-IN')}</td></tr>`).join('')}<tr style="background:#FAFAF9;font-weight:700"><td colspan="5" style="text-align:right;padding-right:16px">Total:</td><td class="fw-7" style="color:var(--sf-blue)">₹${products.reduce((s,p)=>s+p.total,0).toLocaleString('en-IN')}</td></tr></tbody></table></div>`;
+  const quotesHtml = quotes.length===0?`<div class="rs-empty">No quotes. <a class="sf-link" style="font-size:12px" onclick="toast('New Quote','info')">Create Quote →</a></div>`:`<div class="t-wrap"><table><thead><tr><th>Quote Name</th><th>Amount</th><th>Discount</th><th>Approval</th><th>Status</th><th>Valid Until</th><th></th></tr></thead><tbody>${quotes.map(q=>`<tr><td><a class="sf-link" onclick="openQuoteRecord('${q.id}')">${q.name}</a></td><td class="fw-7">₹${q.amount.toLocaleString('en-IN')}</td><td>${q.discount}%</td><td><span class="badge ${q.approvalStatus==='Approved'?'b-green':q.approvalStatus==='Not Required'?'b-gray':'b-amber'}">${q.approvalStatus}</span></td><td><span class="badge ${q.status==='Accepted'?'b-green':'b-blue'}">${q.status}</span></td><td class="text-muted text-sm">${q.validUntil}</td><td><button class="btn btn-neutral btn-xs" onclick="openQuoteRecord('${q.id}')">Open →</button></td></tr>`).join('')}</tbody></table></div>`;
+  const historyHtml = `<div class="t-wrap"><table><thead><tr><th>Date</th><th>Field</th><th>User</th><th>From</th><th>To</th></tr></thead><tbody><tr><td class="mono text-sm">22/12/2024</td><td>Stage</td><td style="color:var(--sf-blue)">${opp.owner}</td><td class="text-muted">Quotation In Progress</td><td>Quote Presented</td></tr><tr><td class="mono text-sm">18/12/2024</td><td>Amount</td><td style="color:var(--sf-blue)">${opp.owner}</td><td class="text-muted">₹${(opp.amount*0.9).toLocaleString('en-IN')}</td><td>₹${opp.amount.toLocaleString('en-IN')}</td></tr></tbody></table></div>`;
+  return rs('📦','#0176D3','Products (Line Items)',products.length,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('Add Product','info')">+ Add Product</button>`,productsHtml,true)
+    +rs('📄','#2E844A','Quotes',quotes.length,`<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('New Quote','info')">+ New Quote</button>`,quotesHtml,true)
+    +rs('📊','#2E5FAC','Opportunity History',2,'',historyHtml,false);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// QUOTE RECORD
+// ════════════════════════════════════════════════════════════════════
+function renderQuoteRecord(el, q, activeTab) {
+  const opp = state.opps.find(o=>o.id===q.oppId);
+  const acc = ACCOUNT_DATA.find(a=>a.name===q.account);
+  const bc = renderBreadcrumb([
+    {label:'Accounts', action:"state.selectedAccount=null;state.selectedOpp=null;state.selectedQuote=null;renderAccountsTab(document.getElementById('sf-content'))"},
+    {label:q.account, action:`state.selectedOpp=null;state.selectedQuote=null;openAccountRecord('${acc?acc.id:''}')`},
+    {label:opp?opp.name.substring(0,35):'Opportunity', action:`state.selectedQuote=null;openOppRecord('${q.oppId}','related')`},
+    {label:q.name}
+  ]);
+  el.innerHTML = `${bc}
+  <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:0;box-shadow:var(--shadow-sm);border-top:3px solid var(--green)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:10px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:2px">Quote · ${q.id}</div>
+        <div style="font-family:var(--font-disp);font-size:20px;color:var(--sf-t1);margin-bottom:8px">${q.name}</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Account</div><div><a class="sf-link" onclick="openAccountRecord('${acc?acc.id:''}')">${q.account}</a></div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Opportunity</div><div><a class="sf-link" onclick="openOppRecord('${q.oppId}')">${opp?opp.name.substring(0,35):q.oppId}</a></div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Total Amount</div><div style="font-size:13px;font-weight:700">₹${q.amount.toLocaleString('en-IN')}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Approval</div><div><span class="badge ${q.approvalStatus==='Approved'?'b-green':q.approvalStatus==='Not Required'?'b-gray':'b-amber'}">${q.approvalStatus}</span></div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Status</div><div><span class="badge ${q.status==='Accepted'?'b-green':'b-blue'}">${q.status}</span></div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Valid Until</div><div style="font-size:13px;font-weight:600">${q.validUntil}</div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-success btn-sm" onclick="toast('PDF generated','success')">📄 PDF</button>
+        <button class="btn btn-neutral btn-sm" onclick="toast('Email quote','info')">✉️ Email</button>
+        <button class="btn btn-neutral btn-sm" onclick="toast('Edit Quote','info')">Edit</button>
+      </div>
+    </div>
+  </div>
+  <div class="rec-layout" style="margin-top:14px">
+    <div>
+      <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden">
+        <div class="rec-tab-bar">
+          ${['details','related'].map(t=>`<div class="rec-tab-item ${activeTab===t?'active':''}" onclick="openQuoteRecord('${q.id}','${t}')">${t==='details'?'Details':'Related'}</div>`).join('')}
+        </div>
+        <div class="rec-tab-content">
+          ${activeTab==='details'?renderQuoteDetails(q):renderQuoteRelated(q)}
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="side-card">
+        <div class="side-title">💰 Quote Summary</div>
+        <div class="side-row"><span class="text-muted">Net Amount</span><span class="fw-6">₹${q.amount.toLocaleString('en-IN')}</span></div>
+        <div class="side-row"><span class="text-muted">Discount</span><span class="fw-6" style="color:var(--red)">-${q.discount}%</span></div>
+        <div class="side-row"><span class="text-muted">GST @18%</span><span class="fw-6">₹${Math.round(q.amount*0.18).toLocaleString('en-IN')}</span></div>
+        <hr style="margin:6px 0;border:none;border-top:1px solid var(--sf-border)">
+        <div class="side-row"><span class="fw-7">Grand Total</span><span class="fw-7" style="color:var(--sf-blue)">₹${Math.round(q.amount*1.18).toLocaleString('en-IN')}</span></div>
+      </div>
+      <div class="side-card">
+        <div class="side-title">📋 Quote Info</div>
+        <div class="side-row"><span class="text-muted">Owner</span><span style="color:var(--sf-blue)">${q.owner}</span></div>
+        <div class="side-row"><span class="text-muted">Created</span><span>${q.createdDate}</span></div>
+        <div class="side-row"><span class="text-muted">Line Items</span><span class="fw-6">${q.lineItems.length}</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderQuoteDetails(q) {
+  return `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 4px;border-bottom:1px solid var(--sf-border);margin-bottom:4px">▾ Quote Information</div>
+  <div class="fields-grid">${[
+    ['Quote Name',q.name],['Quote Owner',`<span style="color:var(--sf-blue)">${q.owner}</span>`],
+    ['Account',q.account],['Opportunity',q.oppId],
+    ['Total Amount',`<strong>₹${q.amount.toLocaleString('en-IN')}</strong>`],['Discount %',`${q.discount}%`],
+    ['Approval Status',q.approvalStatus],['Quote Status',q.status],
+    ['Valid Until',q.validUntil],['Created Date',q.createdDate],
+  ].map(([l,v])=>`<div class="f-row"><div class="f-lbl">${l}</div><div class="f-val">${v}</div></div>`).join('')}</div>`;
+}
+
+function renderQuoteRelated(q) {
+  function rs(icon,bg,title,count,btns,body,open=false){
+    const id='rsqt'+Math.random().toString(36).slice(2,8);
+    return `<div class="rs"><div class="rs-hdr" onclick="toggleRS('${id}')"><div class="rs-left"><div class="rs-obj-icon" style="background:${bg}">${icon}</div>${title}<span class="rs-count">(${count})</span></div><div class="rs-actions">${btns}<span class="rs-chev ${open?'':'closed'}" id="${id}c">▾</span></div></div><div id="${id}" class="rs-body" style="${open?'':'display:none'}">${body}</div></div>`;
+  }
+  const lineItemsHtml = `<div class="t-wrap"><table><thead><tr><th>SKU</th><th>Product</th><th>Qty</th><th>Unit Price</th><th>Discount</th><th>Line Total</th></tr></thead><tbody>${q.lineItems.map(li=>`<tr><td class="mono">${li.sku}</td><td class="fw-6">${li.product}</td><td>${li.qty}</td><td>₹${li.unitPrice.toLocaleString('en-IN')}</td><td>${li.discount}%</td><td class="fw-7">₹${li.total.toLocaleString('en-IN')}</td></tr>`).join('')}<tr style="background:#FAFAF9"><td colspan="5" style="text-align:right;padding-right:16px;font-weight:700">Quote Total:</td><td class="fw-7" style="color:var(--sf-blue)">₹${q.lineItems.reduce((s,li)=>s+li.total,0).toLocaleString('en-IN')}</td></tr></tbody></table></div>`;
+  const historyHtml = `<div class="t-wrap"><table><thead><tr><th>Date</th><th>Field</th><th>User</th><th>From</th><th>To</th></tr></thead><tbody><tr><td class="mono text-sm">${q.createdDate}</td><td>Status</td><td style="color:var(--sf-blue)">${q.owner}</td><td class="text-muted">Draft</td><td>Sent</td></tr><tr><td class="mono text-sm">${q.createdDate}</td><td>Approval</td><td style="color:var(--sf-blue)">Vikram Desai</td><td class="text-muted">Pending</td><td>${q.approvalStatus}</td></tr></tbody></table></div>`;
+  return rs('📦','#0176D3','Quote Line Items',q.lineItems.length,'',lineItemsHtml,true)
+    +rs('📊','#2E5FAC','Quote History',2,'',historyHtml,false);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// P3 — SALES MANAGER
+// ════════════════════════════════════════════════════════════════════// ════════════════════════════════════════════════════════════════════
+// P3 — SALES MANAGER
+// ════════════════════════════════════════════════════════════════════
+function renderSalesMgrTab(tab, el) {
+  const totalPipeline = state.opps.reduce((s,o)=>s+o.amount,0);
+  const pendingApprovals = state.opps.filter(o=>o.discount>12&&o.stage<6);
+
+  if (tab === 'home') {
+    el.innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi" style="border-left:3px solid var(--p3)"><div class="kpi-lbl">Team Pipeline</div><div class="kpi-val">₹${(totalPipeline/10000000).toFixed(1)}Cr</div><div class="kpi-sub">${state.opps.length} opportunities · All territories</div></div>
+      <div class="kpi" style="border-left:3px solid var(--amber-raw)"><div class="kpi-lbl">Pending Approvals</div><div class="kpi-val" style="color:var(--amber)">${pendingApprovals.length}</div><div class="kpi-sub">Discount &gt;12%</div></div>
+      <div class="kpi"><div class="kpi-lbl">Team Win Rate</div><div class="kpi-val">42%</div><div class="kpi-sub">Q4 FY25 MTD</div></div>
+      <div class="kpi"><div class="kpi-lbl">Forecast vs Target</div><div class="kpi-val" style="color:var(--green)">88%</div><div class="kpi-sub">₹8.8Cr of ₹10Cr</div></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sf-card mb-16">
+          <div class="sf-card-hdr"><div class="sf-card-title">📊 Pipeline by Rep</div><button class="btn btn-neutral btn-sm" onclick="switchTab('team-pipeline')">Full View →</button></div>
+          <div class="sf-card-body">
+            ${[{rep:'Rahul Sharma',territory:'West',val:2470000,target:3500000},{rep:'Priya Nair',territory:'South/Blr',val:1070000,target:2500000},{rep:'Arvind Kumar',territory:'South/Hyd',val:11000000,target:9000000}].map(r=>`
+            <div style="margin-bottom:14px">
+              <div class="flex jc-sb text-sm mb-4 fw-6"><span>${r.rep} <span class="text-muted fw-5">${r.territory}</span></span><span>₹${(r.val/100000).toFixed(0)}L / ₹${(r.target/100000).toFixed(0)}L</span></div>
+              <div class="prog" style="height:10px"><div class="prog-fill ${r.val/r.target>=1?'green':r.val/r.target>=.6?'amber':'red'}" style="width:${Math.min(100,r.val/r.target*100).toFixed(0)}%"></div></div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="sf-card">
+          <div class="sf-card-hdr"><div class="sf-card-title">✅ Approval Queue <span class="badge b-amber">${pendingApprovals.length} Pending</span></div></div>
+          <div style="padding:12px">
+            ${pendingApprovals.map(o=>`
+            <div class="approval-card">
+              <div class="flex jc-sb ai-c mb-8">
+                <div>
+                  <div class="fw-7">${o.name.substring(0,45)}</div>
+                  <div class="text-sm text-muted">${o.account} · ${o.owner}</div>
+                </div>
+                <span class="badge b-amber">⚠️ ${o.discount}% discount</span>
+              </div>
+              <div class="flex gap-16 mb-12" style="font-size:12.5px">
+                <div><span class="text-muted">Amount: </span><span class="fw-7">₹${o.amount.toLocaleString('en-IN')}</span></div>
+                <div><span class="text-muted">Margin: </span><span class="fw-6">${o.margin}%</span></div>
+                <div><span class="text-muted">Stage: </span><span class="fw-6">${OPP_STAGES[o.stage]}</span></div>
+              </div>
+              <div class="flex gap-8">
+                <button class="btn btn-success btn-sm" onclick="approveDiscount('${o.id}')">✅ Approve Discount</button>
+                <button class="btn btn-danger btn-sm" onclick="rejectDiscount('${o.id}')">✕ Reject</button>
+                <button class="btn btn-neutral btn-sm" onclick="toast('Opening ${o.id} record','info')">View Full Record →</button>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-title">🎯 Q4 Forecast Summary</div>
+          <div class="side-row"><span class="text-muted">Closed Won</span><span class="fw-7" style="color:var(--green)">₹3.2Cr</span></div>
+          <div class="side-row"><span class="text-muted">Best Case</span><span class="fw-6">₹5.6Cr</span></div>
+          <div class="side-row"><span class="text-muted">Commit</span><span class="fw-6">₹4.8Cr</span></div>
+          <div class="side-row"><span class="text-muted">Target</span><span class="fw-6">₹10Cr</span></div>
+          <div class="side-row"><span class="text-muted">Attainment</span><span class="fw-7" style="color:var(--amber)">48%</span></div>
+        </div>
+        <div class="side-card">
+          <div class="side-title">📈 Win/Loss (MTD)</div>
+          <div class="side-row"><span class="text-muted">Won</span><span class="fw-7 text-muted" style="color:var(--green)">8 deals</span></div>
+          <div class="side-row"><span class="text-muted">Lost</span><span class="fw-6">5 deals</span></div>
+          <div class="side-row"><span class="text-muted">Top Lost Reason</span><span class="fw-6">Price (Competitor)</span></div>
+          <div class="side-row"><span class="text-muted">Avg Deal Size Won</span><span class="fw-6">₹42L</span></div>
+        </div>
+        <div class="side-card" style="background:#F5F3FF;border-color:#C9B1E8">
+          <div class="side-title" style="color:var(--purple)">👁️ Manager View Active</div>
+          <p style="font-size:12px;color:var(--sf-t2);line-height:1.7">You can see <strong>all territories and all reps' data</strong>. Your approval authority covers discounts <strong>12%–20%</strong>. Above 20% requires VP Sales.</p>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'approval-queue') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">✅ Discount Approval Queue</div><span class="badge b-amber">${pendingApprovals.length} Pending Your Action</span></div>
+      <div style="padding:14px">
+        ${pendingApprovals.length === 0
+          ? '<div style="text-align:center;padding:40px;color:var(--sf-t3)">🎉 No pending approvals. All clear.</div>'
+          : pendingApprovals.map(o=>`
+        <div class="approval-card">
+          <div class="flex jc-sb ai-c mb-8">
+            <div><div class="fw-7" style="font-size:14px">${o.name}</div><div class="text-sm text-muted">${o.account} · Submitted by ${o.owner}</div></div>
+            <div class="approval-amount">₹${o.amount.toLocaleString('en-IN')}</div>
+          </div>
+          <div class="grid-2 mb-12" style="font-size:12.5px;gap:8px">
+            <div class="sf-card" style="margin:0;padding:10px"><div class="sf-field-lbl">Discount Requested</div><div class="fw-7 text-sm" style="color:var(--amber-raw);font-size:16px">${o.discount}%</div></div>
+            <div class="sf-card" style="margin:0;padding:10px"><div class="sf-field-lbl">Gross Margin</div><div class="fw-7 text-sm" style="font-size:16px">${o.margin}%</div></div>
+          </div>
+          <div class="flex gap-8">
+            <button class="btn btn-success" onclick="approveDiscount('${o.id}')">✅ Approve</button>
+            <button class="btn btn-danger" onclick="rejectDiscount('${o.id}')">✕ Reject</button>
+            <button class="btn btn-neutral" onclick="toast('Counter-proposal: reduce to 11%','info')">💬 Counter-Propose</button>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'team-pipeline') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">📊 Full Team Pipeline — All Territories</div></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Opportunity</th><th>Account</th><th>Owner</th><th>Territory</th><th>Stage</th><th>Amount</th><th>Discount</th><th>Close Date</th><th></th></tr></thead>
+        <tbody>${state.opps.map(o=>`
+        <tr>
+          <td><a class="sf-link">${o.name.substring(0,35)}…</a></td>
+          <td>${o.account}</td>
+          <td class="fw-6">${o.owner}</td>
+          <td class="text-muted text-sm">${o.owner==='Rahul Sharma'?'West':o.owner==='Priya Nair'?'South/Blr':'South/Hyd'}</td>
+          <td><span class="badge ${['b-gray','b-gray','b-blue','b-blue','b-amber','b-purple','b-green'][o.stage]||'b-gray'}">${OPP_STAGES[o.stage]}</span></td>
+          <td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td>
+          <td style="${o.discount>12?'color:var(--red);font-weight:700':''}">${o.discount}%${o.discount>12?' ⚠️':''}</td>
+          <td class="text-muted text-sm">${o.closeDate}</td>
+          <td><button class="btn btn-neutral btn-xs" onclick="openOppRecord('${o.id}')">Open →</button></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }
+
+  else if (tab === 'forecasts') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">🎯 Q4 FY25 Forecast — National</div><span class="badge b-blue">December 2024</span></div>
+      <div class="sf-card-body">
+        ${[
+          {rep:'Rahul Sharma',territory:'West',    closed:680000, commit:1800000, best:2470000, target:3500000},
+          {rep:'Priya Nair',  territory:'South/Blr',closed:420000, commit:800000,  best:1070000, target:2500000},
+          {rep:'Arvind Kumar',territory:'South/Hyd',closed:2100000,commit:7200000, best:11000000,target:9000000},
+        ].map(r=>`
+        <div style="margin-bottom:20px;border-bottom:1px solid #F1F5F9;padding-bottom:18px">
+          <div class="flex jc-sb ai-c mb-10">
+            <div><div class="fw-7">${r.rep}</div><div class="text-sm text-muted">${r.territory} · Target: ₹${(r.target/100000).toFixed(0)}L</div></div>
+            <span class="badge ${r.closed/r.target>=.5?'b-green':r.closed/r.target>=.3?'b-amber':'b-red'}">${(r.closed/r.target*100).toFixed(0)}% closed</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px">
+            ${[{lbl:'Closed Won',val:r.closed,color:'var(--green)'},{lbl:'Commit',val:r.commit,color:'var(--sf-blue)'},{lbl:'Best Case',val:r.best,color:'var(--purple)'}].map(f=>`
+            <div>
+              <div style="color:${f.color};font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">${f.lbl}</div>
+              <div class="forecast-bar">
+                <div class="forecast-fill" style="width:${Math.min(100,f.val/r.target*100).toFixed(0)}%;background:${f.color}">₹${(f.val/100000).toFixed(0)}L</div>
+                <span class="forecast-target">₹${(r.target/100000).toFixed(0)}L</span>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  else {
+    el.innerHTML = `<div class="sf-card"><div class="sf-card-body" style="text-align:center;padding:40px;color:var(--sf-t3)">${state.persona.tabLabels[tab]} — select a tab above</div></div>`;
+  }
+}
+
+function approveDiscount(oppId) {
+  const o = state.opps.find(x=>x.id===oppId);
+  if(!o) return;
+  toast(`✅ Discount approved for ${o.name}. Sales Rep notified. Quote can now be sent.`,'success');
+  o.discount = Math.min(o.discount, 12); // mark as within approved range
+  renderTab(state.activeTab);
+}
+function rejectDiscount(oppId) {
+  const o = state.opps.find(x=>x.id===oppId);
+  if(!o) return;
+  toast(`✕ Discount rejected for ${o.name}. Sales Rep notified to revise.`,'warning');
+  renderTab(state.activeTab);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// P4 — SALES OPS / KYC
+// ════════════════════════════════════════════════════════════════════
+function renderSalesOpsTab(tab, el) {
+  if (tab === 'home') {
+    el.innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi" style="border-left:3px solid var(--p4)"><div class="kpi-lbl">KYC Pending</div><div class="kpi-val" style="color:var(--amber)">${state.kyc.filter(k=>k.status!=='Approved').length}</div><div class="kpi-sub">Registrations awaiting review</div></div>
+      <div class="kpi"><div class="kpi-lbl">Leads to Qualify</div><div class="kpi-val">${state.leads.filter(l=>l.verified&&l.status!=='Qualified').length}</div><div class="kpi-sub">Telecaller verified</div></div>
+      <div class="kpi"><div class="kpi-lbl">Active Orders</div><div class="kpi-val">${state.orders.length}</div><div class="kpi-sub">In fulfillment</div></div>
+      <div class="kpi"><div class="kpi-lbl">Price Books</div><div class="kpi-val">3</div><div class="kpi-sub">Standard · OTR · Export</div></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sf-card">
+          <div class="sf-card-hdr"><div class="sf-card-title">🔍 KYC Review Queue</div><span class="badge b-amber">${state.kyc.filter(k=>k.status==='Ready').length} Ready for Review</span></div>
+          <div style="padding:12px">${state.kyc.map(k=>`
+          <div class="kyc-card">
+            <div class="flex jc-sb ai-c mb-8">
+              <div>
+                <div class="fw-7" style="font-size:13.5px">${k.company}</div>
+                <div class="text-sm text-muted">GST: <span class="mono">${k.gst}</span> · ${k.contact} · ${k.mobile}</div>
+              </div>
+              <div class="flex gap-6 ai-c">
+                <span class="badge ${k.status==='Ready'?'b-green':k.status==='Pending'?'b-blue':'b-amber'}">${k.status}</span>
+                <span class="text-xs text-muted">${k.submitted}</span>
+              </div>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3);margin-bottom:8px">Documents Submitted</div>
+            ${[['GST Certificate',k.docs.gst],['Trade Licence',k.docs.trade],['Incorporation Certificate',k.docs.inc],['Bank Statement',k.docs.bank]].map(([doc,ok])=>`
+            <div class="kyc-doc-row">
+              <span>${doc}</span>
+              <span class="badge ${ok?'b-green':'b-red'}">${ok?'✓ Received':'✕ Missing'}</span>
+            </div>`).join('')}
+            <div class="flex gap-8 mt-12">
+              <button class="btn btn-success btn-sm" ${k.status!=='Ready'?'disabled style="opacity:.5;cursor:not-allowed"':''} onclick="approveKYC('${k.id}')">✅ Approve & Create Account</button>
+              <button class="btn btn-danger btn-sm" onclick="rejectKYC('${k.id}')">✕ Reject</button>
+              <button class="btn btn-neutral btn-sm" onclick="toast('Request sent for missing documents','info')">📧 Request Docs</button>
+            </div>
+          </div>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-title">📋 KYC Checklist</div>
+          <div style="font-size:12.5px;color:var(--sf-t2);line-height:1.8">
+            <div>✅ All 4 documents received</div>
+            <div>✅ GST number verified via API</div>
+            <div>✅ Telecaller confirmation logged</div>
+            <div>✅ Company address matches GST</div>
+            <div>✅ Director/Proprietor name confirmed</div>
+            <div style="margin-top:10px;color:var(--sf-t3);font-size:12px">When all conditions are met, Account + Contact auto-created in SF. Portal access is NOT automatically provisioned — it requires a separate decision.</div>
+          </div>
+        </div>
+        <div class="side-card">
+          <div class="side-title">📦 Pending Order Actions</div>
+          ${state.orders.filter(o=>o.sapSync!=='synced').map(o=>`
+          <div class="side-row"><span class="fw-6">${o.orderNo}</span><span class="sap-pill ${o.sapSync==='pending'?'sap-pending':'sap-failed'}"><span class="sap-dot" style="background:${o.sapSync==='pending'?'var(--amber-raw)':'var(--red)'}"></span>${o.sapSync}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'kyc-queue') {
+    renderSalesOpsTab('home', el);
+  }
+
+  else if (tab === 'products') {
+    el.innerHTML = `
+    <div class="sf-card mb-14">
+      <div class="sf-card-hdr"><div class="sf-card-title">🏷️ Product Catalogue &amp; Price Books</div><button class="btn btn-primary btn-sm" onclick="toast('New Product created','info')">+ New Product</button></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>SKU</th><th>Product Name</th><th>Category</th><th>List Price</th><th>Price Book</th><th>Actions</th></tr></thead>
+        <tbody>${PRODUCTS_DATA.map(p=>`
+        <tr>
+          <td class="mono fw-6">${p.sku}</td>
+          <td class="fw-6">${p.name}</td>
+          <td><span class="badge b-gray">${p.category}</span></td>
+          <td class="fw-7">₹${p.price.toLocaleString('en-IN')}</td>
+          <td class="text-muted text-sm">${p.pricebook}</td>
+          <td><button class="btn btn-neutral btn-xs" onclick="toast('Editing ${p.sku}','info')">Edit Price</button></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">📚 Price Books</div></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Price Book Name</th><th>Currency</th><th>Active</th><th>Products</th><th>Segments</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="fw-7">Standard India FY25</td><td>INR</td><td><span class="badge b-green">Active</span></td><td>38</td><td>All Segments</td><td><button class="btn btn-neutral btn-xs" onclick="toast('Standard Price Book opened','info')">View</button></td></tr>
+          <tr><td class="fw-7">OTR Segment FY25</td><td>INR</td><td><span class="badge b-green">Active</span></td><td>12</td><td>Mining, OTR</td><td><button class="btn btn-neutral btn-xs">View</button></td></tr>
+          <tr><td class="fw-7">Export Pricing FY25</td><td>USD</td><td><span class="badge b-blue">Draft</span></td><td>18</td><td>Export Accounts</td><td><button class="btn btn-neutral btn-xs">View</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>`;
+  }
+
+  else if (tab === 'orders') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">📦 All Orders</div></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Order No.</th><th>Account</th><th>Product</th><th>Amount</th><th>Warehouse</th><th>SAP Order</th><th>SAP Sync</th><th>Status</th></tr></thead>
+        <tbody>${state.orders.map(o=>`
+        <tr>
+          <td class="mono fw-6">${o.orderNo}</td>
+          <td class="fw-6">${o.account}</td>
+          <td class="text-sm">${o.product}</td>
+          <td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td>
+          <td>${o.wh} DC</td>
+          <td class="mono text-sm">${o.sapOrder||'—'}</td>
+          <td><span class="sap-pill ${o.sapSync==='synced'?'sap-synced':o.sapSync==='pending'?'sap-pending':'sap-failed'}"><span class="sap-dot" style="background:${o.sapSync==='synced'?'var(--green)':o.sapSync==='pending'?'var(--amber-raw)':'var(--red)'}"></span>${o.sapSync}</span></td>
+          <td><span class="badge ${['b-navy','b-blue','b-amber','b-amber','b-green'][o.statusIdx]}">${['Confirmed','Processing','Shipped','In Transit','Delivered'][o.statusIdx]}</span></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }
+
+  else {
+    el.innerHTML = `<div class="sf-card"><div class="sf-card-body" style="text-align:center;padding:40px;color:var(--sf-t3)">${state.persona.tabLabels[tab]} view</div></div>`;
+  }
+}
+
+function approveKYC(kycId) {
+  const k = state.kyc.find(x=>x.id===kycId);
+  if(!k) return;
+  if(k.status !== 'Ready') { toast('All documents must be received before approval','warning'); return; }
+  k.status = 'Approved';
+  toast(`✅ ${k.company} KYC approved. Account + Contact created in Salesforce. Portal access NOT auto-provisioned.`,'success');
+  renderTab(state.activeTab);
+}
+function rejectKYC(kycId) {
+  const k = state.kyc.find(x=>x.id===kycId);
+  if(!k) return;
+  k.status = 'Rejected';
+  toast(`KYC rejected for ${k.company}. Applicant notified.`,'warning');
+  renderTab(state.activeTab);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// P5 — DEALER RM
+// ════════════════════════════════════════════════════════════════════
+function renderDealerRMTab(tab, el) {
+  // Record drill-through for dealer-accounts tab
+  if (tab === 'dealer-accounts' && state.selectedDealer) {
+    const d = state.dealers.find(x=>x.id===state.selectedDealer);
+    if (d) { renderDealerRecord(el, d, state.selectedDealerTab||'details'); return; }
+  }
+
+  const activeD = state.dealers.filter(d=>d.active);
+  const totalCommission = state.dealers.reduce((s,d)=>s+(d.monthlyRev*(d.commission/100)),0);
+  const dealerOpps = state.opps.filter(o=>o.routing==='dealer');
+
+  if (tab === 'home') {
+    el.innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi" style="border-left:3px solid var(--p5)"><div class="kpi-lbl">Active Dealers</div><div class="kpi-val">${activeD.length}</div><div class="kpi-sub">of ${state.dealers.length} mapped</div></div>
+      <div class="kpi"><div class="kpi-lbl">Dealer Pipeline</div><div class="kpi-val">₹${(dealerOpps.reduce((s,o)=>s+o.amount,0)/100000).toFixed(0)}L</div><div class="kpi-sub">${dealerOpps.length} dealer opps</div></div>
+      <div class="kpi" style="border-left:3px solid var(--red)"><div class="kpi-lbl">Uncovered Territories</div><div class="kpi-val" style="color:var(--red)">2</div><div class="kpi-sub">Kolkata · North East</div></div>
+      <div class="kpi"><div class="kpi-lbl">Commission Due MTD</div><div class="kpi-val">₹${(totalCommission/100000).toFixed(1)}L</div><div class="kpi-sub">Across active dealers</div></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sf-card">
+          <div class="sf-card-hdr">
+            <div class="sf-card-title">🤝 Dealer Scorecard</div>
+            <button class="btn btn-neutral btn-sm" onclick="switchTab('dealer-accounts')">Full View →</button>
+          </div>
+          <div class="t-wrap"><table>
+            <thead><tr><th>Dealer</th><th>Territory</th><th>Tier</th><th>MTD Rev</th><th>vs Target</th><th>Status</th></tr></thead>
+            <tbody>${state.dealers.map(d=>{
+              const pct=d.monthlyTarget>0?Math.round(d.monthlyRev/d.monthlyTarget*100):0;
+              return `<tr style="${!d.active?'opacity:.55':''}">
+                <td><a class="sf-link" onclick="openDealerRecord('${d.id}')">${d.name}</a></td>
+                <td class="text-sm text-muted">${d.territory.split('/')[0].trim()}</td>
+                <td><span class="badge ${d.tier==='Gold'?'b-amber':'b-gray'}">${d.tier}</span></td>
+                <td class="fw-6">₹${(d.monthlyRev/100000).toFixed(1)}L</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <div class="prog" style="width:60px"><div class="prog-fill ${pct>=100?'green':pct>=60?'amber':'red'}" style="width:${Math.min(100,pct)}%"></div></div>
+                    <span class="text-xs ${pct>=100?'':'text-muted'}" style="${pct>=100?'color:var(--green);font-weight:700':''}"> ${pct}%</span>
+                  </div>
+                </td>
+                <td><span class="badge ${d.active?'b-green':'b-red'}">${d.active?'Active':'Inactive'}</span></td>
+              </tr>`;
+            }).join('')}</tbody>
+          </table></div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card" style="background:#FEF3C7;border-color:#F5D5A0">
+          <div class="side-title" style="color:var(--amber)">⚠️ Coverage Gaps</div>
+          <div style="font-size:13px;color:var(--sf-t2);line-height:2">
+            🔴 <strong>Kolkata / Bengal</strong> — No dealer<br>
+            🔴 <strong>North East India</strong> — No dealer
+          </div>
+          <button class="btn btn-amber btn-sm w-full mt-12" style="justify-content:center" onclick="toast('New Dealer onboarding form opened','info')">+ Onboard New Dealer →</button>
+        </div>
+        <div class="side-card">
+          <div class="side-title">💰 Commission This Month</div>
+          ${activeD.map(d=>`
+          <div class="side-row">
+            <span class="text-muted text-sm">${d.name.split(' ')[0]} (${d.commission}%)</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="fw-6">₹${(d.monthlyRev*d.commission/100/100000).toFixed(2)}L</span>
+              <span class="badge ${d.payoutStatus==='Paid'?'b-green':'b-amber'}" style="font-size:10px">${d.payoutStatus}</span>
+            </div>
+          </div>`).join('')}
+          <hr style="margin:8px 0;border:none;border-top:1px solid #F1F5F9">
+          <div class="side-row"><span class="fw-7">Total MTD</span><span class="fw-7" style="color:var(--green)">₹${(totalCommission/100000).toFixed(1)}L</span></div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'dealer-accounts') {
+    // List view — active dealers first, inactive dimmed at bottom
+    const active = state.dealers.filter(d=>d.active);
+    const inactive = state.dealers.filter(d=>!d.active);
+    const renderRow = d => {
+      const pct = d.monthlyTarget>0?Math.round(d.monthlyRev/d.monthlyTarget*100):0;
+      return `<tr style="${!d.active?'opacity:.5':''}" onclick="openDealerRecord('${d.id}')" style="cursor:pointer">
+        <td><a class="sf-link" onclick="event.stopPropagation();openDealerRecord('${d.id}')">${d.name}</a></td>
+        <td class="mono text-sm text-muted">${d.code}</td>
+        <td class="text-sm">${d.territory}</td>
+        <td><span class="badge ${d.tier==='Gold'?'b-amber':'b-gray'}">${d.tier}</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" class="sf-input" style="width:50px;padding:3px 6px;font-size:12px" value="${d.commission}" min="3" max="12"
+              onclick="event.stopPropagation()" onchange="updateCommission('${d.id}',this.value)">
+            <span class="text-muted">%</span>
+          </div>
+        </td>
+        <td class="fw-6">₹${(d.monthlyRev/100000).toFixed(1)}L</td>
+        <td class="text-muted">₹${(d.ytdRev/100000).toFixed(0)}L</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="prog" style="width:55px"><div class="prog-fill ${pct>=100?'green':pct>=60?'amber':'red'}" style="width:${Math.min(100,pct)}%"></div></div>
+            <span class="text-xs text-muted">${pct}%</span>
+          </div>
+        </td>
+        <td><span class="badge ${d.active?'b-green':'b-red'}">${d.active?'Active':'Inactive'}</span></td>
+        <td><button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();openDealerRecord('${d.id}')">Open →</button></td>
+      </tr>`;
+    };
+    el.innerHTML = `
+    <div class="lv-header">
+      <div class="lv-title">🤝 Dealer Accounts <span class="badge b-green" style="font-size:12px">${active.length} Active</span>${inactive.length?`<span class="badge b-red" style="font-size:12px">${inactive.length} Inactive</span>`:''}</div>
+      <div class="flex gap-8">
+        <button class="btn btn-neutral btn-sm" onclick="toast('Export dealer list','info')">⬇ Export</button>
+        <button class="btn btn-primary btn-sm" onclick="toast('New Dealer onboarding form','info')">+ New Dealer</button>
+      </div>
+    </div>
+    <div class="sf-card">
+      <div class="t-wrap"><table>
+        <thead><tr><th>Dealer Name</th><th>Code</th><th>Territory</th><th>Tier</th><th>Commission</th><th>MTD Rev</th><th>YTD Rev</th><th>vs Target</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          ${active.map(renderRow).join('')}
+          ${inactive.length?`<tr><td colspan="10" style="padding:6px 14px;background:#FFF1EF;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--red)">Inactive Dealers</td></tr>${inactive.map(renderRow).join('')}`:''}
+        </tbody>
+      </table></div>
+      <div style="padding:10px 16px;border-top:1px solid var(--sf-border);display:flex;gap:8px">
+        <button class="btn btn-success btn-sm" onclick="toast('Commission rates saved','success')">💾 Save Commission Changes</button>
+      </div>
+    </div>
+    <div class="access-wall" style="margin-top:0">🔒 Direct customer accounts and internal pipeline are not visible on this profile.</div>`;
+  }
+
+  else if (tab === 'dealer-opps') {
+    el.innerHTML = `
+    <div class="lv-header">
+      <div class="lv-title">💼 Dealer-Routed Opportunities</div>
+      <span class="badge b-amber">${dealerOpps.length} open</span>
+    </div>
+    <div class="sf-card">
+      <div class="t-wrap"><table>
+        <thead><tr><th>Opportunity</th><th>Account</th><th>Stage</th><th>Amount</th><th>Dealer</th><th>Close Date</th><th>SAP Sync</th></tr></thead>
+        <tbody>${dealerOpps.map(o=>`
+        <tr>
+          <td><a class="sf-link" onclick="toast('${o.name}','info')">${o.name.substring(0,40)}</a></td>
+          <td>${o.account}</td>
+          <td><span class="badge ${['b-gray','b-gray','b-blue','b-blue','b-amber','b-purple','b-green'][o.stage]||'b-gray'}">${OPP_STAGES[o.stage]}</span></td>
+          <td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td>
+          <td><a class="sf-link" onclick="openDealerRecord('D-001')">Tyre Solutions India</a></td>
+          <td class="text-muted text-sm">${o.closeDate}</td>
+          <td><span class="sap-pill ${o.sapSync==='synced'?'sap-synced':o.sapSync==='pending'?'sap-pending':'sap-failed'}"><span class="sap-dot" style="background:${o.sapSync==='synced'?'var(--green)':o.sapSync==='pending'?'var(--amber-raw)':'var(--red)'}"></span>${o.sapSync}</span></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="access-wall" style="margin-top:0">🔒 Direct Opportunities are not visible on this profile. You see only dealer-routed deals.</div>`;
+  }
+
+  else if (tab === 'commission') {
+    const allDealers = state.dealers;
+    el.innerHTML = `
+    <div class="lv-header">
+      <div class="lv-title">💰 Commission Ledger</div>
+      <div class="flex gap-8">
+        <select class="sf-select" style="font-size:12px"><option>December 2024</option><option>November 2024</option><option>October 2024</option></select>
+        <button class="btn btn-neutral btn-sm" onclick="toast('Commission report exported','success')">⬇ Export</button>
+      </div>
+    </div>
+    <div class="sf-card">
+      <div class="t-wrap"><table>
+        <thead><tr><th>Dealer</th><th>Tier</th><th>Rate</th><th>Last Month</th><th>MTD Revenue</th><th>MTD Commission</th><th>YTD Commission</th><th>Payout Status</th><th></th></tr></thead>
+        <tbody>${allDealers.map(d=>{
+          const mtdComm = d.monthlyRev*d.commission/100;
+          const ytdComm = d.ytdRev*d.commission/100;
+          return `<tr style="${!d.active?'opacity:.55':''}">
+            <td><a class="sf-link" onclick="openDealerRecord('${d.id}')">${d.name}</a></td>
+            <td><span class="badge ${d.tier==='Gold'?'b-amber':'b-gray'}">${d.tier}</span></td>
+            <td class="fw-6">${d.commission}%</td>
+            <td class="text-muted">₹${(d.lastMonthRev/100000).toFixed(1)}L</td>
+            <td class="fw-6">₹${(d.monthlyRev/100000).toFixed(1)}L</td>
+            <td class="fw-7" style="color:var(--green)">₹${(mtdComm/100000).toFixed(2)}L</td>
+            <td class="text-muted">₹${(ytdComm/100000).toFixed(1)}L</td>
+            <td><span class="badge ${d.payoutStatus==='Paid'?'b-green':'b-amber'}">${d.payoutStatus}</span></td>
+            <td>${d.active&&d.payoutStatus==='Pending'?`<button class="btn btn-success btn-xs" onclick="markPaid('${d.id}')">Mark Paid</button>`:''}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>
+      <div style="padding:10px 16px;border-top:1px solid var(--sf-border);display:flex;justify-content:space-between;align-items:center">
+        <span class="text-muted text-sm">Next payout: <strong>January 5, 2025</strong></span>
+        <div style="font-size:13px;font-weight:700">Total MTD: <span style="color:var(--green)">₹${(totalCommission/100000).toFixed(2)}L</span></div>
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'partner-contacts') {
+    // Flattened list of all dealer contacts, linking back to dealer record
+    const allContacts = state.dealers.flatMap(d =>
+      (d.contacts||[]).map(c => ({...c, dealerName:d.name, dealerId:d.id, dealerActive:d.active}))
+    );
+    const totalActive = allContacts.filter(c => {
+      const d = state.dealers.find(x=>x.id===c.dealerId);
+      return d && d.active;
+    }).length;
+    el.innerHTML = `
+    <div class="lv-header">
+      <div class="lv-title">👥 Partner Contacts <span class="badge b-blue" style="font-size:12px">${allContacts.length} contacts · ${state.dealers.filter(d=>d.active).length} dealers</span></div>
+      <div class="flex gap-8">
+        <button class="btn btn-neutral btn-sm" onclick="toast('Export contacts','info')">⬇ Export</button>
+        <button class="btn btn-primary btn-sm" onclick="toast('New Contact','info')">+ New Contact</button>
+      </div>
+    </div>
+    <div class="sf-card">
+      <div class="t-wrap"><table>
+        <thead><tr><th>Name</th><th>Title</th><th>Dealer</th><th>Territory</th><th>Phone</th><th>Email</th><th>Role</th><th></th></tr></thead>
+        <tbody>${allContacts.map(c => {
+          const d = state.dealers.find(x=>x.id===c.dealerId);
+          return `<tr style="${!c.dealerActive?'opacity:.5':''}">
+            <td>
+              <a class="sf-link">${c.name}</a>
+              ${c.primary?'<span class="badge b-blue" style="font-size:10px;margin-left:4px">Primary</span>':''}
+            </td>
+            <td class="text-muted">${c.title}</td>
+            <td><a class="sf-link" onclick="openDealerRecord('${c.dealerId}')">${c.dealerName}</a></td>
+            <td class="text-sm text-muted">${d?d.territory.split('/')[0].trim():'—'}</td>
+            <td>${c.phone}</td>
+            <td style="color:var(--sf-blue);font-size:12px">${c.email}</td>
+            <td><span class="badge ${c.primary?'b-navy':'b-gray'}" style="font-size:10px">${c.primary?'Primary':'Secondary'}</span></td>
+            <td>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-neutral btn-xs" onclick="toast('Calling ${c.name}','info')" title="Call">📞</button>
+                <button class="btn btn-neutral btn-xs" onclick="toast('Email to ${c.name}','info')" title="Email">✉️</button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="access-wall">🔒 Showing contacts from Dealer Accounts only. Direct customer contacts are not visible on this profile.</div>`;
+  }
+
+  else {
+    el.innerHTML = `<div class="sf-card"><div class="sf-card-body" style="text-align:center;padding:40px;color:var(--sf-t3)">${state.persona.tabLabels[tab]}</div></div>`;
+  }
+}
+
+// ── Dealer record navigation ─────────────────────────────────────────
+function openDealerRecord(id, recTab) {
+  state.selectedDealer = id;
+  state.selectedDealerTab = recTab || 'details';
+  state.activeTab = 'dealer-accounts';
+  buildNav();
+  renderDealerRMTab('dealer-accounts', document.getElementById('sf-content'));
+}
+
+// ── Full dealer record view ──────────────────────────────────────────
+function renderDealerRecord(el, d, activeTab) {
+  const dealerOpps = state.opps.filter(o=>o.routing==='dealer');
+  const pct = d.monthlyTarget>0?Math.round(d.monthlyRev/d.monthlyTarget*100):0;
+  const toGold = d.tier==='Silver'?Math.max(0,d.goldTarget-d.ytdRev):0;
+  const bc = `<div style="font-size:12px;color:var(--sf-t3);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+    <a class="sf-link" style="font-size:12px;color:var(--sf-t3)" onclick="state.selectedDealer=null;renderDealerRMTab('dealer-accounts',document.getElementById('sf-content'))">Dealer Accounts</a>
+    <span>/</span>
+    <span style="color:var(--sf-t2);font-weight:600">${d.name}</span>
+  </div>`;
+
+  el.innerHTML = `${bc}
+  <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:0;box-shadow:var(--shadow-sm);border-top:3px solid var(--p5)">
+    ${!d.active?`<div style="background:#FFF1EF;border:1px solid #FFBBB8;border-radius:var(--radius);padding:8px 14px;font-size:12px;font-weight:600;color:var(--red);margin-bottom:12px">⚠️ Inactive Dealer — ${d.inactiveReason||'Deactivated'}. Reactivation requires Regional Manager approval.</div>`:''}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:10px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);margin-bottom:2px">Dealer Account · ${d.code}</div>
+        <div style="font-family:var(--font-disp);font-size:22px;color:var(--sf-t1);margin-bottom:8px">${d.name}</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Territory</div><div style="font-size:13px;font-weight:600">${d.territory}</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Tier</div><div><span class="badge ${d.tier==='Gold'?'b-amber':'b-gray'}" style="font-size:12px">${d.tier}</span></div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Commission</div><div style="font-size:13px;font-weight:700">${d.commission}%</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">MTD Revenue</div><div style="font-size:13px;font-weight:700">₹${(d.monthlyRev/100000).toFixed(1)}L</div></div>
+          <div><div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--sf-t3)">Status</div><div><span class="badge ${d.active?'b-green':'b-red'}">${d.active?'Active':'Inactive'}</span></div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-neutral btn-sm" onclick="toast('Email to ${d.contactName}','info')">✉️ Email</button>
+        <button class="btn btn-neutral btn-sm" onclick="toast('Calling ${d.contactPhone}','info')">📞 Call</button>
+        <button class="btn btn-primary btn-sm" onclick="toast('Edit Dealer','info')">Edit</button>
+        ${!d.active?`<button class="btn btn-success btn-sm" onclick="toast('Reactivation request raised','success')">↺ Reactivate</button>`:''}
+      </div>
+    </div>
+  </div>
+  <div class="rec-layout" style="margin-top:14px">
+    <div>
+      <div style="background:white;border:1px solid var(--sf-border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden">
+        <div class="rec-tab-bar">
+          ${['details','scorecard','related'].map(t=>`<div class="rec-tab-item ${activeTab===t?'active':''}" onclick="openDealerRecord('${d.id}','${t}')">${t==='details'?'Details':t==='scorecard'?'Scorecard':'Related'}</div>`).join('')}
+        </div>
+        <div class="rec-tab-content">
+          ${activeTab==='details'?renderDealerDetails(d):activeTab==='scorecard'?renderDealerScorecard(d):renderDealerRelated(d,dealerOpps)}
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="side-card">
+        <div class="side-title">📊 This Month</div>
+        <div class="side-row"><span class="text-muted">MTD Revenue</span><span class="fw-7">₹${(d.monthlyRev/100000).toFixed(1)}L</span></div>
+        <div class="side-row"><span class="text-muted">Target</span><span class="fw-6">₹${(d.monthlyTarget/100000).toFixed(1)}L</span></div>
+        <div style="padding:6px 0">
+          <div class="prog" style="height:8px"><div class="prog-fill ${pct>=100?'green':pct>=60?'amber':'red'}" style="width:${Math.min(100,pct)}%"></div></div>
+          <div style="font-size:11px;color:var(--sf-t3);margin-top:3px">${pct}% of target</div>
+        </div>
+        <div class="side-row"><span class="text-muted">Commission MTD</span><span class="fw-7" style="color:var(--green)">₹${(d.monthlyRev*d.commission/100/100000).toFixed(2)}L</span></div>
+        <div class="side-row"><span class="text-muted">Payout</span><span class="badge ${d.payoutStatus==='Paid'?'b-green':'b-amber'}">${d.payoutStatus}</span></div>
+      </div>
+      ${toGold>0?`
+      <div class="side-card" style="background:#FFF7EC;border-color:#F5D5A0">
+        <div class="side-title" style="color:var(--amber)">🏆 Tier Progression</div>
+        <p style="font-size:12px;color:var(--sf-t2);line-height:1.7">₹${(toGold/100000).toFixed(0)}L more in YTD revenue to reach <strong>Gold</strong> tier and unlock ${d.commission+1}% commission.</p>
+        <div class="prog mt-8" style="height:8px"><div class="prog-fill amber" style="width:${Math.min(100,Math.round(d.ytdRev/d.goldTarget*100))}%"></div></div>
+        <div style="font-size:11px;color:var(--sf-t3);margin-top:3px">₹${(d.ytdRev/100000).toFixed(0)}L of ₹${(d.goldTarget/100000).toFixed(0)}L</div>
+      </div>`:''}
+      <div class="side-card">
+        <div class="side-title">👤 Primary Contact</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">${d.contactName}</div>
+        <div style="font-size:12px;color:var(--sf-t3);margin-bottom:2px">📱 ${d.contactPhone}</div>
+        <div style="font-size:12px;color:var(--sf-blue)">${d.contactEmail}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDealerDetails(d) {
+  const fRow = (l,v) => `<div class="f-row"><div class="f-lbl">${l}</div><div class="f-val">${v||'—'}</div></div>`;
+  return `
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 4px;border-bottom:1px solid var(--sf-border);margin-bottom:4px">▾ Dealer Information</div>
+  <div class="fields-grid" style="margin-bottom:12px">
+    ${fRow('Dealer Name',d.name)}${fRow('Dealer Code',`<span class="mono">${d.code}</span>`)}
+    ${fRow('Territory',d.territory)}${fRow('Tier',`<span class="badge ${d.tier==='Gold'?'b-amber':'b-gray'}">${d.tier}</span>`)}
+    ${fRow('Status',`<span class="badge ${d.active?'b-green':'b-red'}">${d.active?'Active':'Inactive'}</span>`)}${fRow('Onboarded',d.onboardedDate)}
+    ${fRow('Primary Contact',d.contactName)}${fRow('Phone',d.contactPhone)}
+    ${fRow('Email',`<span style="color:var(--sf-blue)">${d.contactEmail}</span>`)}${fRow('Address',d.address)}
+  </div>
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 4px;border-bottom:1px solid var(--sf-border);margin-bottom:4px">▾ Commercial Terms</div>
+  <div class="fields-grid">
+    ${fRow('Commission Rate',`<strong>${d.commission}%</strong>`)}${fRow('Monthly Target',`₹${(d.monthlyTarget/100000).toFixed(1)}L`)}
+    ${fRow('YTD Revenue',`₹${(d.ytdRev/100000).toFixed(0)}L`)}${fRow('Payout Status',`<span class="badge ${d.payoutStatus==='Paid'?'b-green':'b-amber'}">${d.payoutStatus}</span>`)}
+    ${fRow('Commission MTD',`<span style="color:var(--green);font-weight:700">₹${(d.monthlyRev*d.commission/100/100000).toFixed(2)}L</span>`)}${fRow('YTD Commission',`₹${(d.ytdRev*d.commission/100/100000).toFixed(1)}L`)}
+  </div>`;
+}
+
+function renderDealerScorecard(d) {
+  const months = ['Jul','Aug','Sep','Oct','Nov','Dec'];
+  const maxVal = Math.max(...d.monthlyTrend, d.monthlyTarget);
+  const barH = 80;
+  const bars = d.monthlyTrend.map((v,i) => {
+    const h = maxVal>0?Math.round(v/maxVal*barH):0;
+    const isLast = i===d.monthlyTrend.length-1;
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">
+      <div style="font-size:10px;font-weight:700;color:${isLast?'var(--p5)':'var(--sf-t3)'}">₹${(v/100000).toFixed(0)}L</div>
+      <div style="height:${barH}px;display:flex;align-items:flex-end;width:100%">
+        <div style="width:100%;height:${h}px;background:${isLast?'var(--p5)':'#CBD5E1'};border-radius:3px 3px 0 0;transition:height .3s"></div>
+      </div>
+      <div style="font-size:10px;color:var(--sf-t3)">${months[i]}</div>
+    </div>`;
+  }).join('');
+  const pct = d.monthlyTarget>0?Math.round(d.monthlyRev/d.monthlyTarget*100):0;
+  const toGold = d.tier==='Silver'?Math.max(0,d.goldTarget-d.ytdRev):0;
+  return `
+  <div style="margin-bottom:16px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 10px;border-bottom:1px solid var(--sf-border);margin-bottom:12px">▾ Revenue Trend — Last 6 Months</div>
+    <div style="display:flex;gap:6px;align-items:flex-end;padding:0 4px">${bars}</div>
+    <div style="margin-top:8px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sf-t3)">
+      <div style="width:10px;height:10px;background:var(--p5);border-radius:2px"></div>Current month
+      <div style="width:10px;height:10px;background:#CBD5E1;border-radius:2px;margin-left:8px"></div>Prior months
+    </div>
+  </div>
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 4px;border-bottom:1px solid var(--sf-border);margin-bottom:10px">▾ Performance vs Target</div>
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="kpi" style="padding:10px 12px"><div class="kpi-lbl">MTD Target</div><div class="kpi-val" style="font-size:20px">₹${(d.monthlyTarget/100000).toFixed(1)}L</div></div>
+    <div class="kpi" style="padding:10px 12px"><div class="kpi-lbl">MTD Actual</div><div class="kpi-val" style="font-size:20px;color:${pct>=100?'var(--green)':pct>=60?'var(--amber)':'var(--red)'}">₹${(d.monthlyRev/100000).toFixed(1)}L</div></div>
+    <div class="kpi" style="padding:10px 12px"><div class="kpi-lbl">Attainment</div><div class="kpi-val" style="font-size:20px;color:${pct>=100?'var(--green)':pct>=60?'var(--amber)':'var(--red)'}">${pct}%</div></div>
+    <div class="kpi" style="padding:10px 12px"><div class="kpi-lbl">YTD Revenue</div><div class="kpi-val" style="font-size:20px">₹${(d.ytdRev/100000).toFixed(0)}L</div></div>
+  </div>
+  ${toGold>0?`
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--sf-t3);padding:8px 0 4px;border-bottom:1px solid var(--sf-border);margin-bottom:10px">▾ Tier Progression</div>
+  <div style="margin-bottom:6px;display:flex;justify-content:space-between;font-size:12.5px"><span>Silver → Gold</span><span class="fw-6">₹${(d.ytdRev/100000).toFixed(0)}L of ₹${(d.goldTarget/100000).toFixed(0)}L YTD</span></div>
+  <div class="prog" style="height:10px;margin-bottom:6px"><div class="prog-fill amber" style="width:${Math.min(100,Math.round(d.ytdRev/d.goldTarget*100))}%"></div></div>
+  <div style="font-size:12px;color:var(--sf-t3)">₹${(toGold/100000).toFixed(0)}L more needed to reach Gold and unlock ${d.commission+1}% commission rate.</div>`:'<div style="padding:12px;background:var(--green-lt);border-radius:var(--radius);font-size:12.5px;color:var(--green-dk)">🏆 <strong>Gold Tier</strong> — Maximum commission tier achieved.</div>'}`;
+}
+
+function renderDealerRelated(d, allDealerOpps) {
+  function rs(icon,bg,title,count,btns,body,open=false){
+    const id='rsdlr'+Math.random().toString(36).slice(2,8);
+    return `<div class="rs"><div class="rs-hdr" onclick="toggleRS('${id}')"><div class="rs-left"><div class="rs-obj-icon" style="background:${bg}">${icon}</div>${title}<span class="rs-count">(${count})</span></div><div class="rs-actions">${btns}<span class="rs-chev ${open?'':'closed'}" id="${id}c">▾</span></div></div><div id="${id}" class="rs-body" style="${open?'':'display:none'}">${body}</div></div>`;
+  }
+  // Contacts
+  const contacts = d.contacts || [];
+  const contactsHtml = contacts.length===0
+    ? `<div class="rs-empty">No contacts found.</div>`
+    : `<div class="t-wrap"><table>
+        <thead><tr><th>Name</th><th>Title</th><th>Phone</th><th>Email</th><th></th></tr></thead>
+        <tbody>${contacts.map(c=>`
+        <tr>
+          <td>
+            <a class="sf-link">${c.name}</a>
+            ${c.primary?'<span class="badge b-blue" style="font-size:10px;margin-left:4px">Primary</span>':''}
+          </td>
+          <td class="text-muted">${c.title}</td>
+          <td>${c.phone}</td>
+          <td style="color:var(--sf-blue);font-size:12px">${c.email}</td>
+          <td>
+            <div style="display:flex;gap:4px">
+              <button class="btn btn-neutral btn-xs" onclick="toast('Calling ${c.name}','info')">📞</button>
+              <button class="btn btn-neutral btn-xs" onclick="toast('Email to ${c.name}','info')">✉️</button>
+            </div>
+          </td>
+        </tr>`).join('')}
+        </tbody>
+      </table></div>`;
+  // Opportunities
+  const oppsHtml = allDealerOpps.length===0
+    ? `<div class="rs-empty">No dealer-routed opportunities.</div>`
+    : `<div class="t-wrap"><table><thead><tr><th>Opportunity</th><th>Account</th><th>Stage</th><th>Amount</th><th>Close Date</th></tr></thead><tbody>${allDealerOpps.map(o=>`<tr><td><a class="sf-link" onclick="openOppRecord('${o.id}')">${o.name.substring(0,38)}</a></td><td>${o.account}</td><td><span class="badge ${['b-gray','b-gray','b-blue','b-blue','b-amber','b-purple','b-green'][o.stage]||'b-gray'}">${OPP_STAGES[o.stage]}</span></td><td class="fw-7">₹${o.amount.toLocaleString('en-IN')}</td><td class="text-muted text-sm">${o.closeDate}</td></tr>`).join('')}</tbody></table></div>`;
+  // Commission ledger
+  const commRows = [
+    {month:'December 2024', rev:d.monthlyRev,        comm:d.monthlyRev*d.commission/100,        status:d.payoutStatus},
+    {month:'November 2024', rev:d.lastMonthRev,       comm:d.lastMonthRev*d.commission/100,       status:'Paid'},
+    {month:'October 2024',  rev:d.monthlyTrend[4]||0, comm:(d.monthlyTrend[4]||0)*d.commission/100, status:'Paid'},
+  ];
+  const commHtml = `<div class="t-wrap"><table><thead><tr><th>Month</th><th>Revenue</th><th>Commission (${d.commission}%)</th><th>Status</th><th></th></tr></thead><tbody>${commRows.map(r=>`<tr><td class="fw-6">${r.month}</td><td>₹${(r.rev/100000).toFixed(1)}L</td><td class="fw-7" style="color:var(--green)">₹${(r.comm/100000).toFixed(2)}L</td><td><span class="badge ${r.status==='Paid'?'b-green':'b-amber'}">${r.status}</span></td><td>${r.status==='Pending'?`<button class="btn btn-success btn-xs" onclick="markPaid('${d.id}')">Mark Paid</button>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+
+  return rs('👤','#1B52AE','Contacts',contacts.length,
+      `<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();toast('New Contact','info')">+ New Contact</button>`,
+      contactsHtml, true)
+    +rs('💼','#D97706','Dealer Opportunities',allDealerOpps.length,
+      `<button class="btn btn-neutral btn-xs" onclick="event.stopPropagation();switchTab('dealer-opps')">View All →</button>`,
+      oppsHtml, true)
+    +rs('💰','#059669','Commission Ledger',commRows.length,'',commHtml,false);
+}
+
+function markPaid(dealerId) {
+  const d = state.dealers.find(x=>x.id===dealerId);
+  if(d) { d.payoutStatus='Paid'; toast(`Commission marked as Paid for ${d.name}`,'success'); renderDealerRMTab(state.activeTab, document.getElementById('sf-content')); }
+}
+
+function updateCommission(dealerId, val) {
+  const d = state.dealers.find(x=>x.id===dealerId);
+  if(d) { d.commission = parseFloat(val); toast(`Commission updated: ${d.name} → ${val}%`,'success'); }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// P6 — SYSTEM ADMIN
+// ════════════════════════════════════════════════════════════════════
+function renderSysAdminTab(tab, el) {
+  if (tab === 'home') {
+    el.innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi" style="border-left:3px solid var(--p6)"><div class="kpi-lbl">Active Users</div><div class="kpi-val">${USERS_DATA.filter(u=>u.active).length}</div><div class="kpi-sub">${USERS_DATA.length} total licensed</div></div>
+      <div class="kpi" style="border-left:3px solid var(--red)"><div class="kpi-lbl">Failed Jobs</div><div class="kpi-val" style="color:var(--red)">3</div><div class="kpi-sub">Retry queued</div></div>
+      <div class="kpi"><div class="kpi-lbl">API Health</div><div class="kpi-val" style="color:var(--green)">99.2%</div><div class="kpi-sub">18,420 / 25,000 calls today</div></div>
+      <div class="kpi"><div class="kpi-lbl">Last Deploy</div><div class="kpi-val" style="font-size:18px">3 days</div><div class="kpi-sub">v2.4.1 · No issues</div></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sf-card">
+          <div class="sf-card-hdr"><div class="sf-card-title">👤 User Licenses Overview</div></div>
+          <div class="t-wrap"><table>
+            <thead><tr><th>License Type</th><th>Total</th><th>Used</th><th>Available</th><th>Cost Tier</th></tr></thead>
+            <tbody>
+              <tr><td class="fw-7">Salesforce (Sales Cloud)</td><td>8</td><td>5</td><td class="fw-6 text-muted" style="color:var(--green)">3</td><td><span class="badge b-amber">$$$ / user</span></td></tr>
+              <tr><td class="fw-7">Salesforce Platform</td><td>5</td><td>3</td><td class="fw-6 text-muted" style="color:var(--green)">2</td><td><span class="badge b-gray">$ / user</span></td></tr>
+              <tr><td class="fw-7">System Administrator</td><td>2</td><td>1</td><td>1</td><td><span class="badge b-navy">Included</span></td></tr>
+              <tr><td class="fw-7">Community (Experience Cloud)</td><td>0</td><td>0</td><td>0</td><td><span class="badge b-gray">Not provisioned</span></td></tr>
+            </tbody>
+          </table></div>
+          <div style="padding:10px 14px;background:var(--green-lt);border-top:1px solid var(--sf-border);font-size:12px;color:var(--green-dk)">
+            ✅ <strong>Experience Cloud licenses = 0.</strong> B2B portal uses Connected App / API integration. No Community licenses required.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-title">🔐 Recent Config Changes</div>
+          <div class="timeline-item"><div class="tl-icon">⚙️</div><div><div class="tl-title">Threshold updated: ₹3L → ₹5L</div><div class="tl-sub">Suresh K · Reason: Q4 review</div><div class="tl-time">Nov 1, 2024</div></div></div>
+          <div class="timeline-item"><div class="tl-icon">👤</div><div><div class="tl-title">User added: Arjun Mehta (Telecaller)</div><div class="tl-sub">Platform license · West territory</div><div class="tl-time">Dec 10, 2024</div></div></div>
+          <div class="timeline-item"><div class="tl-icon">🔌</div><div><div class="tl-title">SAP Named Credential refreshed</div><div class="tl-sub">OAuth token rotated</div><div class="tl-time">Dec 20, 2024</div></div></div>
+        </div>
+        <div class="side-card" style="background:#EEF4FF;border-color:#A8C7F0">
+          <div class="side-title" style="color:var(--sf-blue)">🛡️ System Admin Access</div>
+          <p style="font-size:12px;color:var(--sf-t2);line-height:1.7">You have <strong>unrestricted access</strong> to all objects, data, configuration, and setup. All changes are logged in the Audit Trail.</p>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'users') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">👤 User Management</div><button class="btn btn-primary btn-sm" onclick="toast('New User form opened','info')">+ New User</button></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Full Name</th><th>Profile</th><th>License</th><th>Territory</th><th>Last Login</th><th>Active</th><th></th></tr></thead>
+        <tbody>${USERS_DATA.map(u=>`
+        <tr>
+          <td class="fw-7">${u.name}</td>
+          <td><span class="badge b-gray">${u.profile}</span></td>
+          <td class="text-sm">${u.license}</td>
+          <td class="text-muted text-sm">${u.territory}</td>
+          <td class="text-muted text-sm">${u.lastLogin}</td>
+          <td><span class="badge ${u.active?'b-green':'b-red'}">${u.active?'Active':'Inactive'}</span></td>
+          <td><button class="btn btn-neutral btn-xs" onclick="toast('User ${u.id} opened','info')">Edit</button></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }
+
+  else if (tab === 'permissions') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">🔐 Permission Matrix — Object Access by Profile</div></div>
+      <div class="t-wrap">
+        <table class="perm-matrix">
+          <thead>
+            <tr>
+              <th>Object</th>
+              <th>Telecaller</th>
+              <th>Sales Rep</th>
+              <th>Sales Mgr</th>
+              <th>Sales Ops</th>
+              <th>Dealer RM</th>
+              <th>Sys Admin</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${[
+              ['Leads',              'R (own only)','R/W (territory)','R/W (all)','R/W (all)','—','R/W/D'],
+              ['Accounts',          '—',           'R/W (territory)','R/W (all)','R/W (all)','R (dealer)','R/W/D'],
+              ['Contacts',          '—',           'R/W (territory)','R/W (all)','R/W (all)','R (dealer)','R/W/D'],
+              ['Opportunities',     '—',           'R/W (own)','R/W (all)','R/W (all)','R (dealer)','R/W/D'],
+              ['Quotes',            '—',           'R/W (own ≤12%)','R/W (all)','R/W (all)','—','R/W/D'],
+              ['Orders',            '—',           '—','R (all)','R/W (all)','—','R/W/D'],
+              ['Products/PriceBook','—',           'R','R','R/W','—','R/W/D'],
+              ['Dealer Accounts',   '—',           '—','—','—','R/W (dealer)','R/W/D'],
+              ['Commission Data',   '—',           '—','—','—','R/W','R/W/D'],
+              ['Integration Logs',  '—',           '—','—','—','—','R/W/D'],
+              ['Setup / Config',    '—',           '—','—','—','—','Full'],
+            ].map(([obj,...cells])=>`
+            <tr>
+              <td class="fw-6">${obj}</td>
+              ${cells.map(c=>`<td class="perm-cell">
+                ${c==='—'?'<span class="perm-n">—</span>':
+                  c.includes('Full')||c.includes('R/W/D')?`<span class="perm-y">✓</span> <span style="font-size:10px;color:var(--green)">Full</span>`:
+                  `<span class="perm-r">${c}</span>`}
+              </td>`).join('')}
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:12px 16px;font-size:12px;color:var(--sf-t3);border-top:1px solid var(--sf-border)">
+        <strong>Key:</strong> R = Read · W = Write · D = Delete · (own) = own records only · (territory) = assigned territory · (dealer) = dealer records only · — = No access
+      </div>
+    </div>`;
+  }
+
+  else if (tab === 'integration') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr"><div class="sf-card-title">🔌 Integration Health</div></div>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Integration</th><th>Direction</th><th>Mechanism</th><th>Last Run</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="fw-6">Inventory Sync</td><td class="text-muted">SAP → SF</td><td>MuleSoft Batch</td><td>14 min ago</td><td><span class="sap-pill sap-synced"><span class="sap-dot" style="background:var(--green)"></span>OK</span></td><td><button class="btn btn-neutral btn-xs" onclick="toast('Inventory sync triggered','success')">▶ Run</button></td></tr>
+          <tr><td class="fw-6">Sales Order Push</td><td class="text-muted">SF → SAP</td><td>REST/BAPI</td><td>2 min ago</td><td><span class="sap-pill sap-synced"><span class="sap-dot" style="background:var(--green)"></span>OK</span></td><td><button class="btn btn-neutral btn-xs">▶ Run</button></td></tr>
+          <tr><td class="fw-6">Shipment Tracker</td><td class="text-muted">SAP → SF</td><td>Webhook</td><td style="color:var(--red)">Failed 06:42</td><td><span class="sap-pill sap-failed"><span class="sap-dot" style="background:var(--red)"></span>Down</span></td><td><button class="btn btn-danger btn-xs" onclick="toast('Restart triggered — 30s…','warning')">↺ Restart</button></td></tr>
+          <tr><td class="fw-6">Invoice Sync</td><td class="text-muted">SAP → SF</td><td>Scheduled</td><td>Yesterday 9AM</td><td><span class="sap-pill sap-synced"><span class="sap-dot" style="background:var(--green)"></span>OK</span></td><td><button class="btn btn-neutral btn-xs">▶ Run</button></td></tr>
+          <tr><td class="fw-6">B2B Portal API</td><td class="text-muted">Portal → SF</td><td>Connected App</td><td>Active (real-time)</td><td><span class="sap-pill sap-synced"><span class="sap-dot" style="background:var(--green)"></span>OK</span></td><td><button class="btn btn-neutral btn-xs" onclick="toast('Connected App config opened','info')">Config</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>`;
+  }
+
+  else if (tab === 'logs') {
+    el.innerHTML = `
+    <div class="sf-card">
+      <div class="sf-card-hdr">
+        <div class="sf-card-title">📋 System Audit Log</div>
+        <div class="flex gap-8">
+          <select class="sf-select" style="font-size:12px"><option>All Events</option><option>Config Changes</option><option>User Management</option><option>Integration</option></select>
+          <button class="btn btn-neutral btn-sm" onclick="toast('Log exported','success')">⬇ Export</button>
+        </div>
+      </div>
+      <div>
+        ${[
+          {time:'2024-12-23 15:42',level:'ERROR',service:'Integration',user:'System',msg:'Shipment webhook timeout — endpoint returned 504 after 30s. Retry #3 failed.'},
+          {time:'2024-12-23 15:28',level:'INFO', service:'SF-Flow',    user:'Meera Iyer',msg:'KYC Approved: Bharat Mining Equip Co. Account + Contact created. Portal NOT provisioned.'},
+          {time:'2024-12-23 14:55',level:'INFO', service:'SAP-FI',     user:'System',msg:'Invoice INV-SAP-87100 synced to SF Order ORD-001. AR entry created. ₹11,39,200.'},
+          {time:'2024-12-23 13:11',level:'INFO', service:'SF-Flow',    user:'System',msg:'Lead L-006 (Anjali Rao) auto-assigned to Arvind Kumar. GST state: Telangana.'},
+          {time:'2024-12-23 11:30',level:'WARN', service:'Approval',   user:'Vikram Desai',msg:'OPP-003 discount 14% rejected. Rahul Sharma notified to revise.'},
+          {time:'2024-12-23 10:15',level:'INFO', service:'Telecaller', user:'Arjun Mehta',msg:'Lead L-001 (Vikram Desai) — Attempt 1. Not reachable. Retry scheduled.'},
+          {time:'2024-12-23 09:00',level:'INFO', service:'Admin',      user:'Suresh K',msg:'Named Credential SAP_S4HANA_PROD OAuth token refreshed successfully.'},
+        ].map(e=>`
+        <div style="display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid #F3F2F2;font-size:12px">
+          <span class="mono" style="color:var(--sf-t3);width:130px;flex-shrink:0">${e.time}</span>
+          <span style="padding:1px 6px;border-radius:2px;font-size:10.5px;font-weight:700;flex-shrink:0;align-self:flex-start;background:${e.level==='ERROR'?'#FEE2E2':e.level==='WARN'?'#FEF3C7':'#DBEAFE'};color:${e.level==='ERROR'?'#991B1B':e.level==='WARN'?'#92400E':'#1E40AF'}">${e.level}</span>
+          <span style="color:var(--sf-blue);font-weight:600;width:80px;flex-shrink:0">${e.service}</span>
+          <span style="color:var(--sf-t3);width:90px;flex-shrink:0">${e.user}</span>
+          <span style="color:var(--sf-t2);flex:1">${e.msg}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════════════════════════
+function toast(msg, type='info') {
+  const icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  const wrap=document.getElementById('toast-wrap');
+  const el=document.createElement('div');
+  el.className='sf-toast '+(type==='info'?'':type);
+  el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  wrap.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300);},5000);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// INIT — Open persona selector on load
+// ════════════════════════════════════════════════════════════════════
+openPersonaModal();
+</script>
+</body>
+</html>

@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veltrac India — Admin Console</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   VELTRAC INDIA — ADMIN CONSOLE
+   Deep Purple sidebar · Indigo accents · Config-first UI
+   ══════════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1E1B4B;--ink-mid:#2D2A63;--ink-soft:#3730A3;
+  --indigo:#6366F1;--indigo-lt:#EEF2FF;--indigo-dk:#4338CA;
+  --purple:#7C3AED;--purple-lt:#F5F3FF;
+  --slate:#64748B;--steel:#E2E8F0;--steel-lt:#F8FAFC;
+  --amber:#F59E0B;--amber-lt:#FFFBEB;
+  --green:#10B981;--green-lt:#ECFDF5;--green-dk:#059669;
+  --red:#EF4444;--red-lt:#FEF2F2;--red-dk:#DC2626;
+  --blue:#3B82F6;--blue-lt:#EFF6FF;
+  --white:#FFFFFF;--border:#E2E8F0;--border-dk:#CBD5E1;
+  --text-1:#1E293B;--text-2:#475569;--text-3:#94A3B8;--text-4:#CBD5E1;
+  --radius:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:18px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.07);--shadow:0 4px 16px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.12);
+  --font:'DM Sans',system-ui,sans-serif;--font-disp:'DM Serif Display',Georgia,serif;
+  --sidebar-w:260px;--topbar-h:58px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--steel-lt);color:var(--text-1);font-size:13.5px;line-height:1.6;overflow-x:hidden;display:flex;min-height:100vh}
+
+/* ── UTILITIES ───────────────────────────────────────────────────── */
+.hidden{display:none!important}
+.flex{display:flex}.ai-c{align-items:center}.jc-sb{justify-content:space-between}.jc-c{justify-content:center}
+.gap-4{gap:4px}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.gap-20{gap:20px}
+.flex-1{flex:1}
+.mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
+.mb-4{margin-bottom:4px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fw-5{font-weight:500}.fw-6{font-weight:600}.fw-7{font-weight:700}.fw-8{font-weight:800}
+.text-sm{font-size:12px}.text-xs{font-size:11px}.text-muted{color:var(--text-3)}
+.text-green{color:var(--green-dk)}.text-red{color:var(--red-dk)}.text-amber{color:#92400E}.text-indigo{color:var(--indigo-dk)}
+.w-full{width:100%}.text-center{text-align:center}.text-right{text-align:right}
+
+/* ── BADGES ─────────────────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.badge-green{background:#D1FAE5;color:#065F46}
+.badge-amber{background:#FEF3C7;color:#92400E}
+.badge-red{background:#FEE2E2;color:#991B1B}
+.badge-blue{background:#DBEAFE;color:#1E40AF}
+.badge-indigo{background:var(--indigo-lt);color:var(--indigo-dk)}
+.badge-purple{background:var(--purple-lt);color:var(--purple)}
+.badge-ink{background:var(--ink);color:white}
+.badge-gray{background:#F1F5F9;color:#64748B}
+
+/* ── CARDS ─────────────────────────────────────────────────────── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+.card-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-title{font-weight:700;font-size:14px;color:var(--text-1);display:flex;align-items:center;gap:8px}
+.card-subtitle{font-size:12px;color:var(--text-3);margin-top:1px}
+.card-body{padding:20px}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;user-select:none;white-space:nowrap}
+.btn-primary{background:var(--ink);color:white;border-color:var(--ink)}.btn-primary:hover{background:var(--ink-mid)}
+.btn-indigo{background:var(--indigo);color:white;border-color:var(--indigo)}.btn-indigo:hover{background:var(--indigo-dk)}
+.btn-green{background:var(--green);color:white;border-color:var(--green)}.btn-green:hover{background:var(--green-dk)}
+.btn-red{background:var(--red);color:white;border-color:var(--red)}.btn-red:hover{background:var(--red-dk)}
+.btn-amber{background:var(--amber);color:white;border-color:var(--amber)}
+.btn-outline{background:white;color:var(--text-1);border-color:var(--border-dk)}.btn-outline:hover{background:var(--steel-lt)}
+.btn-ghost{background:transparent;color:var(--text-2);border-color:transparent}.btn-ghost:hover{background:var(--steel-lt);color:var(--text-1)}
+.btn-sm{padding:5px 11px;font-size:12px}.btn-xs{padding:3px 8px;font-size:11px}
+.btn-danger-ghost{background:transparent;color:var(--red);border-color:transparent}.btn-danger-ghost:hover{background:var(--red-lt)}
+
+/* ── FORMS ─────────────────────────────────────────────────────── */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.form-control{width:100%;padding:9px 12px;border:1.5px solid var(--border-dk);border-radius:var(--radius);font-family:var(--font);font-size:13px;color:var(--text-1);background:white;outline:none;transition:border-color .15s,box-shadow .15s}
+.form-control:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.form-hint{font-size:11px;color:var(--text-3);margin-top:4px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ── TABLES ─────────────────────────────────────────────────────── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--steel-lt);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);padding:9px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid #F1F5F9;color:var(--text-2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFBFD}
+
+/* ── TOGGLE SWITCH ─────────────────────────────────────────────── */
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle{position:relative;width:42px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:#CBD5E1;border-radius:24px;cursor:pointer;transition:background .2s}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle input:checked + .toggle-slider{background:var(--indigo)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(18px)}
+
+/* ── PROGRESS ─────────────────────────────────────────────────────── */
+.prog-bar{height:6px;background:var(--steel);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:var(--indigo)}
+.prog-fill.green{background:var(--green)}.prog-fill.amber{background:var(--amber)}.prog-fill.red{background:var(--red)}
+
+/* ── DIVIDER / MONO ─────────────────────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.mono{font-family:'Consolas',monospace;font-size:12px}
+
+/* ── KPI CARDS ─────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow-sm)}
+.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:4px}
+.kpi-value{font-family:var(--font-disp);font-size:28px;color:var(--text-1);line-height:1;margin-bottom:3px}
+.kpi-sub{font-size:11.5px;color:var(--text-3)}
+.kpi-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.kpi-card.ok{border-left:3px solid var(--green)}
+.kpi-card.warn{border-left:3px solid var(--amber)}
+.kpi-card.error{border-left:3px solid var(--red)}
+.kpi-card.info{border-left:3px solid var(--indigo)}
+
+/* ── LOG ENTRY ─────────────────────────────────────────────────── */
+.log-entry{display:flex;gap:10px;align-items:flex-start;padding:9px 14px;border-bottom:1px solid #F1F5F9;font-size:12.5px}
+.log-entry:last-child{border-bottom:none}
+.log-level{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;flex-shrink:0;margin-top:1px}
+.log-level.INFO{background:#DBEAFE;color:#1E40AF}
+.log-level.WARN{background:#FEF3C7;color:#92400E}
+.log-level.ERROR{background:#FEE2E2;color:#991B1B}
+.log-time{color:var(--text-3);font-size:11.5px;flex-shrink:0;width:110px;font-family:monospace}
+.log-service{color:var(--indigo);font-weight:600;width:90px;flex-shrink:0;font-size:12px}
+.log-msg{flex:1;color:var(--text-2)}
+
+/* ── HEALTH METRIC CARD ─────────────────────────────────────────── */
+.health-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.health-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.health-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.health-card.ok::before{background:var(--green)}
+.health-card.warn::before{background:var(--amber)}
+.health-card.error::before{background:var(--red)}
+.health-card.info::before{background:var(--indigo)}
+.health-metric{font-family:var(--font-disp);font-size:32px;line-height:1;margin-bottom:4px}
+.health-label{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px}
+.health-sub{font-size:12px;color:var(--text-3);margin-top:4px}
+
+/* ── THRESHOLD CONFIG CARD ─────────────────────────────────────── */
+.threshold-big{font-family:var(--font-disp);font-size:38px;color:var(--ink);line-height:1}
+.threshold-edit-form{background:var(--steel-lt);border:1.5px solid var(--indigo);border-radius:var(--radius-md);padding:16px;margin-top:12px;display:none}
+.threshold-edit-form.open{display:block}
+
+/* ── API USAGE GAUGE ────────────────────────────────────────────── */
+.gauge-wrap{position:relative;display:inline-block}
+.gauge-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);text-align:center}
+
+/* ══════════════════════════════════════════════════════════════════
+   ADMIN SIDEBAR
+   ══════════════════════════════════════════════════════════════════ */
+#admin-sidebar{
+  width:var(--sidebar-w);background:var(--ink);
+  min-height:100vh;position:fixed;top:0;left:0;bottom:0;
+  display:flex;flex-direction:column;z-index:100;overflow-y:auto;
+}
+.sb-brand{padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo{display:flex;align-items:center;gap:10px}
+.sb-logo-mark{width:36px;height:36px;background:var(--indigo);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:white}
+.sb-logo-name{font-family:var(--font-disp);font-size:16px;color:white}
+.sb-logo-sub{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px;text-transform:uppercase}
+.sb-user-card{padding:12px 16px;margin:10px 10px 0;background:rgba(255,255,255,.05);border-radius:var(--radius-md)}
+.sb-user-name{font-weight:700;font-size:13px;color:white}
+.sb-user-role{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+.sb-role-badge{margin-top:6px;display:inline-block;padding:2px 8px;background:rgba(99,102,241,.3);border:1px solid rgba(99,102,241,.5);border-radius:20px;font-size:10px;font-weight:700;color:var(--indigo);letter-spacing:.5px}
+.sb-nav{flex:1;padding:10px 0}
+.sb-section-label{padding:12px 20px 4px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.2)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;color:rgba(255,255,255,.5);cursor:pointer;font-size:13px;font-weight:500;border-left:3px solid transparent;transition:all .15s;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(99,102,241,.15);color:#A5B4FC;border-left-color:var(--indigo)}
+.nav-icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.nav-badge.ok{background:var(--green)}
+.switcher-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;margin:8px 10px 2px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-weight:600;transition:all .15s}
+.switcher-btn:hover{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.4);color:#A5B4FC}
+.sb-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,.06)}
+.logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.35);font-size:12.5px;cursor:pointer;padding:6px 4px;border-radius:var(--radius);transition:all .15s}
+.logout-btn:hover{color:var(--red)}
+
+/* ══════════════════════════════════════════════════════════════════
+   MAIN LAYOUT
+   ══════════════════════════════════════════════════════════════════ */
+#admin-main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+#topbar{height:var(--topbar-h);background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:50;gap:12px}
+.topbar-title{font-weight:700;font-size:15px;flex:1;display:flex;align-items:center;gap:8px}
+.topbar-sub{font-size:12px;font-weight:400;color:var(--text-3)}
+.topbar-env{padding:4px 12px;background:var(--red-lt);border:1px solid #FECACA;border-radius:var(--radius);font-size:11.5px;font-weight:700;color:var(--red-dk);letter-spacing:.5px}
+#admin-content{flex:1;padding:22px 24px;overflow-y:auto}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.content-2col{display:grid;grid-template-columns:1fr 280px;gap:16px}
+
+/* ── PANELS (right sidebar) ─────────────────────────────────────── */
+.side-panel{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.side-panel-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:10px}
+.side-panel-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #F1F5F9;font-size:12.5px}
+.side-panel-row:last-child{border-bottom:none}
+
+/* ── TOAST ─────────────────────────────────────────────────────── */
+#toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--ink);color:white;padding:11px 16px;border-radius:var(--radius-md);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);max-width:380px;animation:toastIn .2s ease;border-left:3px solid var(--indigo);display:flex;gap:9px;align-items:flex-start}
+.toast.success{border-left-color:#6EE7B7;background:#064E3B}
+.toast.error{border-left-color:var(--red);background:#7F1D1D}
+.toast.warning{border-left-color:var(--amber);background:#78350F}
+@keyframes toastIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── SWITCHER MODAL ─────────────────────────────────────────────── */
+#switcher-modal{display:none;position:fixed;inset:0;background:rgba(10,15,30,.8);z-index:2000;align-items:center;justify-content:center}
+#switcher-modal.open{display:flex}
+.sw-modal{background:white;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);width:660px;max-width:96vw;overflow:hidden}
+.sw-header{background:var(--ink);padding:22px 28px}
+.sw-title{font-family:var(--font-disp);font-size:20px;color:white;margin-bottom:4px}
+.sw-sub{font-size:12.5px;color:rgba(255,255,255,.4)}
+.sw-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border)}
+.sw-card{padding:20px 22px;cursor:pointer;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background .15s;display:flex;flex-direction:column;gap:8px}
+.sw-card:nth-child(2),.sw-card:nth-child(4){border-right:none}
+.sw-card:nth-child(3),.sw-card:nth-child(4){border-bottom:none}
+.sw-card:hover{background:var(--steel-lt)}
+.sw-card.current{background:var(--indigo-lt)}
+.sw-card-icon{font-size:28px}.sw-card-title{font-weight:700;font-size:13.5px}.sw-card-desc{font-size:12px;color:var(--text-3);line-height:1.5}
+
+/* ── OVERRIDE REASON MODAL ─────────────────────────────────────── */
+#override-modal{display:none;position:fixed;inset:0;background:rgba(10,15,30,.7);z-index:1500;align-items:center;justify-content:center}
+#override-modal.open{display:flex}
+.override-card{background:white;border-radius:var(--radius-xl);width:480px;max-width:96vw;overflow:hidden;box-shadow:var(--shadow-lg)}
+.override-header{background:var(--ink);padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+.override-body{padding:24px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="admin-sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">⚙</div>
+      <div>
+        <div class="sb-logo-name">Veltrac India</div>
+        <div class="sb-logo-sub">Admin Console</div>
+      </div>
+    </div>
+  </div>
+  <div class="sb-user-card">
+    <div class="sb-user-name">Suresh Krishnamurthy</div>
+    <div class="sb-user-role">System Administrator</div>
+    <div class="sb-role-badge">SYSTEM ADMIN</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <div class="nav-item active" onclick="adminNav('health')"><span class="nav-icon">🖥️</span>System Health</div>
+    <div class="sb-section-label">Configuration</div>
+    <div class="nav-item" onclick="adminNav('territory')"><span class="nav-icon">🗺️</span>Territory Config</div>
+    <div class="nav-item" onclick="adminNav('threshold')"><span class="nav-icon">⚖️</span>Threshold Rules</div>
+    <div class="nav-item" onclick="adminNav('dealer-map')"><span class="nav-icon">🤝</span>Dealer Mapping</div>
+    <div class="sb-section-label">Operations</div>
+    <div class="nav-item" onclick="adminNav('inventory')"><span class="nav-icon">📦</span>Inventory Override</div>
+    <div class="sb-section-label">Integration</div>
+    <div class="nav-item" onclick="adminNav('integration')"><span class="nav-icon">🔌</span>Integration Monitor<span class="nav-badge" id="nav-error-badge">3</span></div>
+    <div class="nav-item" onclick="adminNav('logs')"><span class="nav-icon">📋</span>System Logs</div>
+  </nav>
+  <div class="switcher-btn" onclick="openSwitcher()">
+    <span style="font-size:14px">⚡</span>
+    <span>Switch Portal View</span>
+    <span style="margin-left:auto;font-size:9px;opacity:.4">▲</span>
+  </div>
+  <div class="sb-footer">
+    <div class="logout-btn">← Sign Out</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="admin-main">
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <div class="topbar-title">
+      <span id="page-title">System Health</span>
+      <span class="topbar-sub" id="page-sub"></span>
+    </div>
+    <span class="topbar-env">PRODUCTION</span>
+    <div class="flex gap-8 ai-c">
+      <span style="font-size:11.5px;color:var(--text-3)">Last config save:</span>
+      <span style="font-size:11.5px;font-weight:600" id="last-save-time">—</span>
+    </div>
+    <div class="flex gap-8 ai-c">
+      <span class="badge badge-green">● SAP Connected</span>
+      <span class="badge badge-indigo">● SF Synced</span>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="admin-content">
+
+    <!-- ══════════════════════════════════════════════════════════
+         SYSTEM HEALTH
+         ══════════════════════════════════════════════════════════ -->
+    <div class="admin-section active" id="as-health">
+      <!-- KPI row -->
+      <div class="kpi-grid">
+        <div class="kpi-card ok">
+          <div class="kpi-label">API Success Rate</div>
+          <div class="kpi-value" id="h-api-rate">99.2%</div>
+          <div class="kpi-sub">Last 24 hours</div>
+        </div>
+        <div class="kpi-card warn">
+          <div class="kpi-label">Failed Jobs</div>
+          <div class="kpi-value" id="h-failed-jobs">3</div>
+          <div class="kpi-sub">Retry queued</div>
+        </div>
+        <div class="kpi-card ok">
+          <div class="kpi-label">Active Flows</div>
+          <div class="kpi-value" id="h-active-flows">14</div>
+          <div class="kpi-sub">SF Flows running</div>
+        </div>
+        <div class="kpi-card info">
+          <div class="kpi-label">API Calls Today</div>
+          <div class="kpi-value" id="h-api-calls">18,420</div>
+          <div class="kpi-sub">Limit: 25,000/day</div>
+        </div>
+      </div>
+
+      <!-- Health Grid -->
+      <div class="health-grid mb-20">
+        <div class="health-card ok">
+          <div class="health-label">Salesforce Org</div>
+          <div class="health-metric" style="color:var(--green-dk)">Healthy</div>
+          <div class="health-sub">API v59 · Sandbox OK · Last deploy: 3 days ago</div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span class="text-muted">Storage Used</span><span class="fw-6">4.2 GB / 10 GB</span></div>
+            <div class="prog-bar"><div class="prog-fill green" style="width:42%"></div></div>
+          </div>
+        </div>
+        <div class="health-card ok">
+          <div class="health-label">SAP S/4HANA</div>
+          <div class="health-metric" style="color:var(--green-dk)">Connected</div>
+          <div class="health-sub">OData v4 · BAPI Active · Last sync: 14 min ago</div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span class="text-muted">Response Time</span><span class="fw-6 text-green">142 ms avg</span></div>
+            <div class="prog-bar"><div class="prog-fill green" style="width:88%"></div></div>
+          </div>
+        </div>
+        <div class="health-card warn">
+          <div class="health-label">MuleSoft API Gateway</div>
+          <div class="health-metric" style="color:#92400E">Degraded</div>
+          <div class="health-sub">3 failed transformations in last hour</div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span class="text-muted">Success Rate</span><span class="fw-6 text-amber">94.7%</span></div>
+            <div class="prog-bar"><div class="prog-fill amber" style="width:95%"></div></div>
+          </div>
+        </div>
+        <div class="health-card ok">
+          <div class="health-label">B2B Customer Portal</div>
+          <div class="health-metric" style="color:var(--green-dk)">Online</div>
+          <div class="health-sub">Experience Cloud · 24 active sessions</div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span class="text-muted">Uptime (30d)</span><span class="fw-6">99.98%</span></div>
+            <div class="prog-bar"><div class="prog-fill green" style="width:99.98%"></div></div>
+          </div>
+        </div>
+        <div class="health-card ok">
+          <div class="health-label">Dealer Portal</div>
+          <div class="health-metric" style="color:var(--green-dk)">Online</div>
+          <div class="health-sub">Experience Cloud · 7 dealer sessions</div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span class="text-muted">Uptime (30d)</span><span class="fw-6">99.91%</span></div>
+            <div class="prog-bar"><div class="prog-fill green" style="width:99%"></div></div>
+          </div>
+        </div>
+        <div class="health-card error">
+          <div class="health-label">Shipment Tracking API</div>
+          <div class="health-metric" style="color:var(--red-dk)">Failed</div>
+          <div class="health-sub">Webhook endpoint timeout since 06:42 IST</div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span class="text-muted">Success Rate</span><span class="fw-6 text-red">0% (down)</span></div>
+            <div class="prog-bar"><div class="prog-fill red" style="width:5%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Flows + Apex Jobs -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">⚡ Active Salesforce Flows</div><span class="badge badge-indigo" id="flows-count">14 Running</span></div>
+          <table>
+            <thead><tr><th>Flow Name</th><th>Type</th><th>Trigger</th><th>Status</th><th>Last Run</th></tr></thead>
+            <tbody id="flows-tbody"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">⚙️ Apex Scheduled Jobs</div><span class="badge badge-amber">3 Warnings</span></div>
+          <table>
+            <thead><tr><th>Job Name</th><th>Schedule</th><th>Last Run</th><th>Status</th></tr></thead>
+            <tbody id="jobs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         TERRITORY CONFIG
+         ══════════════════════════════════════════════════════════ -->
+    <div class="admin-section" id="as-territory">
+      <div class="content-2col">
+        <div>
+          <div class="card mb-16">
+            <div class="card-header">
+              <div>
+                <div class="card-title">🗺️ Territory → Salesperson Mapping</div>
+                <div class="card-subtitle">Changes take effect immediately and propagate to all portal assignment logic</div>
+              </div>
+              <button class="btn btn-indigo btn-sm" onclick="addTerritoryRow()">+ Add Territory</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>State / Region</th><th>Zone</th><th>Account Manager</th><th>Email</th><th>Dealer Override</th><th>Actions</th></tr></thead>
+                <tbody id="territory-tbody"></tbody>
+              </table>
+            </div>
+            <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px">
+              <button class="btn btn-green btn-sm" onclick="saveTerritoryConfig()">💾 Save Territory Config</button>
+              <button class="btn btn-outline btn-sm" onclick="toast('Territory config reset to last saved version','warning')">↺ Discard Changes</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">📊 Territory Coverage Map</div></div>
+            <div class="card-body">
+              <div class="grid-3" id="territory-coverage-grid"></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="side-panel">
+            <div class="side-panel-title">ℹ️ Configuration Notes</div>
+            <p style="font-size:12.5px;color:var(--text-2);line-height:1.7;margin-bottom:10px">Territory mapping controls automatic SF Lead/Opp assignment and dealer routing. Changes sync to SF via Named Credentials.</p>
+            <div class="side-panel-row"><span class="text-muted">Auto-assignment</span><span class="badge badge-green">Active</span></div>
+            <div class="side-panel-row"><span class="text-muted">Geo-detection</span><span class="badge badge-green">GST-based</span></div>
+            <div class="side-panel-row"><span class="text-muted">Last sync</span><span class="fw-6">14 min ago</span></div>
+            <div class="side-panel-row"><span class="text-muted">Pending changes</span><span class="fw-6" id="pending-territory-changes">0</span></div>
+          </div>
+          <div class="side-panel">
+            <div class="side-panel-title">👥 Sales Team Summary</div>
+            <div id="sales-team-summary"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         THRESHOLD CONFIG
+         ══════════════════════════════════════════════════════════ -->
+    <div class="admin-section" id="as-threshold">
+      <div class="content-2col">
+        <div>
+          <!-- Current thresholds -->
+          <div class="grid-2 mb-16">
+            <div class="card">
+              <div class="card-header"><div class="card-title">🏢 Direct Fulfillment Threshold</div><span class="badge badge-green">Active</span></div>
+              <div class="card-body">
+                <div class="threshold-big" id="display-direct-threshold">₹5,00,000</div>
+                <div class="text-sm text-muted mt-8">Orders ≥ this value → fulfilled directly by Veltrac India</div>
+                <div class="flex gap-8 mt-16">
+                  <button class="btn btn-outline btn-sm" onclick="toggleThresholdEdit('direct')">✏️ Edit</button>
+                  <span class="badge badge-gray">Last changed: 2024-11-01</span>
+                </div>
+                <div class="threshold-edit-form" id="edit-direct">
+                  <div class="form-group">
+                    <label class="form-label">New Threshold Value (₹)</label>
+                    <input class="form-control" id="input-direct-threshold" type="number" min="100000" max="10000000" step="50000" value="500000">
+                    <div class="form-hint">Min ₹1,00,000 · Max ₹1,00,00,000</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Change Reason (required for audit log)</label>
+                    <input class="form-control" id="input-direct-reason" type="text" placeholder="e.g. Adjusted for Q1 FY25 pricing review">
+                  </div>
+                  <div class="flex gap-8">
+                    <button class="btn btn-green btn-sm" onclick="saveThreshold('direct')">Apply</button>
+                    <button class="btn btn-outline btn-sm" onclick="toggleThresholdEdit('direct')">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">🤝 Dealer Routing Threshold</div><span class="badge badge-amber">Active</span></div>
+              <div class="card-body">
+                <div class="threshold-big" id="display-dealer-threshold">₹5,00,000</div>
+                <div class="text-sm text-muted mt-8">Orders &lt; this value → routed to mapped dealer in territory</div>
+                <div class="flex gap-8 mt-16">
+                  <button class="btn btn-outline btn-sm" onclick="toggleThresholdEdit('dealer')">✏️ Edit</button>
+                  <span class="badge badge-gray">Last changed: 2024-11-01</span>
+                </div>
+                <div class="threshold-edit-form" id="edit-dealer">
+                  <div class="form-group">
+                    <label class="form-label">New Threshold Value (₹)</label>
+                    <input class="form-control" id="input-dealer-threshold" type="number" min="50000" max="10000000" step="50000" value="500000">
+                    <div class="form-hint">Must be equal to or less than Direct threshold</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Change Reason</label>
+                    <input class="form-control" id="input-dealer-reason" type="text" placeholder="e.g. Expanding dealer network capacity">
+                  </div>
+                  <div class="flex gap-8">
+                    <button class="btn btn-green btn-sm" onclick="saveThreshold('dealer')">Apply</button>
+                    <button class="btn btn-outline btn-sm" onclick="toggleThresholdEdit('dealer')">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Approval Discount Thresholds -->
+          <div class="card mb-16">
+            <div class="card-header"><div class="card-title">📋 Discount Approval Thresholds</div><button class="btn btn-indigo btn-sm" onclick="saveDiscountThresholds()">💾 Save</button></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:0">
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:0;background:var(--steel-lt);padding:8px 12px;border-radius:var(--radius) var(--radius) 0 0;border:1px solid var(--border)">
+                  <div class="form-label" style="margin:0">Discount Tier</div>
+                  <div class="form-label" style="margin:0">Max %</div>
+                  <div class="form-label" style="margin:0">Approver</div>
+                </div>
+                <div id="discount-tiers-body" style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius)"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Threshold Simulation -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">🧪 Routing Simulator</div><span class="badge badge-indigo">Live Preview</span></div>
+            <div class="card-body">
+              <div class="form-row mb-12">
+                <div class="form-group">
+                  <label class="form-label">Test Order Value (₹)</label>
+                  <input class="form-control" id="sim-value" type="number" placeholder="e.g. 350000" oninput="runSimulation()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Territory</label>
+                  <select class="form-control" id="sim-territory" onchange="runSimulation()">
+                    <option value="">— Select territory —</option>
+                    <option>Mumbai</option><option>Delhi NCR</option><option>Hyderabad</option>
+                    <option>Ahmedabad</option><option>Chennai</option><option>Bangalore</option>
+                  </select>
+                </div>
+              </div>
+              <div id="sim-result" style="display:none;background:var(--indigo-lt);border:1.5px solid var(--indigo);border-radius:var(--radius-md);padding:14px">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--indigo-dk);margin-bottom:10px">Simulation Result</div>
+                <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+                  <div class="flex jc-sb"><span class="text-muted">Order Value</span><span class="fw-7" id="sim-r-value">—</span></div>
+                  <div class="flex jc-sb"><span class="text-muted">Active Threshold</span><span class="fw-7" id="sim-r-threshold">—</span></div>
+                  <div class="flex jc-sb"><span class="text-muted">Routing Decision</span><span id="sim-r-decision">—</span></div>
+                  <div class="flex jc-sb"><span class="text-muted">Assigned To</span><span class="fw-7" id="sim-r-assignee">—</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="side-panel">
+            <div class="side-panel-title">⚖️ Threshold Audit Log</div>
+            <div id="threshold-audit-log" style="font-size:12px"></div>
+          </div>
+          <div class="side-panel">
+            <div class="side-panel-title">📊 Routing Split (30 days)</div>
+            <div style="text-align:center;padding:10px 0">
+              <canvas id="chart-routing-split" width="220" height="120"></canvas>
+            </div>
+            <div style="display:flex;justify-content:center;gap:16px;font-size:12px">
+              <div class="flex ai-c gap-4"><div style="width:10px;height:10px;border-radius:50%;background:var(--ink)"></div><span>Direct (68%)</span></div>
+              <div class="flex ai-c gap-4"><div style="width:10px;height:10px;border-radius:50%;background:var(--amber)"></div><span>Dealer (32%)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         DEALER MAPPING
+         ══════════════════════════════════════════════════════════ -->
+    <div class="admin-section" id="as-dealer-map">
+      <div class="content-2col">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">🤝 Dealer Territory Mapping</div>
+                <div class="card-subtitle">Controls which dealer receives RFQs for each territory</div>
+              </div>
+              <button class="btn btn-indigo btn-sm" onclick="addDealerRow()">+ Map New Dealer</button>
+            </div>
+            <table>
+              <thead><tr><th>Dealer Name</th><th>Code</th><th>Territory</th><th>Categories</th><th>Commission %</th><th>Tier</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="dealer-map-tbody"></tbody>
+            </table>
+            <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px">
+              <button class="btn btn-green btn-sm" onclick="saveDealerMapping()">💾 Save Dealer Mapping</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="side-panel">
+            <div class="side-panel-title">📊 Dealer Network Stats</div>
+            <div class="side-panel-row"><span class="text-muted">Total Dealers</span><span class="fw-7">8</span></div>
+            <div class="side-panel-row"><span class="text-muted">Gold Tier</span><span class="badge badge-amber">3</span></div>
+            <div class="side-panel-row"><span class="text-muted">Silver Tier</span><span class="badge badge-gray">4</span></div>
+            <div class="side-panel-row"><span class="text-muted">Bronze Tier</span><span class="badge badge-gray">1</span></div>
+            <div class="side-panel-row"><span class="text-muted">Uncovered territories</span><span class="badge badge-red">2</span></div>
+          </div>
+          <div class="side-panel">
+            <div class="side-panel-title">⚠️ Uncovered Territories</div>
+            <div style="font-size:12.5px;color:var(--text-2)">
+              <div style="padding:6px 0;border-bottom:1px solid #F1F5F9">🔴 <strong>Kolkata / Bengal</strong> — No dealer assigned</div>
+              <div style="padding:6px 0">🔴 <strong>North East India</strong> — No dealer assigned</div>
+            </div>
+            <button class="btn btn-outline btn-sm w-full mt-12" style="justify-content:center" onclick="addDealerRow()">+ Assign Dealer →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INVENTORY OVERRIDE
+         ══════════════════════════════════════════════════════════ -->
+    <div class="admin-section" id="as-inventory">
+      <div class="content-2col">
+        <div>
+          <div class="card mb-16">
+            <div class="card-header">
+              <div>
+                <div class="card-title">📦 Inventory Override — Warehouse Stock</div>
+                <div class="card-subtitle">Manual overrides bypass SAP sync until next scheduled batch (every 4 hrs). All overrides are logged.</div>
+              </div>
+              <span class="badge badge-amber" id="override-active-count">2 Active Overrides</span>
+            </div>
+            <table>
+              <thead><tr><th>SKU</th><th>Product</th><th>Warehouse</th><th>SAP Stock</th><th>Override Stock</th><th>Reason</th><th>Overridden By</th><th>Expires</th><th>Actions</th></tr></thead>
+              <tbody id="inventory-tbody"></tbody>
+            </table>
+            <div style="padding:14px 20px;border-top:1px solid var(--border)">
+              <button class="btn btn-amber btn-sm" onclick="openOverrideModal()">+ New Manual Override</button>
+            </div>
+          </div>
+          <!-- Full inventory table -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Full Inventory Snapshot (SAP MM)</div><span class="badge badge-green">Synced 14 min ago</span></div>
+            <table>
+              <thead><tr><th>SKU</th><th>Product</th><th>Mumbai</th><th>Delhi</th><th>Ahmedabad</th><th>Kolkata</th><th>Total</th><th>Override</th></tr></thead>
+              <tbody id="full-inventory-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="side-panel">
+            <div class="side-panel-title">ℹ️ Override Policy</div>
+            <p style="font-size:12.5px;color:var(--text-2);line-height:1.7">Manual overrides are for emergency situations (SAP sync lag, physical recount). All overrides are audited and require a reason. Overrides auto-expire after next SAP sync unless marked as persistent.</p>
+            <div class="side-panel-row mt-8"><span class="text-muted">Next SAP sync</span><span class="fw-6" id="next-sync-time">~3h 46m</span></div>
+            <div class="side-panel-row"><span class="text-muted">Override audit trail</span><span class="badge badge-green">Enabled</span></div>
+          </div>
+          <div class="side-panel">
+            <div class="side-panel-title">📊 Low Stock Alerts</div>
+            <div id="low-stock-alerts"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INTEGRATION MONITOR
+         ══════════════════════════════════════════════════════════ -->
+    <div class="admin-section" id="as-integration">
+      <div class="kpi-grid">
+        <div class="kpi-card ok"><div class="kpi-label">SAP API Calls</div><div class="kpi-value">2,814</div><div class="kpi-sub">Today · Avg 142ms</div></div>
+        <div class="kpi-card ok"><div class="kpi-label">SF API Calls</div><div class="kpi-value">15,606</div><div class="kpi-sub">Today · Limit 25K/day</div></div>
+        <div class="kpi-card warn"><div class="kpi-label">Failed Syncs</div><div class="kpi-value" id="int-failed">3</div><div class="kpi-sub">Retry queued</div></div>
+        <div class="kpi-card ok"><div class="kpi-label">MuleSoft Flows</div><div class="kpi-value">14</div><div class="kpi-sub">All active</div></div>
+      </div>
+      <div class="grid-2 mb-16">
+        <!-- Integration status table -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔌 Integration Status</div></div>
+          <table>
+            <thead><tr><th>Integration</th><th>Direction</th><th>Frequency</th><th>Last Run</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="integration-status-tbody"></tbody>
+          </table>
+        </div>
+        <!-- Named credentials -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔐 Named Credentials</div></div>
+          <table>
+            <thead><tr><th>Credential</th><th>Endpoint</th><th>Auth Type</th><th>Status</th></tr></thead>
+            <tbody id="credentials-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Flow status -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">⚡ MuleSoft API Flows</div><button class="btn btn-outline btn-sm" onclick="toast('MuleSoft Anypoint Platform opened','info')">Open Anypoint →</button></div>
+        <table>
+          <thead><tr><th>Flow Name</th><th>Type</th><th>Last Exec</th><th>Avg Duration</th><th>Success Rate</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="mulesoft-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SYSTEM LOGS
+         ══════════════════════════════════════════════════════════ -->
+    <div class="admin-section" id="as-logs">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 System Log — Integration Events</div>
+          <div class="flex gap-8 ai-c">
+            <select class="form-control" style="width:120px;padding:5px 8px;font-size:12px" id="log-filter-level" onchange="renderLogs()">
+              <option value="ALL">All Levels</option>
+              <option value="ERROR">ERROR Only</option>
+              <option value="WARN">WARN Only</option>
+              <option value="INFO">INFO Only</option>
+            </select>
+            <select class="form-control" style="width:140px;padding:5px 8px;font-size:12px" id="log-filter-service" onchange="renderLogs()">
+              <option value="ALL">All Services</option>
+              <option value="SAP-SD">SAP-SD</option>
+              <option value="SAP-MM">SAP-MM</option>
+              <option value="SAP-FI">SAP-FI</option>
+              <option value="MuleSoft">MuleSoft</option>
+              <option value="SF-Flow">SF-Flow</option>
+              <option value="B2B-API">B2B-API</option>
+            </select>
+            <button class="btn btn-outline btn-sm" onclick="toast('Logs exported to CSV','success')">⬇ Export CSV</button>
+            <button class="btn btn-indigo btn-sm" onclick="refreshLogs()">↻ Refresh</button>
+          </div>
+        </div>
+        <div id="logs-container" style="max-height:600px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</div><!-- /admin-main -->
+
+<!-- OVERRIDE MODAL -->
+<div id="override-modal">
+  <div class="override-card">
+    <div class="override-header">
+      <div style="font-family:var(--font-disp);font-size:17px;color:white">📦 Manual Inventory Override</div>
+      <button class="btn btn-ghost btn-sm" style="color:rgba(255,255,255,.6)" onclick="closeOverrideModal()">✕</button>
+    </div>
+    <div class="override-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">SKU *</label>
+          <select class="form-control" id="ov-sku">
+            <option>DUN-18X7-8</option><option>SOL-6.50-10</option><option>GOL-4.00-8</option>
+            <option>NUB-21X7X15</option><option>RS-8.15-15</option><option>SW-7.00-12</option>
+            <option>TUB-TBR-10.00</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Warehouse *</label>
+          <select class="form-control" id="ov-warehouse">
+            <option>Mumbai</option><option>Delhi</option><option>Ahmedabad</option><option>Kolkata</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Override Qty *</label>
+          <input class="form-control" id="ov-qty" type="number" placeholder="e.g. 150">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expires After</label>
+          <select class="form-control" id="ov-expires">
+            <option>Next SAP Sync (~4 hrs)</option>
+            <option>24 hours</option>
+            <option>48 hours</option>
+            <option>Persistent (Manual clear)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason for Override *</label>
+        <input class="form-control" id="ov-reason" placeholder="e.g. Physical recount shows discrepancy — SAP lag">
+      </div>
+      <div style="color:var(--text-3);font-size:12px;margin-bottom:16px">⚠️ All overrides are logged in the audit trail and visible to all admins. Overrides bypass SAP stock checks for routing decisions.</div>
+      <div class="flex gap-10">
+        <button class="btn btn-amber" onclick="submitOverride()">Apply Override</button>
+        <button class="btn btn-outline" onclick="closeOverrideModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PORTAL SWITCHER MODAL -->
+<div id="switcher-modal">
+  <div class="sw-modal">
+    <div class="sw-header">
+      <div class="sw-title">Switch Portal View</div>
+      <div class="sw-sub">Veltrac Enterprise Platform — 4 Role-Based Experiences</div>
+    </div>
+    <div class="sw-grid">
+      <div class="sw-card" onclick="window.open('Veltrac_B2B_Portal.html','_blank')">
+        <div class="sw-card-icon">🛒</div>
+        <div><div class="sw-card-title">B2B Customer Portal</div><div class="sw-card-desc">Browse catalogue, submit RFQs, track orders.</div></div>
+        <span class="badge badge-gray" style="align-self:flex-start">File 1</span>
+      </div>
+      <div class="sw-card" onclick="window.open('Veltrac_Dealer_Portal_Fixed.html','_blank')">
+        <div class="sw-card-icon">🤝</div>
+        <div><div class="sw-card-title">Dealer Portal</div><div class="sw-card-desc">Respond to RFQs, submit quotes, track dealer orders.</div></div>
+        <span class="badge badge-gray" style="align-self:flex-start">File 2</span>
+      </div>
+      <div class="sw-card" onclick="window.open('Veltrac_SF_Console_Final.html','_blank')">
+        <div class="sw-card-icon">☁️</div>
+        <div><div class="sw-card-title">Salesforce Sales Console</div><div class="sw-card-desc">Leads, Accounts, Opportunities, Quotes, Orders.</div></div>
+        <span class="badge badge-gray" style="align-self:flex-start">File 3</span>
+      </div>
+      <div class="sw-card current" onclick="closeSwitcher()">
+        <div class="sw-card-icon">⚙️</div>
+        <div><div class="sw-card-title">Admin Console</div><div class="sw-card-desc">Territory, thresholds, dealer mapping, integration monitoring.</div></div>
+        <span class="badge badge-indigo" style="align-self:flex-start">Currently Active</span>
+      </div>
+    </div>
+    <div style="padding:14px 24px;background:var(--steel-lt);border-top:1px solid var(--border);text-align:right">
+      <button class="btn btn-outline btn-sm" onclick="closeSwitcher()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════════
+let TERRITORY_CONFIG = [
+  { state:'Maharashtra',       zone:'West',  owner:'Rahul Sharma',  email:'rahul.s@veltrac.in',  dealerOverride:true  },
+  { state:'Gujarat',           zone:'West',  owner:'Rahul Sharma',  email:'rahul.s@veltrac.in',  dealerOverride:true  },
+  { state:'Delhi / NCR',       zone:'North', owner:'Priya Nair',    email:'priya.n@veltrac.in',  dealerOverride:true  },
+  { state:'Uttar Pradesh',     zone:'North', owner:'Priya Nair',    email:'priya.n@veltrac.in',  dealerOverride:false },
+  { state:'Telangana / AP',    zone:'South', owner:'Arvind Kumar',  email:'arvind.k@veltrac.in', dealerOverride:true  },
+  { state:'Tamil Nadu',        zone:'South', owner:'Arvind Kumar',  email:'arvind.k@veltrac.in', dealerOverride:false },
+  { state:'Karnataka',         zone:'South', owner:'Priya Nair',    email:'priya.n@veltrac.in',  dealerOverride:false },
+  { state:'Kerala',            zone:'South', owner:'Arvind Kumar',  email:'arvind.k@veltrac.in', dealerOverride:false },
+];
+
+let adminState = {
+  directThreshold: 500000,
+  dealerThreshold: 500000,
+  pendingTerritoryChanges: 0,
+};
+
+const DEALER_MAP = [
+  { name:'Tyre Solutions India',     code:'DLR-W-042', territory:'Mumbai / Pune / Nashik',    categories:'Industrial, Commercial', commission:7, tier:'Gold',   status:'Active'   },
+  { name:'Northern Tyre Works',      code:'DLR-N-018', territory:'Delhi NCR / Gurgaon',       categories:'Industrial, OTR',        commission:6, tier:'Silver', status:'Active'   },
+  { name:'South India Rubber Co',    code:'DLR-S-031', territory:'Hyderabad / Bengaluru',     categories:'All Categories',         commission:7, tier:'Gold',   status:'Active'   },
+  { name:'Gujarat Tyre Distributors',code:'DLR-W-055', territory:'Ahmedabad / Surat / Vadodara',categories:'Commercial, Tubes',    commission:5, tier:'Silver', status:'Active'   },
+  { name:'Chennai Wheel & Tyre',     code:'DLR-S-044', territory:'Chennai / Coimbatore',      categories:'Industrial, Solid',      commission:5, tier:'Silver', status:'Inactive' },
+  { name:'Kochi Rubber Mart',        code:'DLR-S-067', territory:'Kochi / Trivandrum',        categories:'All Categories',         commission:6, tier:'Silver', status:'Active'   },
+  { name:'Pune Tyre Centre',         code:'DLR-W-073', territory:'Pune / Nashik',             categories:'Commercial, Foam Fill',  commission:7, tier:'Gold',   status:'Active'   },
+  { name:'Jaipur Auto Supplies',     code:'DLR-N-029', territory:'Rajasthan',                 categories:'Industrial, OTR',        commission:5, tier:'Bronze', status:'Active'   },
+];
+
+const INVENTORY_OVERRIDES = [
+  { sku:'RS-8.15-15', product:'Rocksolid Standard Profile', warehouse:'Mumbai', sapStock:120, overrideStock:145, reason:'Physical recount — SAP showing dispatch error', by:'Suresh K', expires:'Next sync' },
+  { sku:'DUN-18X7-8', product:'Dunamis Premium Solid',      warehouse:'Ahmedabad', sapStock:80, overrideStock:95, reason:'Pending receipt not yet in SAP', by:'Suresh K', expires:'24 hours' },
+];
+
+const FULL_INVENTORY = [
+  { sku:'DUN-18X7-8',   product:'Dunamis Premium Solid',       mumbai:120, delhi:85, ahmedabad:95, kolkata:40 },
+  { sku:'SOL-6.50-10',  product:'Solitrek Heavy Duty Solid',   mumbai:60,  delhi:45, ahmedabad:30, kolkata:20 },
+  { sku:'GOL-4.00-8',   product:'Goliath Economy Solid',       mumbai:400, delhi:280,ahmedabad:190,kolkata:150},
+  { sku:'NUB-21X7X15',  product:'Nubian Press-On-Band',        mumbai:50,  delhi:30, ahmedabad:25, kolkata:15 },
+  { sku:'RS-8.15-15',   product:'Rocksolid Standard Profile',  mumbai:145, delhi:90, ahmedabad:60, kolkata:35 },
+  { sku:'SW-7.00-12',   product:'Solidwings Medium Intensity', mumbai:80,  delhi:55, ahmedabad:40, kolkata:22 },
+];
+
+const INTEGRATION_STATUSES = [
+  { name:'Inventory Sync',    dir:'SAP → SF',  freq:'Every 4 hours',   lastRun:'14 min ago', status:'ok',   runs:6 },
+  { name:'Sales Order Push',  dir:'SF → SAP',  freq:'Real-time',       lastRun:'2 min ago',  status:'ok',   runs:148 },
+  { name:'Order Confirmation',dir:'SAP → SF',  freq:'Real-time',       lastRun:'2 min ago',  status:'ok',   runs:142 },
+  { name:'Shipment Status',   dir:'SAP → SF',  freq:'Daily 8 AM IST',  lastRun:'Failed',     status:'error',runs:0 },
+  { name:'Invoice Sync',      dir:'SAP → SF',  freq:'Daily 9 AM IST',  lastRun:'Yesterday',  status:'ok',   runs:1 },
+  { name:'Credit Limit',      dir:'SAP → SF',  freq:'Weekly Sunday',   lastRun:'3 days ago', status:'ok',   runs:1 },
+  { name:'Lead → Account',    dir:'SF Internal',freq:'On Conversion',  lastRun:'1 hour ago', status:'warn', runs:4 },
+];
+
+const CREDENTIALS = [
+  { name:'SAP_S4HANA_PROD',    endpoint:'https://sap-prod.veltrac.internal/odata/v4', auth:'OAuth 2.0', status:'ok' },
+  { name:'MuleSoft_API_GW',    endpoint:'https://api-gw.veltrac.in/v2',              auth:'API Key',    status:'warn' },
+  { name:'SF_B2B_Portal',      endpoint:'https://veltrac.my.salesforce.com',          auth:'OAuth 2.0', status:'ok' },
+  { name:'Shipment_Tracker',   endpoint:'https://track.logistics-api.in/v1',            auth:'JWT Bearer', status:'error' },
+];
+
+const MULESOFT_FLOWS = [
+  { name:'SAP-OrderCreate-Flow',        type:'REST → BAPI',    lastExec:'2 min ago',  duration:'210ms', success:99.4, status:'ok' },
+  { name:'Inventory-Sync-Batch',        type:'Scheduled Batch',lastExec:'14 min ago', duration:'4.2s',  success:100,  status:'ok' },
+  { name:'Invoice-Sync-Daily',          type:'Scheduled',      lastExec:'Yesterday',  duration:'1.8s',  success:100,  status:'ok' },
+  { name:'Shipment-Webhook-Handler',    type:'Webhook',        lastExec:'06:42 IST',  duration:'—',     success:0,    status:'error' },
+  { name:'Lead-Dedup-Transform',        type:'SF Trigger',     lastExec:'1 hr ago',   duration:'380ms', success:91.2, status:'warn' },
+  { name:'Credit-Limit-Sync',           type:'Scheduled',      lastExec:'3 days ago', duration:'2.1s',  success:100,  status:'ok' },
+];
+
+const FLOWS_DATA = [
+  { name:'RK_Order_To_SAP_Push',    type:'Record-Triggered', trigger:'Order: AfterInsert', status:'ok',   lastRun:'2 min ago' },
+  { name:'RK_Quote_Approval_Flow',  type:'Approval Process', trigger:'Quote: Discount>12%',status:'ok',   lastRun:'1 hr ago' },
+  { name:'RK_Lead_Territory_Assign',type:'Record-Triggered', trigger:'Lead: BeforeInsert', status:'ok',   lastRun:'3 hr ago' },
+  { name:'RK_Opp_Routing_Decision', type:'Record-Triggered', trigger:'Opp: AfterUpdate',   status:'ok',   lastRun:'45 min ago'},
+  { name:'RK_Dealer_RFQ_Route',     type:'Scheduled',        trigger:'Daily 8 AM IST',     status:'ok',   lastRun:'6 hrs ago' },
+  { name:'RK_Inventory_Alert',      type:'Scheduled',        trigger:'Every 4 hours',       status:'warn', lastRun:'14 min ago'},
+  { name:'RK_Invoice_To_SF',        type:'Platform Event',   trigger:'SAP Webhook Callback',status:'error',lastRun:'06:42 IST' },
+];
+
+const JOBS_DATA = [
+  { name:'InventorySnapshotBatch', schedule:'Every 4 hours',  lastRun:'14 min ago', status:'ok' },
+  { name:'CreditLimitSyncBatch',   schedule:'Weekly Sunday',  lastRun:'3 days ago', status:'ok' },
+  { name:'LeadScoringBatch',       schedule:'Daily midnight', lastRun:'Failed',     status:'error' },
+  { name:'OppForecastRollup',      schedule:'Daily 6 AM IST', lastRun:'2 hrs ago',  status:'warn' },
+];
+
+const LOGS_DATA = [
+  { time:'2024-12-23 15:42:11', level:'ERROR', service:'SAP-MM',   msg:'Shipment webhook timeout — endpoint https://track.logistics-api.in/v1 returned 504 after 30s. Retry #3 failed.' },
+  { time:'2024-12-23 15:38:54', level:'WARN',  service:'MuleSoft', msg:'Lead dedup transform: duplicate GST number detected for lead L-008. Manual review required.' },
+  { time:'2024-12-23 15:31:22', level:'INFO',  service:'SAP-SD',   msg:'Sales Order 4500087310 created successfully for Adani Ports. SO pushed via MuleSoft BAPI call in 208ms.' },
+  { time:'2024-12-23 15:28:45', level:'INFO',  service:'SF-Flow',  msg:'RK_Quote_Approval_Flow triggered for Q-003 (Vedanta Mining). Discount 14% > threshold. Approval request sent to Mgr.' },
+  { time:'2024-12-23 15:22:10', level:'ERROR', service:'SF-Flow',  msg:'RK_Invoice_To_SF: Platform event delivery failed — SAP Webhook callback returned empty payload for SO 4500087205.' },
+  { time:'2024-12-23 14:55:33', level:'INFO',  service:'SAP-FI',   msg:'Invoice INV-SAP-87100 synced to SF Order ORD-001. AR entry created in SAP FI. Amount: ₹11,39,200.' },
+  { time:'2024-12-23 14:48:02', level:'WARN',  service:'SAP-MM',   msg:'Inventory snapshot: Mumbai depot RS-8.15-15 stock mismatch. SAP: 120, Physical: 145. Override applied by Suresh K.' },
+  { time:'2024-12-23 14:30:00', level:'INFO',  service:'B2B-API',  msg:'Inventory sync batch completed. 40 SKUs × 4 warehouses = 160 records updated in SF. Duration: 4.2s.' },
+  { time:'2024-12-23 13:11:05', level:'INFO',  service:'SF-Flow',  msg:'RK_Lead_Territory_Assign: Lead L-006 (Anjali Rao, Hyderabad) auto-assigned to Arvind Kumar. GST state: Telangana.' },
+  { time:'2024-12-23 12:02:18', level:'INFO',  service:'SAP-SD',   msg:'Goods Issue posted for Order ORD-002 (Adani Ports). Delivery note DN-87310 generated. Dispatch confirmed.' },
+  { time:'2024-12-23 10:44:31', level:'WARN',  service:'MuleSoft', msg:'API Gateway rate limit approaching: 94.7% of hourly quota used. Throttling may occur in next 15 minutes.' },
+  { time:'2024-12-23 09:00:05', level:'INFO',  service:'SAP-FI',   msg:'Scheduled invoice sync batch started. Processing 3 pending invoices from yesterday.' },
+  { time:'2024-12-23 08:42:00', level:'ERROR', service:'SAP-MM',   msg:'Shipment tracker webhook registration failed at startup. Circuit breaker open. All 9 pending shipment events queued.' },
+  { time:'2024-12-23 08:00:01', level:'INFO',  service:'SF-Flow',  msg:'RK_Dealer_RFQ_Route: 5 open RFQs below ₹5L threshold routed to West region dealers. 3 → Tyre Solutions India.' },
+  { time:'2024-12-23 07:30:00', level:'INFO',  service:'SAP-SD',   msg:'Credit limit sync batch completed. 147 accounts updated from SAP FI. 2 accounts flagged for limit breach.' },
+];
+
+const DISCOUNT_TIERS = [
+  { tier:'Tier 1', min:0,  max:5,  approver:'No approval required',  field:5 },
+  { tier:'Tier 2', min:5,  max:12, approver:'Sales Rep (self-approval)', field:12 },
+  { tier:'Tier 3', min:12, max:20, approver:'Sales Manager',          field:20 },
+  { tier:'Tier 4', min:20, max:100,approver:'VP Sales',               field:100 },
+];
+
+const THRESHOLD_AUDIT = [
+  { date:'2024-11-01', user:'Suresh K', from:'₹3,00,000', to:'₹5,00,000', reason:'Q4 FY25 pricing review — dealer capacity expanded' },
+  { date:'2024-08-15', user:'Suresh K', from:'₹2,50,000', to:'₹3,00,000', reason:'West region dealer onboarding complete' },
+  { date:'2024-04-01', user:'Admin',    from:'₹2,00,000', to:'₹2,50,000', reason:'FY25 commencement — annual threshold review' },
+];
+
+// ══════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════
+const PAGE_META = {
+  health:      ['System Health',      'Platform Monitoring · API Usage · Active Flows'],
+  territory:   ['Territory Config',   'State → Salesperson Assignment · Zone Management'],
+  threshold:   ['Threshold Rules',    'Direct vs Dealer Routing · Discount Approval Policy'],
+  'dealer-map':['Dealer Mapping',     'Territory → Dealer Assignment · Commission Rates'],
+  inventory:   ['Inventory Override', 'Manual SAP Inventory Override · Audit Trail'],
+  integration: ['Integration Monitor','SAP · MuleSoft · Named Credentials · Flow Status'],
+  logs:        ['System Logs',        'Integration Event Log · Error Tracking'],
+};
+
+function adminNav(section) {
+  document.querySelectorAll('.admin-section').forEach(el=>el.classList.remove('active'));
+  const el = document.getElementById('as-'+section);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>{ if(n.getAttribute('onclick')?.includes(`'${section}'`)) n.classList.add('active'); });
+  const [title,sub] = PAGE_META[section]||[section,''];
+  document.getElementById('page-title').textContent = title;
+  document.getElementById('page-sub').textContent   = sub;
+
+  if (section==='health')      renderHealth();
+  if (section==='territory')   renderTerritory();
+  if (section==='threshold')   renderThreshold();
+  if (section==='dealer-map')  renderDealerMap();
+  if (section==='inventory')   renderInventory();
+  if (section==='integration') renderIntegration();
+  if (section==='logs')        renderLogs();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// HEALTH
+// ══════════════════════════════════════════════════════════════════
+function renderHealth() {
+  // Flows
+  const flowCls={ok:'badge-green',warn:'badge-amber',error:'badge-red'};
+  document.getElementById('flows-tbody').innerHTML = FLOWS_DATA.map(f=>`
+    <tr>
+      <td class="fw-6">${f.name}</td>
+      <td class="text-muted text-sm">${f.type}</td>
+      <td class="text-sm">${f.trigger}</td>
+      <td><span class="badge ${flowCls[f.status]}">${f.status.toUpperCase()}</span></td>
+      <td class="text-muted text-sm">${f.lastRun}</td>
+    </tr>`).join('');
+
+  document.getElementById('jobs-tbody').innerHTML = JOBS_DATA.map(j=>`
+    <tr>
+      <td class="fw-6">${j.name}</td>
+      <td class="text-sm">${j.schedule}</td>
+      <td class="text-muted text-sm">${j.lastRun}</td>
+      <td><span class="badge ${flowCls[j.status]}">${j.status.toUpperCase()}</span></td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TERRITORY
+// ══════════════════════════════════════════════════════════════════
+function renderTerritory() {
+  const zoneCls={West:'badge-blue',North:'badge-indigo',South:'badge-green',East:'badge-amber'};
+  document.getElementById('territory-tbody').innerHTML = TERRITORY_CONFIG.map((t,i)=>`
+    <tr>
+      <td><input type="text" class="form-control" style="padding:5px 8px;font-size:12.5px" value="${t.state}" onchange="TERRITORY_CONFIG[${i}].state=this.value;markTerritoryChanged()"></td>
+      <td><span class="badge ${zoneCls[t.zone]||'badge-gray'}">${t.zone}</span></td>
+      <td><input type="text" class="form-control" style="padding:5px 8px;font-size:12.5px" value="${t.owner}" onchange="TERRITORY_CONFIG[${i}].owner=this.value;markTerritoryChanged()"></td>
+      <td><input type="text" class="form-control" style="padding:5px 8px;font-size:12.5px" value="${t.email}" onchange="TERRITORY_CONFIG[${i}].email=this.value;markTerritoryChanged()"></td>
+      <td style="text-align:center">
+        <label class="toggle"><input type="checkbox" ${t.dealerOverride?'checked':''} onchange="TERRITORY_CONFIG[${i}].dealerOverride=this.checked;markTerritoryChanged()"><span class="toggle-slider"></span></label>
+      </td>
+      <td><button class="btn btn-danger-ghost btn-xs" onclick="removeTerritoryRow(${i})">✕ Remove</button></td>
+    </tr>`).join('');
+
+  // Coverage grid
+  const zones = {};
+  TERRITORY_CONFIG.forEach(t=>{ if(!zones[t.zone]) zones[t.zone]=[]; zones[t.zone].push(t.state); });
+  const zoneColors={West:'var(--blue)',North:'var(--indigo)',South:'var(--green)',East:'var(--amber)'};
+  document.getElementById('territory-coverage-grid').innerHTML = Object.entries(zones).map(([zone,states])=>`
+    <div style="background:var(--steel-lt);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:${zoneColors[zone]};margin-bottom:6px">${zone} Zone</div>
+      ${states.map(s=>`<div style="font-size:12.5px;color:var(--text-2);padding:2px 0">• ${s}</div>`).join('')}
+    </div>`).join('');
+
+  // Sales team summary
+  const team = {};
+  TERRITORY_CONFIG.forEach(t=>{ if(!team[t.owner]) team[t.owner]=0; team[t.owner]++; });
+  document.getElementById('sales-team-summary').innerHTML = Object.entries(team).map(([rep,cnt])=>`
+    <div class="side-panel-row"><span class="fw-6">${rep}</span><span class="badge badge-indigo">${cnt} states</span></div>`).join('');
+}
+
+function addTerritoryRow() {
+  TERRITORY_CONFIG.push({state:'New State',zone:'West',owner:'Rahul Sharma',email:'rahul.s@veltrac.in',dealerOverride:false});
+  adminState.pendingTerritoryChanges++;
+  renderTerritory();
+  toast('New territory row added. Edit fields and save.','info');
+}
+
+function removeTerritoryRow(i) {
+  TERRITORY_CONFIG.splice(i,1);
+  adminState.pendingTerritoryChanges++;
+  document.getElementById('pending-territory-changes').textContent = adminState.pendingTerritoryChanges;
+  renderTerritory();
+}
+
+function markTerritoryChanged() {
+  adminState.pendingTerritoryChanges++;
+  document.getElementById('pending-territory-changes').textContent = adminState.pendingTerritoryChanges;
+}
+
+function saveTerritoryConfig() {
+  adminState.pendingTerritoryChanges = 0;
+  document.getElementById('pending-territory-changes').textContent = '0';
+  const t = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('last-save-time').textContent = t;
+  toast('✅ Territory config saved. SF Lead assignment rules updated via Named Credentials.','success');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// THRESHOLD
+// ══════════════════════════════════════════════════════════════════
+function renderThreshold() {
+  // Discount tiers
+  document.getElementById('discount-tiers-body').innerHTML = DISCOUNT_TIERS.map((t,i)=>`
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:0;padding:10px 12px;border-bottom:1px solid #F1F5F9;">
+      <div class="fw-6">${t.tier} (${t.min}–${t.max}%)</div>
+      <div><input type="number" class="form-control" style="padding:4px 7px;font-size:12px;width:80px" value="${t.field}" onchange="DISCOUNT_TIERS[${i}].field=+this.value"></div>
+      <div class="text-sm">${t.approver}</div>
+    </div>`).join('');
+
+  // Audit log
+  document.getElementById('threshold-audit-log').innerHTML = THRESHOLD_AUDIT.map(a=>`
+    <div style="padding:7px 0;border-bottom:1px solid #F1F5F9;font-size:12px">
+      <div class="fw-6">${a.date} · <span class="text-muted">${a.user}</span></div>
+      <div class="text-muted mt-4">${a.from} → ${a.to}</div>
+      <div style="color:var(--text-3);margin-top:2px;font-style:italic">"${a.reason}"</div>
+    </div>`).join('');
+
+  // Chart
+  setTimeout(drawRoutingChart, 100);
+}
+
+function toggleThresholdEdit(type) {
+  const el = document.getElementById('edit-'+type);
+  el.classList.toggle('open');
+}
+
+function saveThreshold(type) {
+  const val    = parseInt(document.getElementById('input-'+type+'-threshold').value);
+  const reason = document.getElementById('input-'+type+'-reason').value.trim();
+  if (!val || val < 100000) { toast('Invalid threshold value. Minimum ₹1,00,000.','error'); return; }
+  if (!reason) { toast('Change reason is required for audit log.','warning'); return; }
+  const fmt = '₹'+val.toLocaleString('en-IN');
+  document.getElementById('display-'+type+'-threshold').textContent = fmt;
+  if (type==='direct') adminState.directThreshold = val;
+  else adminState.dealerThreshold = val;
+  THRESHOLD_AUDIT.unshift({ date: new Date().toLocaleDateString('en-IN'), user:'Suresh K', from: document.getElementById('display-'+type+'-threshold').textContent, to:fmt, reason });
+  toggleThresholdEdit(type);
+  const t = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('last-save-time').textContent = t;
+  toast(`✅ ${type==='direct'?'Direct':'Dealer'} threshold updated to ${fmt}. All portal routing logic updated immediately.`,'success');
+  renderThreshold();
+  runSimulation();
+}
+
+function saveDiscountThresholds() {
+  toast('✅ Discount approval thresholds saved. SF Validation Rule updated.','success');
+}
+
+function runSimulation() {
+  const val = parseInt(document.getElementById('sim-value').value);
+  const territory = document.getElementById('sim-territory').value;
+  const res = document.getElementById('sim-result');
+  if (!val || !territory) { res.style.display='none'; return; }
+  res.style.display='block';
+  document.getElementById('sim-r-value').textContent = '₹'+val.toLocaleString('en-IN');
+  document.getElementById('sim-r-threshold').textContent = '₹'+adminState.directThreshold.toLocaleString('en-IN');
+  const isDirect = val >= adminState.directThreshold;
+  document.getElementById('sim-r-decision').innerHTML = isDirect
+    ? '<span class="badge badge-green">🏢 Direct to Veltrac India</span>'
+    : '<span class="badge badge-amber">🤝 Route to Dealer</span>';
+  const dealer = DEALER_MAP.find(d=>d.territory.toLowerCase().includes(territory.toLowerCase().split(' ')[0]));
+  document.getElementById('sim-r-assignee').textContent = isDirect
+    ? (TERRITORY_CONFIG.find(t=>t.state.includes(territory.split(' ')[0]))||{}).owner || 'Rahul Sharma'
+    : (dealer?.name || 'No dealer assigned — check Dealer Mapping');
+}
+
+function drawRoutingChart() {
+  const c = document.getElementById('chart-routing-split'); if(!c) return;
+  const ctx=c.getContext('2d'); const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2+5,r=Math.min(W,H)/2-10;
+  // Direct 68%, Dealer 32%
+  ctx.beginPath(); ctx.moveTo(cx,cy);
+  ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+2*Math.PI*.68); ctx.closePath();
+  ctx.fillStyle='var(--ink)'; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx,cy);
+  ctx.arc(cx,cy,r,-Math.PI/2+2*Math.PI*.68,3*Math.PI/2); ctx.closePath();
+  ctx.fillStyle='var(--amber)'; ctx.fill();
+  // Inner circle (donut)
+  ctx.beginPath(); ctx.arc(cx,cy,r*.55,0,2*Math.PI);
+  ctx.fillStyle='white'; ctx.fill();
+  ctx.fillStyle='var(--text-1)'; ctx.font='bold 13px DM Sans,system-ui';
+  ctx.textAlign='center'; ctx.fillText('68%',cx,cy+5);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DEALER MAP
+// ══════════════════════════════════════════════════════════════════
+function renderDealerMap() {
+  const tierCls={Gold:'badge-amber',Silver:'badge-gray',Bronze:'badge-indigo'};
+  const stCls={Active:'badge-green',Inactive:'badge-red'};
+  document.getElementById('dealer-map-tbody').innerHTML = DEALER_MAP.map((d,i)=>`
+    <tr>
+      <td class="fw-6">${d.name}</td>
+      <td class="mono text-sm">${d.code}</td>
+      <td>${d.territory}</td>
+      <td class="text-sm text-muted">${d.categories}</td>
+      <td>
+        <input type="number" class="form-control" style="padding:4px 8px;width:60px;font-size:12.5px" value="${d.commission}" min="3" max="12" onchange="DEALER_MAP[${i}].commission=+this.value">%
+      </td>
+      <td><span class="badge ${tierCls[d.tier]||'badge-gray'}">${d.tier}</span></td>
+      <td>
+        <label class="toggle"><input type="checkbox" ${d.status==='Active'?'checked':''} onchange="DEALER_MAP[${i}].status=this.checked?'Active':'Inactive';renderDealerMap()"><span class="toggle-slider"></span></label>
+        <span class="badge ${stCls[d.status]}" style="margin-left:6px">${d.status}</span>
+      </td>
+      <td>
+        <button class="btn btn-ghost btn-xs" onclick="toast('Dealer profile: ${d.name}','info')">View</button>
+        <button class="btn btn-danger-ghost btn-xs" onclick="toast('${d.name} removed from mapping','warning')">Remove</button>
+      </td>
+    </tr>`).join('');
+}
+
+function addDealerRow() {
+  DEALER_MAP.push({name:'New Dealer Pvt Ltd',code:'DLR-X-999',territory:'Enter territory',categories:'All',commission:5,tier:'Silver',status:'Active'});
+  renderDealerMap();
+  toast('New dealer row added. Fill in details and save.','info');
+}
+
+function saveDealerMapping() {
+  const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('last-save-time').textContent=t;
+  toast('✅ Dealer mapping saved. SF Experience Cloud routing rules updated.','success');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INVENTORY OVERRIDE
+// ══════════════════════════════════════════════════════════════════
+function renderInventory() {
+  document.getElementById('override-active-count').textContent = INVENTORY_OVERRIDES.length + ' Active Override' + (INVENTORY_OVERRIDES.length!==1?'s':'');
+  document.getElementById('inventory-tbody').innerHTML = INVENTORY_OVERRIDES.map((o,i)=>`
+    <tr style="background:${i%2===0?'#FFFBEB':'white'}">
+      <td class="mono fw-6">${o.sku}</td>
+      <td>${o.product}</td>
+      <td>${o.warehouse}</td>
+      <td class="text-muted">${o.sapStock}</td>
+      <td class="fw-7 text-green">${o.overrideStock} <span class="badge badge-amber text-xs" style="margin-left:4px">OVERRIDE</span></td>
+      <td class="text-sm text-muted" style="max-width:200px">${o.reason}</td>
+      <td class="text-sm">${o.by}</td>
+      <td class="text-sm">${o.expires}</td>
+      <td>
+        <button class="btn btn-danger-ghost btn-xs" onclick="clearOverride(${i})">✕ Clear</button>
+      </td>
+    </tr>`).join('');
+
+  // Full inventory
+  document.getElementById('full-inventory-tbody').innerHTML = FULL_INVENTORY.map(r=>{
+    const hasOverride = INVENTORY_OVERRIDES.find(o=>o.sku===r.sku);
+    const total = r.mumbai+r.delhi+r.ahmedabad+r.kolkata;
+    const lowTotal = total < 100;
+    return `<tr>
+      <td class="mono fw-6">${r.sku}</td>
+      <td>${r.product}</td>
+      <td class="${hasOverride&&hasOverride.warehouse==='Mumbai'?'fw-7 text-amber':''}">${hasOverride&&hasOverride.warehouse==='Mumbai'?hasOverride.overrideStock:r.mumbai}</td>
+      <td>${r.delhi}</td>
+      <td class="${hasOverride&&hasOverride.warehouse==='Ahmedabad'?'fw-7 text-amber':''}">${hasOverride&&hasOverride.warehouse==='Ahmedabad'?hasOverride.overrideStock:r.ahmedabad}</td>
+      <td>${r.kolkata}</td>
+      <td class="fw-7 ${lowTotal?'text-red':''}">${total}</td>
+      <td>${hasOverride?`<span class="badge badge-amber text-xs">Active</span>`:'—'}</td>
+    </tr>`;
+  }).join('');
+
+  // Low stock alerts
+  const lowItems = FULL_INVENTORY.filter(r=>(r.mumbai+r.delhi+r.ahmedabad+r.kolkata)<150);
+  document.getElementById('low-stock-alerts').innerHTML = lowItems.map(r=>`
+    <div style="padding:6px 0;border-bottom:1px solid #F1F5F9;font-size:12.5px">
+      🔴 <strong>${r.sku}</strong><br>
+      <span class="text-muted">Total stock: ${r.mumbai+r.delhi+r.ahmedabad+r.kolkata} units (below 150 threshold)</span>
+    </div>`).join('');
+}
+
+function clearOverride(i) {
+  INVENTORY_OVERRIDES.splice(i,1);
+  renderInventory();
+  toast('Override cleared. SAP stock values restored.','success');
+}
+
+function openOverrideModal() { document.getElementById('override-modal').classList.add('open'); }
+function closeOverrideModal(){ document.getElementById('override-modal').classList.remove('open'); }
+
+function submitOverride() {
+  const sku     = document.getElementById('ov-sku').value;
+  const wh      = document.getElementById('ov-warehouse').value;
+  const qty     = parseInt(document.getElementById('ov-qty').value);
+  const reason  = document.getElementById('ov-reason').value.trim();
+  const expires = document.getElementById('ov-expires').value;
+  if (!qty || qty < 0) { toast('Enter a valid quantity','error'); return; }
+  if (!reason) { toast('Override reason is required','warning'); return; }
+  const existing = FULL_INVENTORY.find(r=>r.sku===sku);
+  const sapStock = existing ? existing[wh.toLowerCase()] || 0 : 0;
+  INVENTORY_OVERRIDES.push({ sku, product: existing?.product||sku, warehouse:wh, sapStock, overrideStock:qty, reason, by:'Suresh K', expires });
+  closeOverrideModal();
+  renderInventory();
+  toast(`✅ Override applied: ${sku} at ${wh} → ${qty} units. Logged in audit trail.`,'success');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INTEGRATION
+// ══════════════════════════════════════════════════════════════════
+function renderIntegration() {
+  const stCls={ok:'badge-green',warn:'badge-amber',error:'badge-red'};
+  document.getElementById('integration-status-tbody').innerHTML = INTEGRATION_STATUSES.map(s=>`
+    <tr>
+      <td class="fw-6">${s.name}</td>
+      <td class="text-muted text-sm">${s.dir}</td>
+      <td class="text-sm">${s.freq}</td>
+      <td class="text-sm ${s.status==='error'?'text-red':''}">${s.lastRun}</td>
+      <td><span class="badge ${stCls[s.status]}">${s.status.toUpperCase()}</span></td>
+      <td><button class="btn btn-ghost btn-xs" onclick="triggerSync('${s.name}')">▶ Run Now</button></td>
+    </tr>`).join('');
+
+  document.getElementById('credentials-tbody').innerHTML = CREDENTIALS.map(c=>`
+    <tr>
+      <td class="mono fw-6">${c.name}</td>
+      <td class="text-muted text-sm" style="font-size:11px">${c.endpoint}</td>
+      <td class="text-sm">${c.auth}</td>
+      <td><span class="badge ${stCls[c.status]}">${c.status==='ok'?'Active':c.status==='warn'?'Warning':'Failed'}</span></td>
+    </tr>`).join('');
+
+  document.getElementById('mulesoft-tbody').innerHTML = MULESOFT_FLOWS.map(f=>`
+    <tr>
+      <td class="fw-6">${f.name}</td>
+      <td class="text-sm text-muted">${f.type}</td>
+      <td class="text-sm">${f.lastExec}</td>
+      <td class="mono text-sm">${f.duration}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="prog-bar" style="width:80px"><div class="prog-fill ${f.success>=95?'green':f.success>=70?'amber':'red'}" style="width:${f.success}%"></div></div>
+          <span class="text-sm fw-6 ${f.success<70?'text-red':''}">${f.success}%</span>
+        </div>
+      </td>
+      <td><span class="badge ${stCls[f.status]}">${f.status.toUpperCase()}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-xs" onclick="triggerSync('${f.name}')">▶ Trigger</button>
+        ${f.status==='error'?`<button class="btn btn-danger-ghost btn-xs" onclick="toast('${f.name} restarted','success')">↺ Restart</button>`:''}
+      </td>
+    </tr>`).join('');
+}
+
+function triggerSync(name) {
+  toast(`▶ Triggering: ${name}…`,'info');
+  setTimeout(()=>toast(`✅ ${name} completed successfully`,'success'),2000);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LOGS
+// ══════════════════════════════════════════════════════════════════
+function renderLogs() {
+  const levelFilter   = document.getElementById('log-filter-level').value;
+  const serviceFilter = document.getElementById('log-filter-service').value;
+  const filtered = LOGS_DATA.filter(l =>
+    (levelFilter==='ALL'   || l.level===levelFilter) &&
+    (serviceFilter==='ALL' || l.service===serviceFilter)
+  );
+  document.getElementById('logs-container').innerHTML = filtered.length
+    ? filtered.map(l=>`
+        <div class="log-entry">
+          <span class="log-time">${l.time.split(' ')[1]}</span>
+          <span class="log-level ${l.level}">${l.level}</span>
+          <span class="log-service">${l.service}</span>
+          <span class="log-msg">${l.msg}</span>
+        </div>`).join('')
+    : '<div style="text-align:center;padding:40px;color:var(--text-3)">No logs match current filters.</div>';
+}
+
+function refreshLogs() {
+  // Add a simulated new log entry
+  const now = new Date().toLocaleString('en-IN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).replace(',','');
+  LOGS_DATA.unshift({time:now, level:'INFO', service:'B2B-API', msg:'Admin log refresh triggered manually by Suresh K. All systems nominal except Shipment Tracker.'});
+  renderLogs();
+  toast('Logs refreshed','info');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PORTAL SWITCHER
+// ══════════════════════════════════════════════════════════════════
+function openSwitcher()  { document.getElementById('switcher-modal').classList.add('open'); }
+function closeSwitcher() { document.getElementById('switcher-modal').classList.remove('open'); }
+document.getElementById('switcher-modal').addEventListener('click', e=>{ if(e.target===document.getElementById('switcher-modal')) closeSwitcher(); });
+document.getElementById('override-modal').addEventListener('click', e=>{ if(e.target===document.getElementById('override-modal')) closeOverrideModal(); });
+
+// ══════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════
+function toast(msg,type='info') {
+  const icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  const wrap=document.getElementById('toast-wrap');
+  const el=document.createElement('div');
+  el.className='toast '+(type!=='info'?type:'');
+  el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300); },5000);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════
+document.getElementById('last-save-time').textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+renderHealth();
+</script>
+</body>
+</html>
